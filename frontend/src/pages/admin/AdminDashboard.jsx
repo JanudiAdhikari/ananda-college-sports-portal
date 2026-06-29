@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 
 function AdminDashboard() {
@@ -8,31 +9,37 @@ function AdminDashboard() {
       title: "Sports",
       description: "Add, edit, delete and manage school sports.",
       roles: ["SUPER_ADMIN", "SPORTS_TEACHER"],
+      path: "/admin/sports",
     },
     {
       title: "Teams",
       description: "Manage teams, age groups, coaches, captains and years.",
       roles: ["SUPER_ADMIN", "SPORTS_TEACHER"],
+      path: "/admin/teams",
     },
     {
       title: "Players",
       description: "Manage player profiles, statistics and achievements.",
       roles: ["SUPER_ADMIN", "SPORTS_TEACHER"],
+      path: "/admin/players",
     },
     {
       title: "Gallery",
       description: "Create albums and manage event images.",
       roles: ["SUPER_ADMIN", "SPORTS_TEACHER", "PHOTO_CLUB"],
+      path: "/admin/gallery",
     },
     {
       title: "Live Matches",
       description: "Update live match links, scores and match status.",
       roles: ["SUPER_ADMIN", "SPORTS_TEACHER", "VIDEO_CLUB"],
+      path: "/admin/live-matches",
     },
     {
       title: "Users",
       description: "Create and manage system users and roles.",
       roles: ["SUPER_ADMIN", "SPORTS_TEACHER"],
+      path: "/admin/users",
     },
   ];
 
@@ -67,9 +74,12 @@ function AdminDashboard() {
 
             <p className="mt-2 text-gray-600">{item.description}</p>
 
-            <button className="mt-5 rounded-xl bg-ananda-maroon px-4 py-2 text-sm font-semibold text-white hover:bg-ananda-dark-maroon">
+            <Link
+              to={item.path}
+              className="mt-5 inline-block rounded-xl bg-ananda-maroon px-4 py-2 text-sm font-semibold text-white hover:bg-ananda-dark-maroon"
+            >
               Manage
-            </button>
+            </Link>
           </div>
         ))}
       </div>
