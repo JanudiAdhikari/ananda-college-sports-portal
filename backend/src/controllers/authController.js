@@ -60,6 +60,51 @@ const getMe = async (req, res) => {
   });
 };
 
+const getUsers = async (req, res) => {
+  try {
+    const { search, role } = req.query;
+
+    const query = {};
+
+    if (search) {
+      query.$or = [
+        {
+          fullName: {
+            $regex: search,
+            $options: "i",
+          },
+        },
+        {
+          username: {
+            $regex: search,
+            $options: "i",
+          },
+        },
+      ];
+    }
+
+    if (role && role !== "ALL") {
+      query.role = role;
+    }
+
+    const users = await User.find(query)
+      .select("-password")
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({
+      success: true,
+      count: users.length,
+      users,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch users.",
+      error: error.message,
+    });
+  }
+};
+
 const createUser = async (req, res) => {
   try {
     const { fullName, username, password, role } = req.body;
@@ -109,8 +154,101 @@ const createUser = async (req, res) => {
   }
 };
 
+const updateUser = async (req, res) => {
+  try {
+    const { fullName, username, password, role, isActive } = req.body;
+
+    const user = await User.findById(req.params.id);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found.",
+      });
+    }
+
+    if (username && username.toLowerCase() !== user.username) {
+      const existingUser = await User.findOne({
+        _id: { $ne: user._id },
+        username: username.toLowerCase(),
+      });
+
+      if (existingUser) {
+        return res.status(409).json({
+          success: false,
+          message: "Username already exists.",
+        });
+      }
+
+      user.username = username;
+    }
+
+    if (fullName !== undefined) user.fullName = fullName;
+    if (password) user.password = password;
+    if (role !== undefined) user.role = role;
+    if (isActive !== undefined) user.isActive = isActive;
+
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: "User updated successfully.",
+      user: {
+        id: user._id,
+        fullName: user.fullName,
+        username: user.username,
+        role: user.role,
+        isActive: user.isActive,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to update user.",
+      error: error.message,
+    });
+  }
+};
+
+const deactivateUser = async (req, res) => {
+  try {
+    if (req.user._id.toString() === req.params.id) {
+      return res.status(400).json({
+        success: false,
+        message: "You cannot deactivate your own account.",
+      });
+    }
+
+    const user = await User.findById(req.params.id);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found.",
+      });
+    }
+
+    user.isActive = false;
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: "User deactivated successfully.",
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to deactivate user.",
+      error: error.message,
+    });
+  }
+};
+
 module.exports = {
   login,
   getMe,
+  getUsers,
   createUser,
+  updateUser,
+  deactivateUser,
 };
