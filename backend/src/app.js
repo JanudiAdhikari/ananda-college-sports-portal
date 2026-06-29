@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const mongoose = require("mongoose");
 
 const app = express();
 
@@ -18,9 +19,17 @@ app.get("/", (req, res) => {
 });
 
 app.get("/api/health", (req, res) => {
+  const dbStatus = {
+    0: "disconnected",
+    1: "connected",
+    2: "connecting",
+    3: "disconnecting",
+  };
+
   res.status(200).json({
     success: true,
     message: "Backend server is healthy",
+    database: dbStatus[mongoose.connection.readyState],
   });
 });
 
