@@ -1,13 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { getPlayers } from "../../services/playerService";
 import { getTeamById } from "../../services/teamService";
-
-const samplePlayers = [
-  { id: "player-1", name: "Player One", role: "Captain / Batsman" },
-  { id: "player-2", name: "Player Two", role: "Bowler" },
-  { id: "player-3", name: "Player Three", role: "All-rounder" },
-  { id: "player-4", name: "Player Four", role: "Wicketkeeper" },
-];
 
 const ageGroupLabels = {
   UNDER_12: "Under 12",
@@ -24,28 +18,78 @@ function TeamDetails() {
   const { teamId } = useParams();
 
   const [team, setTeam] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [players, setPlayers] = useState([]);
+
+  const [loadingTeam, setLoadingTeam] = useState(true);
+  const [loadingPlayers, setLoadingPlayers] = useState(true);
+
   const [error, setError] = useState("");
 
   useEffect(() => {
-    const fetchTeam = async () => {
-      try {
-        setLoading(true);
-        setError("");
+    let isMounted = true;
 
-        const data = await getTeamById(teamId);
+    getTeamById(teamId)
+      .then((data) => {
+        if (!isMounted) {
+          return;
+        }
+
         setTeam(data.team);
-      } catch (error) {
-        setError(error.response?.data?.message || "Failed to load team.");
-      } finally {
-        setLoading(false);
-      }
-    };
+        setError("");
+      })
+      .catch((error) => {
+        if (!isMounted) {
+          return;
+        }
 
-    fetchTeam();
+        setError(error.response?.data?.message || "Failed to load team.");
+      })
+      .finally(() => {
+        if (!isMounted) {
+          return;
+        }
+
+        setLoadingTeam(false);
+      });
+
+    return () => {
+      isMounted = false;
+    };
   }, [teamId]);
 
-  if (loading) {
+  useEffect(() => {
+    let isMounted = true;
+
+    getPlayers({ team: teamId })
+      .then((data) => {
+        if (!isMounted) {
+          return;
+        }
+
+        setPlayers(data.players);
+        setError("");
+      })
+      .catch((error) => {
+        if (!isMounted) {
+          return;
+        }
+
+        setError(error.response?.data?.message || "Failed to load players.");
+      })
+      .finally(() => {
+        if (!isMounted) {
+          return;
+        }
+
+        setLoadingPlayers(false);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [teamId]);
+
+  if (loadingTeam) {
     return (
       <section className="mx-auto max-w-7xl px-6 py-12">
         <div className="rounded-2xl bg-white p-6 shadow-md">
@@ -123,60 +167,51 @@ function TeamDetails() {
         </div>
       </div>
 
-      {team.achievements?.length > 0 && (
-        <div className="mb-8 rounded-2xl bg-white p-6 shadow-md">
-          <h2 className="mb-4 text-xl font-bold text-ananda-maroon">
-            Team Achievements
-          </h2>
-
-          <div className="space-y-3">
-            {team.achievements.map((achievement) => (
-              <div
-                key={`${achievement.title}-${achievement.year}`}
-                className="rounded-xl bg-ananda-cream p-4"
-              >
-                <p className="font-semibold text-ananda-dark-maroon">
-                  {achievement.title}{" "}
-                  {achievement.year && `(${achievement.year})`}
-                </p>
-
-                {achievement.description && (
-                  <p className="text-sm text-gray-600">
-                    {achievement.description}
-                  </p>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
       <h2 className="mb-4 text-2xl font-bold text-ananda-dark-maroon">
         Players
       </h2>
 
-      <div className="mb-4 rounded-xl bg-ananda-light-gold px-4 py-3 text-sm text-ananda-dark-maroon">
-        Player data is still sample data. In the next step, we will connect this
-        section to real player profiles from MongoDB.
-      </div>
+      {loadingPlayers && (
+        <div className="rounded-2xl bg-white p-6 shadow-md">
+          Loading players...
+        </div>
+      )}
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-        {samplePlayers.map((player) => (
-          <Link
-            key={player.id}
-            to={`/players/${player.id}`}
-            className="rounded-2xl bg-white p-5 shadow-md hover:shadow-lg"
-          >
-            <div className="mb-4 h-24 w-24 rounded-full bg-ananda-light-gold"></div>
+      {!loadingPlayers && players.length === 0 && (
+        <div className="rounded-2xl bg-white p-6 text-gray-700 shadow-md">
+          No players added for this team yet.
+        </div>
+      )}
 
-            <h3 className="text-lg font-bold text-ananda-maroon">
-              {player.name}
-            </h3>
+      {!loadingPlayers && players.length > 0 && (
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+          {players.map((player) => (
+            <Link
+              key={player._id}
+              to={`/players/${player._id}`}
+              className="rounded-2xl bg-white p-5 shadow-md transition hover:-translate-y-1 hover:shadow-lg"
+            >
+              <div className="mb-4 flex h-24 w-24 items-center justify-center rounded-full bg-ananda-light-gold text-2xl font-bold text-ananda-maroon">
+                {player.fullName.charAt(0)}
+              </div>
 
-            <p className="text-sm text-gray-600">{player.role}</p>
-          </Link>
-        ))}
-      </div>
+              <h3 className="text-lg font-bold text-ananda-maroon">
+                {player.fullName}
+              </h3>
+
+              <p className="text-sm text-gray-600">
+                {player.role || player.position || "Player"}
+              </p>
+
+              {player.jerseyNumber && (
+                <p className="mt-2 text-sm font-semibold text-ananda-gold">
+                  Jersey #{player.jerseyNumber}
+                </p>
+              )}
+            </Link>
+          ))}
+        </div>
+      )}
     </section>
   );
 }
