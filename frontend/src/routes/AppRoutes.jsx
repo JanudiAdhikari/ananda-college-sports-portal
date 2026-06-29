@@ -9,6 +9,7 @@ import Gallery from "../pages/public/Gallery";
 import LiveMatches from "../pages/public/LiveMatches";
 import Login from "../pages/auth/Login";
 import AdminDashboard from "../pages/admin/AdminDashboard";
+import ProtectedRoute from "../components/common/ProtectedRoute";
 
 function AppRoutes() {
   return (
@@ -21,7 +22,22 @@ function AppRoutes() {
       <Route path="/gallery" element={<Gallery />} />
       <Route path="/live-matches" element={<LiveMatches />} />
       <Route path="/login" element={<Login />} />
-      <Route path="/admin" element={<AdminDashboard />} />
+
+      <Route
+        path="/admin"
+        element={
+          <ProtectedRoute
+            allowedRoles={[
+              "SUPER_ADMIN",
+              "SPORTS_TEACHER",
+              "PHOTO_CLUB",
+              "VIDEO_CLUB",
+            ]}
+          >
+            <AdminDashboard />
+          </ProtectedRoute>
+        }
+      />
     </Routes>
   );
 }

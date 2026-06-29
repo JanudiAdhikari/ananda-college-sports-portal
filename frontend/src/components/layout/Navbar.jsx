@@ -1,10 +1,19 @@
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import { useAuth } from "../../hooks/useAuth";
 
 function Navbar() {
+  const navigate = useNavigate();
+  const { user, isAuthenticated, logout } = useAuth();
+
   const navLinkClass = ({ isActive }) =>
     isActive
       ? "text-ananda-gold font-semibold"
       : "text-white hover:text-ananda-gold";
+
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+  };
 
   return (
     <header className="bg-ananda-maroon text-white shadow-md">
@@ -35,9 +44,30 @@ function Navbar() {
             Live Matches
           </NavLink>
 
-          <NavLink to="/login" className={navLinkClass}>
-            Login
-          </NavLink>
+          {isAuthenticated ? (
+            <>
+              <NavLink to="/admin" className={navLinkClass}>
+                Dashboard
+              </NavLink>
+
+              <div className="flex items-center gap-3">
+                <span className="text-sm text-ananda-light-gold">
+                  {user?.fullName}
+                </span>
+
+                <button
+                  onClick={handleLogout}
+                  className="rounded-lg border border-ananda-gold px-3 py-1 text-sm text-ananda-gold hover:bg-ananda-gold hover:text-ananda-dark-maroon"
+                >
+                  Logout
+                </button>
+              </div>
+            </>
+          ) : (
+            <NavLink to="/login" className={navLinkClass}>
+              Login
+            </NavLink>
+          )}
         </nav>
       </div>
     </header>
