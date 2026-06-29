@@ -1,25 +1,40 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { getSportBySlug } from "../../services/sportService";
+import { getTeams } from "../../services/teamService";
 
-const sampleTeams = [
-  { id: "u14-a", name: "Under 14 A Team", ageGroup: "Under 14" },
-  { id: "u14-b", name: "Under 14 B Team", ageGroup: "Under 14" },
-  { id: "u16-a", name: "Under 16 A Team", ageGroup: "Under 16" },
-  { id: "first-xi", name: "1st XI Team", ageGroup: "Senior" },
+const ageGroupOptions = [
+  { value: "ALL", label: "All" },
+  { value: "UNDER_12", label: "Under 12" },
+  { value: "UNDER_14", label: "Under 14" },
+  { value: "UNDER_16", label: "Under 16" },
+  { value: "UNDER_18", label: "Under 18" },
+  { value: "UNDER_20", label: "Under 20" },
+  { value: "FIRST_TEAM", label: "First Team" },
+  { value: "SENIOR", label: "Senior" },
+  { value: "OPEN", label: "Open" },
 ];
+
+const getAgeGroupLabel = (value) => {
+  return ageGroupOptions.find((item) => item.value === value)?.label || value;
+};
 
 function SportDetails() {
   const { sportId } = useParams();
 
   const [sport, setSport] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [teams, setTeams] = useState([]);
+  const [selectedAgeGroup, setSelectedAgeGroup] = useState("ALL");
+
+  const [loadingSport, setLoadingSport] = useState(true);
+  const [loadingTeams, setLoadingTeams] = useState(true);
+
   const [error, setError] = useState("");
 
   useEffect(() => {
     const fetchSport = async () => {
       try {
-        setLoading(true);
+        setLoadingSport(true);
         setError("");
 
         const data = await getSportBySlug(sportId);
@@ -29,14 +44,35 @@ function SportDetails() {
           error.response?.data?.message || "Failed to load sport details."
         );
       } finally {
-        setLoading(false);
+        setLoadingSport(false);
       }
     };
 
     fetchSport();
   }, [sportId]);
 
-  if (loading) {
+  useEffect(() => {
+    const fetchTeams = async () => {
+      try {
+        setLoadingTeams(true);
+
+        const data = await getTeams({
+          sportSlug: sportId,
+          ageGroup: selectedAgeGroup,
+        });
+
+        setTeams(data.teams);
+      } catch (error) {
+        setError(error.response?.data?.message || "Failed to load teams.");
+      } finally {
+        setLoadingTeams(false);
+      }
+    };
+
+    fetchTeams();
+  }, [sportId, selectedAgeGroup]);
+
+  if (loadingSport) {
     return (
       <section className="mx-auto max-w-7xl px-6 py-12">
         <div className="rounded-2xl bg-white p-6 shadow-md">
@@ -83,7 +119,8 @@ function SportDetails() {
                 className="rounded-xl bg-ananda-cream p-4"
               >
                 <p className="font-semibold text-ananda-dark-maroon">
-                  {achievement.title} {achievement.year && `(${achievement.year})`}
+                  {achievement.title}{" "}
+                  {achievement.year && `(${achievement.year})`}
                 </p>
 
                 {achievement.description && (
@@ -102,39 +139,64 @@ function SportDetails() {
       </h2>
 
       <div className="mb-8 flex flex-wrap gap-3">
-        <button className="rounded-full bg-ananda-maroon px-5 py-2 text-white">
-          All
-        </button>
-        <button className="rounded-full border border-ananda-maroon px-5 py-2 text-ananda-maroon">
-          Under 12
-        </button>
-        <button className="rounded-full border border-ananda-maroon px-5 py-2 text-ananda-maroon">
-          Under 14
-        </button>
-        <button className="rounded-full border border-ananda-maroon px-5 py-2 text-ananda-maroon">
-          Under 16
-        </button>
-        <button className="rounded-full border border-ananda-maroon px-5 py-2 text-ananda-maroon">
-          Senior
-        </button>
-      </div>
-
-      <div className="grid gap-6 md:grid-cols-2">
-        {sampleTeams.map((team) => (
-          <Link
-            key={team.id}
-            to={`/teams/${team.id}`}
-            className="rounded-2xl bg-white p-6 shadow-md hover:shadow-lg"
+        {ageGroupOptions.map((ageGroup) => (
+          <button
+            key={ageGroup.value}
+            onClick={() => setSelectedAgeGroup(ageGroup.value)}
+            className={
+              selectedAgeGroup === ageGroup.value
+                ? "rounded-full bg-ananda-maroon px-5 py-2 text-white"
+                : "rounded-full border border-ananda-maroon px-5 py-2 text-ananda-maroon hover:bg-ananda-light-gold"
+            }
           >
-            <p className="mb-2 text-sm font-semibold text-ananda-gold">
-              {team.ageGroup}
-            </p>
-            <h3 className="text-2xl font-bold text-ananda-maroon">
-              {team.name}
-            </h3>
-          </Link>
+            {ageGroup.label}
+          </button>
         ))}
       </div>
+
+      {loadingTeams && (
+        <div className="rounded-2xl bg-white p-6 shadow-md">
+          Loading teams...
+        </div>
+      )}
+
+      {!loadingTeams && teams.length === 0 && (
+        <div className="rounded-2xl bg-white p-6 text-gray-700 shadow-md">
+          No teams added for this sport yet.
+        </div>
+      )}
+
+      {!loadingTeams && teams.length > 0 && (
+        <div className="grid gap-6 md:grid-cols-2">
+          {teams.map((team) => (
+            <Link
+              key={team._id}
+              to={`/teams/${team._id}`}
+              className="rounded-2xl bg-white p-6 shadow-md transition hover:-translate-y-1 hover:shadow-lg"
+            >
+              <p className="mb-2 text-sm font-semibold text-ananda-gold">
+                {getAgeGroupLabel(team.ageGroup)} | {team.year}
+              </p>
+
+              <h3 className="mb-3 text-2xl font-bold text-ananda-maroon">
+                {team.name}
+              </h3>
+
+              <div className="grid gap-3 text-sm text-gray-600 md:grid-cols-2">
+                <p>
+                  <span className="font-semibold">Coach:</span>{" "}
+                  {team.coachName || "Not added"}
+                </p>
+
+                <p>
+                  <span className="font-semibold">Captain:</span>{" "}
+                  {team.captain?.fullName || "Not added"}
+                </p>
+              </div>
+            </Link>
+          ))}
+        </div>
+      )}
     </section>
   );
 }

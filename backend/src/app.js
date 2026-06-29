@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 
 const authRoutes = require("./routes/authRoutes");
 const sportRoutes = require("./routes/sportRoutes");
+const teamRoutes = require("./routes/teamRoutes");
 
 const app = express();
 
@@ -38,5 +39,6 @@ app.get("/api/health", (req, res) => {
 
 app.use("/api/auth", authRoutes);
 app.use("/api/sports", sportRoutes);
+app.use("/api/teams", teamRoutes);
 
 module.exports = app;

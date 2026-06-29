@@ -11,6 +11,7 @@ import Login from "../pages/auth/Login";
 import AdminDashboard from "../pages/admin/AdminDashboard";
 import ProtectedRoute from "../components/common/ProtectedRoute";
 import AdminSports from "../pages/admin/AdminSports";
+import AdminTeams from "../pages/admin/AdminTeams";
 
 function AppRoutes() {
   return (
@@ -44,6 +45,14 @@ function AppRoutes() {
         element={
           <ProtectedRoute allowedRoles={["SUPER_ADMIN", "SPORTS_TEACHER"]}>
             <AdminSports />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/teams"
+        element={
+          <ProtectedRoute allowedRoles={["SUPER_ADMIN", "SPORTS_TEACHER"]}>
+            <AdminTeams />
           </ProtectedRoute>
         }
       />
