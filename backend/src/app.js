@@ -2,6 +2,8 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 
+const authRoutes = require("./routes/authRoutes");
+
 const app = express();
 
 app.use(
@@ -32,5 +34,7 @@ app.get("/api/health", (req, res) => {
     database: dbStatus[mongoose.connection.readyState],
   });
 });
+
+app.use("/api/auth", authRoutes);
 
 module.exports = app;
