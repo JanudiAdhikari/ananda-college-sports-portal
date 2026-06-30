@@ -67,6 +67,7 @@ ananda-college-sports-portal/
 │   └── package.json
 ├── package.json
 └── README.md
+```
 
 ## Local Setup
 
