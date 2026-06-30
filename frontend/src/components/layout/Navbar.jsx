@@ -36,6 +36,10 @@ function Navbar() {
             Sports
           </NavLink>
 
+          <NavLink to="/fixtures-results" className={navLinkClass}>
+            Fixtures
+          </NavLink>
+
           <NavLink to="/gallery" className={navLinkClass}>
             Gallery
           </NavLink>
