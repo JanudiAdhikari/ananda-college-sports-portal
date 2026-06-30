@@ -55,7 +55,7 @@ function AdminDashboard() {
   );
 
   return (
-    <section className="mx-auto max-w-7xl px-6 py-12">
+    <div>
       <p className="mb-2 text-sm font-semibold uppercase text-ananda-gold">
         {user?.role}
       </p>
@@ -90,7 +90,7 @@ function AdminDashboard() {
           </div>
         ))}
       </div>
-    </section>
+    </div>
   );
 }
 

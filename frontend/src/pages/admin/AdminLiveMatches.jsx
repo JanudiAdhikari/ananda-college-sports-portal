@@ -388,7 +388,7 @@ function AdminLiveMatches() {
   };
 
   return (
-    <section className="mx-auto max-w-7xl px-6 py-12">
+    <div>
       <p className="mb-2 text-sm font-semibold uppercase text-ananda-gold">
         Admin Panel
       </p>
@@ -857,7 +857,7 @@ function AdminLiveMatches() {
           )}
         </div>
       </div>
-    </section>
+    </div>
   );
 }
 
