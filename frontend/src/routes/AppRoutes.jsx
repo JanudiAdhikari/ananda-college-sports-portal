@@ -16,6 +16,11 @@ import AdminPlayers from "../pages/admin/AdminPlayers";
 import AdminUsers from "../pages/admin/AdminUsers";
 import GalleryAlbumDetails from "../pages/public/GalleryAlbumDetails";
 import AdminGallery from "../pages/admin/AdminGallery";
+import AdminLiveMatches from "../pages/admin/AdminLiveMatches";
+import FixturesResults from "../pages/public/FixturesResults";
+import AdminFixtures from "../pages/admin/AdminFixtures";
+import AdminLayout from "../components/layout/AdminLayout";
+import NotFound from "../pages/public/NotFound";
 
 function AppRoutes() {
   return (
@@ -29,6 +34,8 @@ function AppRoutes() {
       <Route path="/live-matches" element={<LiveMatches />} />
       <Route path="/login" element={<Login />} />
       <Route path="/gallery/:albumSlug" element={<GalleryAlbumDetails />} />
+      <Route path="/fixtures-results" element={<FixturesResults />} />
+      <Route path="/fixtures-results" element={<FixturesResults />} />
       <Route
         path="/admin"
         element={
@@ -40,7 +47,9 @@ function AppRoutes() {
               "VIDEO_CLUB",
             ]}
           >
-            <AdminDashboard />
+            <AdminLayout>
+              <AdminDashboard />
+            </AdminLayout>
           </ProtectedRoute>
         }
       />
@@ -48,7 +57,9 @@ function AppRoutes() {
         path="/admin/sports"
         element={
           <ProtectedRoute allowedRoles={["SUPER_ADMIN", "SPORTS_TEACHER"]}>
-            <AdminSports />
+            <AdminLayout>
+              <AdminSports />
+            </AdminLayout>
           </ProtectedRoute>
         }
       />
@@ -56,7 +67,9 @@ function AppRoutes() {
         path="/admin/teams"
         element={
           <ProtectedRoute allowedRoles={["SUPER_ADMIN", "SPORTS_TEACHER"]}>
-            <AdminTeams />
+            <AdminLayout>
+              <AdminTeams />
+            </AdminLayout>
           </ProtectedRoute>
         }
       />
@@ -64,7 +77,9 @@ function AppRoutes() {
         path="/admin/players"
         element={
           <ProtectedRoute allowedRoles={["SUPER_ADMIN", "SPORTS_TEACHER"]}>
-            <AdminPlayers />
+            <AdminLayout>
+              <AdminPlayers />
+            </AdminLayout>
           </ProtectedRoute>
         }
       />
@@ -72,7 +87,9 @@ function AppRoutes() {
         path="/admin/users"
         element={
           <ProtectedRoute allowedRoles={["SUPER_ADMIN", "SPORTS_TEACHER"]}>
-            <AdminUsers />
+            <AdminLayout>
+              <AdminUsers />
+            </AdminLayout>
           </ProtectedRoute>
         }
       />
@@ -82,10 +99,36 @@ function AppRoutes() {
           <ProtectedRoute
             allowedRoles={["SUPER_ADMIN", "SPORTS_TEACHER", "PHOTO_CLUB"]}
           >
-            <AdminGallery />
+            <AdminLayout>
+              <AdminGallery />
+            </AdminLayout>
           </ProtectedRoute>
         }
       />
+      <Route
+        path="/admin/live-matches"
+        element={
+          <ProtectedRoute
+            allowedRoles={["SUPER_ADMIN", "SPORTS_TEACHER", "VIDEO_CLUB"]}
+          >
+            <AdminLayout>
+              <AdminLiveMatches />
+            </AdminLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/fixtures"
+        element={
+          <ProtectedRoute allowedRoles={["SUPER_ADMIN", "SPORTS_TEACHER"]}>
+            <AdminLayout>
+              <AdminFixtures />
+            </AdminLayout>
+          </ProtectedRoute>
+        }
+      />
+
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }

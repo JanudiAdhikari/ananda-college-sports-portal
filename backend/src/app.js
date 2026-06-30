@@ -7,12 +7,29 @@ const sportRoutes = require("./routes/sportRoutes");
 const teamRoutes = require("./routes/teamRoutes");
 const playerRoutes = require("./routes/playerRoutes");
 const galleryRoutes = require("./routes/galleryRoutes");
+const liveMatchRoutes = require("./routes/liveMatchRoutes");
+const fixtureRoutes = require("./routes/fixtureRoutes");
+
+const {
+  notFound,
+  errorHandler,
+} = require("./middleware/errorMiddleware");
 
 const app = express();
 
+const allowedOrigins = process.env.ALLOWED_ORIGINS
+  ? process.env.ALLOWED_ORIGINS.split(",").map((origin) => origin.trim())
+  : [process.env.CLIENT_URL || "http://localhost:5173"];
+
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || "http://localhost:5173",
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
   })
 );
@@ -36,6 +53,7 @@ app.get("/api/health", (req, res) => {
     success: true,
     message: "Backend server is healthy",
     database: dbStatus[mongoose.connection.readyState],
+    environment: process.env.NODE_ENV || "development",
   });
 });
 
@@ -44,5 +62,10 @@ app.use("/api/sports", sportRoutes);
 app.use("/api/teams", teamRoutes);
 app.use("/api/players", playerRoutes);
 app.use("/api/gallery", galleryRoutes);
+app.use("/api/live-matches", liveMatchRoutes);
+app.use("/api/fixtures", fixtureRoutes);
+
+app.use(notFound);
+app.use(errorHandler);
 
 module.exports = app;
