@@ -16,6 +16,7 @@ import AdminPlayers from "../pages/admin/AdminPlayers";
 import AdminUsers from "../pages/admin/AdminUsers";
 import GalleryAlbumDetails from "../pages/public/GalleryAlbumDetails";
 import AdminGallery from "../pages/admin/AdminGallery";
+import AdminLiveMatches from "../pages/admin/AdminLiveMatches";
 
 function AppRoutes() {
   return (
@@ -83,6 +84,16 @@ function AppRoutes() {
             allowedRoles={["SUPER_ADMIN", "SPORTS_TEACHER", "PHOTO_CLUB"]}
           >
             <AdminGallery />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/live-matches"
+        element={
+          <ProtectedRoute
+            allowedRoles={["SUPER_ADMIN", "SPORTS_TEACHER", "VIDEO_CLUB"]}
+          >
+            <AdminLiveMatches />
           </ProtectedRoute>
         }
       />

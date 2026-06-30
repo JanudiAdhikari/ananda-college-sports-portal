@@ -7,6 +7,7 @@ const sportRoutes = require("./routes/sportRoutes");
 const teamRoutes = require("./routes/teamRoutes");
 const playerRoutes = require("./routes/playerRoutes");
 const galleryRoutes = require("./routes/galleryRoutes");
+const liveMatchRoutes = require("./routes/liveMatchRoutes");
 
 const app = express();
 
@@ -44,5 +45,6 @@ app.use("/api/sports", sportRoutes);
 app.use("/api/teams", teamRoutes);
 app.use("/api/players", playerRoutes);
 app.use("/api/gallery", galleryRoutes);
+app.use("/api/live-matches", liveMatchRoutes);
 
 module.exports = app;
