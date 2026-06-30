@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600&display=swap');
 
 @theme {
   --color-ananda-maroon: #7a0c0c;
@@ -6,4 +7,34 @@
   --color-ananda-gold: #d4af37;
   --color-ananda-light-gold: #f5e6a8;
   --color-ananda-cream: #fff8e1;
+  --font-display: "Oswald", sans-serif;
+  --font-body: "Inter", sans-serif;
+}
+
+body {
+  font-family: var(--font-body);
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.85); }
+}
+.live-dot {
+  animation: pulse-dot 1.6s ease-in-out infinite;
+}
+
+@keyframes reveal {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.reveal {
+  animation: reveal 0.6s ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .live-dot, .reveal { animation: none; }
 }

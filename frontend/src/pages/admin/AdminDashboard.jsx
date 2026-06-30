@@ -1,5 +1,36 @@
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
+
+// Scroll-triggered reveal wrapper — fades sections in once
+function Reveal({ children, className = "" }) {
+  const ref = useRef(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const node = ref.current;
+    if (!node) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.15 }
+    );
+
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div ref={ref} className={`${visible ? "reveal" : "opacity-0"} ${className}`}>
+      {children}
+    </div>
+  );
+}
 
 function AdminDashboard() {
   const { user } = useAuth();
@@ -51,45 +82,48 @@ function AdminDashboard() {
   ];
 
   const allowedItems = dashboardItems.filter((item) =>
-    item.roles.includes(user?.role),
+    item.roles.includes(user?.role)
   );
 
   return (
     <div>
-      <p className="mb-2 text-sm font-semibold uppercase text-ananda-gold">
-        {user?.role}
+      <p className="font-display mb-1 text-xs font-semibold uppercase tracking-wider text-ananda-gold">
+        Welcome Back
       </p>
 
-      <h1 className="mb-2 text-3xl font-bold text-ananda-dark-maroon">
+      <h1 className="font-display mb-2 text-3xl font-bold uppercase tracking-tight text-ananda-dark-maroon">
         Admin Dashboard
       </h1>
 
-      <p className="mb-8 text-gray-700">
-        Welcome, {user?.fullName}. Manage the sections you have permission to
-        access.
+      <p className="mb-8 text-sm text-gray-600">
+        Hello, {user?.fullName}. Select a section below to manage portal content and configurations.
       </p>
 
-      <div className="grid gap-6 md:grid-cols-3">
+      <Reveal className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {allowedItems.map((item) => (
           <div
             key={item.title}
-            className="rounded-2xl bg-white p-6 shadow-md transition hover:-translate-y-1 hover:shadow-lg"
+            className="group rounded-2xl border border-ananda-gold/15 bg-white p-6 shadow-sm transition duration-350 hover:-translate-y-1 hover:border-ananda-gold/30 hover:shadow-md flex flex-col justify-between"
           >
-            <h2 className="text-xl font-bold text-ananda-maroon">
-              {item.title}
-            </h2>
+            <div>
+              <h2 className="font-display text-lg font-bold uppercase tracking-tight text-ananda-maroon group-hover:text-ananda-dark-maroon transition duration-300">
+                {item.title}
+              </h2>
 
-            <p className="mt-2 text-gray-600">{item.description}</p>
+              <p className="mt-2 text-xs text-gray-600 leading-relaxed">
+                {item.description}
+              </p>
+            </div>
 
             <Link
               to={item.path}
-              className="mt-5 inline-block rounded-xl bg-ananda-maroon px-4 py-2 text-sm font-semibold text-white hover:bg-ananda-dark-maroon"
+              className="mt-6 inline-block text-center font-display text-[11px] font-bold uppercase tracking-wider bg-ananda-maroon text-white hover:bg-ananda-dark-maroon px-4 py-2.5 rounded-xl transition duration-300 shadow-sm hover:scale-[1.02]"
             >
-              Manage
+              Manage {item.title}
             </Link>
           </div>
         ))}
-      </div>
+      </Reveal>
     </div>
   );
 }
