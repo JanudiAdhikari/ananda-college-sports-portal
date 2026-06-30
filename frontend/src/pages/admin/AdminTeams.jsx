@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getSports } from "../../services/sportService";
 import {
   createTeam,
@@ -33,6 +33,36 @@ const ageGroupOptions = [
 const getAgeGroupLabel = (value) => {
   return ageGroupOptions.find((item) => item.value === value)?.label || value;
 };
+
+// Scroll-triggered reveal wrapper — fades sections in once
+function Reveal({ children, className = "" }) {
+  const ref = useRef(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const node = ref.current;
+    if (!node) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.15 }
+    );
+
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div ref={ref} className={`${visible ? "reveal" : "opacity-0"} ${className}`}>
+      {children}
+    </div>
+  );
+}
 
 function AdminTeams() {
   const [sports, setSports] = useState([]);
@@ -271,58 +301,66 @@ function AdminTeams() {
 
   return (
     <div>
-      <p className="mb-2 text-sm font-semibold uppercase text-ananda-gold">
+      <p className="font-display mb-1 text-xs font-semibold uppercase tracking-wider text-ananda-gold">
         Admin Panel
       </p>
 
-      <h1 className="mb-2 text-3xl font-bold text-ananda-dark-maroon">
+      <h1 className="font-display mb-2 text-3xl font-bold uppercase tracking-tight text-ananda-dark-maroon">
         Manage Teams
       </h1>
 
-      <p className="mb-8 text-gray-700">
+      <p className="mb-8 text-sm text-gray-600">
         Add teams under each sport, age group, and year.
       </p>
 
       {message && (
-        <div className="mb-6 rounded-xl bg-green-50 px-4 py-3 text-green-700">
+        <div className="mb-6 rounded-xl bg-green-50 border border-green-200 px-4 py-3 text-sm font-semibold text-green-700">
           {message}
         </div>
       )}
 
       {error && (
-        <div className="mb-6 rounded-xl bg-red-50 px-4 py-3 text-red-700">
+        <div className="mb-6 rounded-xl bg-red-50 border border-red-200 px-4 py-3 text-sm font-semibold text-red-700">
           {error}
         </div>
       )}
 
       <div className="grid gap-8 lg:grid-cols-3">
-        <div className="rounded-2xl bg-white p-6 shadow-md lg:col-span-1">
-          <h2 className="mb-5 text-xl font-bold text-ananda-maroon">
+        {/* Form Column */}
+        <Reveal className="rounded-2xl border border-ananda-gold/15 bg-white p-6 shadow-sm lg:col-span-1 h-fit">
+          <h2 className="font-display mb-5 text-lg font-bold uppercase tracking-tight text-ananda-maroon">
             {editingTeamId ? "Edit Team" : "Add New Team"}
           </h2>
 
           <form className="space-y-5" onSubmit={handleSubmit}>
             <div>
-              <label className="mb-2 block font-semibold text-gray-700">
+              <label className="font-display text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5 block">
                 Sport
               </label>
-              <select
-                name="sport"
-                value={formData.sport}
-                onChange={handleChange}
-                className="w-full rounded-xl border border-gray-300 px-4 py-3 outline-none focus:border-ananda-maroon"
-                required
-              >
-                {sports.map((sport) => (
-                  <option key={sport._id} value={sport._id}>
-                    {sport.name}
-                  </option>
-                ))}
-              </select>
+              <div className="relative">
+                <select
+                  name="sport"
+                  value={formData.sport}
+                  onChange={handleChange}
+                  className="w-full appearance-none rounded-xl border border-ananda-gold/25 bg-white px-4 py-3 pr-10 outline-none focus:border-ananda-maroon focus:ring-1 focus:ring-ananda-maroon transition shadow-sm text-sm"
+                  required
+                >
+                  {sports.map((sport) => (
+                    <option key={sport._id} value={sport._id}>
+                      {sport.name}
+                    </option>
+                  ))}
+                </select>
+                <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-4 text-gray-500">
+                  <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </div>
             </div>
 
             <div>
-              <label className="mb-2 block font-semibold text-gray-700">
+              <label className="font-display text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5 block">
                 Team Name
               </label>
               <input
@@ -331,32 +369,39 @@ function AdminTeams() {
                 value={formData.name}
                 onChange={handleChange}
                 placeholder="Example: Under 14 A Team"
-                className="w-full rounded-xl border border-gray-300 px-4 py-3 outline-none focus:border-ananda-maroon"
+                className="w-full rounded-xl border border-ananda-gold/25 bg-white px-4 py-3 outline-none focus:border-ananda-maroon focus:ring-1 focus:ring-ananda-maroon transition shadow-sm text-sm"
                 required
               />
             </div>
 
             <div>
-              <label className="mb-2 block font-semibold text-gray-700">
+              <label className="font-display text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5 block">
                 Age Group
               </label>
-              <select
-                name="ageGroup"
-                value={formData.ageGroup}
-                onChange={handleChange}
-                className="w-full rounded-xl border border-gray-300 px-4 py-3 outline-none focus:border-ananda-maroon"
-                required
-              >
-                {ageGroupOptions.map((ageGroup) => (
-                  <option key={ageGroup.value} value={ageGroup.value}>
-                    {ageGroup.label}
-                  </option>
-                ))}
-              </select>
+              <div className="relative">
+                <select
+                  name="ageGroup"
+                  value={formData.ageGroup}
+                  onChange={handleChange}
+                  className="w-full appearance-none rounded-xl border border-ananda-gold/25 bg-white px-4 py-3 pr-10 outline-none focus:border-ananda-maroon focus:ring-1 focus:ring-ananda-maroon transition shadow-sm text-sm"
+                  required
+                >
+                  {ageGroupOptions.map((ageGroup) => (
+                    <option key={ageGroup.value} value={ageGroup.value}>
+                      {ageGroup.label}
+                    </option>
+                  ))}
+                </select>
+                <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-4 text-gray-500">
+                  <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </div>
             </div>
 
             <div>
-              <label className="mb-2 block font-semibold text-gray-700">
+              <label className="font-display text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5 block">
                 Year
               </label>
               <input
@@ -364,13 +409,13 @@ function AdminTeams() {
                 name="year"
                 value={formData.year}
                 onChange={handleChange}
-                className="w-full rounded-xl border border-gray-300 px-4 py-3 outline-none focus:border-ananda-maroon"
+                className="w-full rounded-xl border border-ananda-gold/25 bg-white px-4 py-3 outline-none focus:border-ananda-maroon focus:ring-1 focus:ring-ananda-maroon transition shadow-sm text-sm"
                 required
               />
             </div>
 
             <div>
-              <label className="mb-2 block font-semibold text-gray-700">
+              <label className="font-display text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5 block">
                 Coach Name
               </label>
               <input
@@ -379,12 +424,12 @@ function AdminTeams() {
                 value={formData.coachName}
                 onChange={handleChange}
                 placeholder="Coach name"
-                className="w-full rounded-xl border border-gray-300 px-4 py-3 outline-none focus:border-ananda-maroon"
+                className="w-full rounded-xl border border-ananda-gold/25 bg-white px-4 py-3 outline-none focus:border-ananda-maroon focus:ring-1 focus:ring-ananda-maroon transition shadow-sm text-sm"
               />
             </div>
 
             <div>
-              <label className="mb-2 block font-semibold text-gray-700">
+              <label className="font-display text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5 block">
                 Assistant Coach Name
               </label>
               <input
@@ -393,12 +438,12 @@ function AdminTeams() {
                 value={formData.assistantCoachName}
                 onChange={handleChange}
                 placeholder="Assistant coach name"
-                className="w-full rounded-xl border border-gray-300 px-4 py-3 outline-none focus:border-ananda-maroon"
+                className="w-full rounded-xl border border-ananda-gold/25 bg-white px-4 py-3 outline-none focus:border-ananda-maroon focus:ring-1 focus:ring-ananda-maroon transition shadow-sm text-sm"
               />
             </div>
 
             <div>
-              <label className="mb-2 block font-semibold text-gray-700">
+              <label className="font-display text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5 block">
                 Team Summary
               </label>
               <textarea
@@ -407,136 +452,164 @@ function AdminTeams() {
                 onChange={handleChange}
                 rows="5"
                 placeholder="Write a short summary about this team..."
-                className="w-full rounded-xl border border-gray-300 px-4 py-3 outline-none focus:border-ananda-maroon"
+                className="w-full rounded-xl border border-ananda-gold/25 bg-white px-4 py-3 outline-none focus:border-ananda-maroon focus:ring-1 focus:ring-ananda-maroon transition shadow-sm text-sm"
               />
             </div>
 
-            <button
-              type="submit"
-              disabled={saving}
-              className="w-full rounded-xl bg-ananda-maroon px-6 py-3 font-semibold text-white hover:bg-ananda-dark-maroon disabled:cursor-not-allowed disabled:opacity-70"
-            >
-              {saving
-                ? "Saving..."
-                : editingTeamId
-                  ? "Update Team"
-                  : "Add Team"}
-            </button>
-
-            {editingTeamId && (
+            <div className="space-y-2">
               <button
-                type="button"
-                onClick={handleCancelEdit}
-                className="w-full rounded-xl border border-ananda-maroon px-6 py-3 font-semibold text-ananda-maroon hover:bg-ananda-light-gold"
+                type="submit"
+                disabled={saving}
+                className="w-full rounded-xl bg-ananda-maroon px-6 py-3 font-semibold text-white hover:bg-ananda-dark-maroon disabled:cursor-not-allowed disabled:opacity-70 transition duration-300 font-display text-xs font-bold uppercase tracking-wider cursor-pointer hover:scale-[1.01]"
               >
-                Cancel Edit
+                {saving
+                  ? "Saving..."
+                  : editingTeamId
+                    ? "Update Team"
+                    : "Add Team"}
               </button>
-            )}
-          </form>
-        </div>
 
-        <div className="rounded-2xl bg-white p-6 shadow-md lg:col-span-2">
-          <div className="mb-5 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-            <h2 className="text-xl font-bold text-ananda-maroon">
+              {editingTeamId && (
+                <button
+                  type="button"
+                  onClick={handleCancelEdit}
+                  className="w-full rounded-xl border border-ananda-maroon/30 px-6 py-3 font-semibold text-ananda-maroon hover:bg-ananda-cream/45 transition duration-300 font-display text-xs font-bold uppercase tracking-wider cursor-pointer"
+                >
+                  Cancel Edit
+                </button>
+              )}
+            </div>
+          </form>
+        </Reveal>
+
+        {/* List Column */}
+        <Reveal className="rounded-2xl border border-ananda-gold/15 bg-white p-6 shadow-sm lg:col-span-2">
+          <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <h2 className="font-display text-lg font-bold uppercase tracking-tight text-ananda-maroon">
               Teams List
             </h2>
 
-            <div className="grid gap-3 md:grid-cols-2">
-              <select
-                value={filterSport}
-                onChange={handleFilterSportChange}
-                className="rounded-xl border border-gray-300 px-4 py-2 outline-none focus:border-ananda-maroon"
-              >
-                <option value="">All Sports</option>
-                {sports.map((sport) => (
-                  <option key={sport._id} value={sport._id}>
-                    {sport.name}
-                  </option>
-                ))}
-              </select>
+            <div className="grid gap-3 grid-cols-2">
+              {/* Sport Filter */}
+              <div className="relative">
+                <select
+                  value={filterSport}
+                  onChange={handleFilterSportChange}
+                  className="appearance-none rounded-xl border border-ananda-gold/25 bg-white pl-3 pr-8 py-2 text-xs font-semibold uppercase tracking-wider outline-none focus:border-ananda-maroon focus:ring-1 focus:ring-ananda-maroon transition shadow-sm"
+                >
+                  <option value="">All Sports</option>
+                  {sports.map((sport) => (
+                    <option key={sport._id} value={sport._id}>
+                      {sport.name}
+                    </option>
+                  ))}
+                </select>
+                <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2.5 text-gray-505">
+                  <svg className="h-3 w-3 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </div>
 
-              <select
-                value={filterAgeGroup}
-                onChange={handleFilterAgeGroupChange}
-                className="rounded-xl border border-gray-300 px-4 py-2 outline-none focus:border-ananda-maroon"
-              >
-                <option value="ALL">All Age Groups</option>
-                {ageGroupOptions.map((ageGroup) => (
-                  <option key={ageGroup.value} value={ageGroup.value}>
-                    {ageGroup.label}
-                  </option>
-                ))}
-              </select>
+              {/* Age Group Filter */}
+              <div className="relative">
+                <select
+                  value={filterAgeGroup}
+                  onChange={handleFilterAgeGroupChange}
+                  className="appearance-none rounded-xl border border-ananda-gold/25 bg-white pl-3 pr-8 py-2 text-xs font-semibold uppercase tracking-wider outline-none focus:border-ananda-maroon focus:ring-1 focus:ring-ananda-maroon transition shadow-sm"
+                >
+                  <option value="ALL">All Ages</option>
+                  {ageGroupOptions.map((ageGroup) => (
+                    <option key={ageGroup.value} value={ageGroup.value}>
+                      {ageGroup.label}
+                    </option>
+                  ))}
+                </select>
+                <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2.5 text-gray-505">
+                  <svg className="h-3 w-3 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </div>
             </div>
           </div>
 
-          {loading && <p className="text-gray-600">Loading teams...</p>}
+          {loading && (
+            <div className="flex flex-col items-center gap-3 py-16 text-center">
+              <div className="h-8 w-8 animate-spin rounded-full border-4 border-ananda-gold/30 border-t-ananda-maroon" />
+              <p className="font-display text-xs uppercase tracking-wider text-ananda-maroon animate-pulse">Loading teams...</p>
+            </div>
+          )}
 
           {!loading && teams.length === 0 && (
-            <p className="text-gray-600">No teams found.</p>
+            <div className="rounded-xl border border-dashed border-gray-200 bg-gray-50 p-8 text-center text-sm text-gray-500">
+              No teams found matching the filters.
+            </div>
           )}
 
           {!loading && teams.length > 0 && (
-            <div className="overflow-x-auto">
-              <table className="w-full border-collapse text-left">
-                <thead>
-                  <tr className="border-b bg-ananda-cream text-sm text-ananda-dark-maroon">
-                    <th className="px-4 py-3">Team</th>
-                    <th className="px-4 py-3">Sport</th>
-                    <th className="px-4 py-3">Age Group</th>
-                    <th className="px-4 py-3">Year</th>
-                    <th className="px-4 py-3">Actions</th>
-                  </tr>
-                </thead>
-
-                <tbody>
-                  {teams.map((team) => (
-                    <tr key={team._id} className="border-b">
-                      <td className="px-4 py-4">
-                        <p className="font-semibold text-ananda-dark-maroon">
-                          {team.name}
-                        </p>
-                        <p className="text-sm text-gray-500">
-                          Coach: {team.coachName || "Not added"}
-                        </p>
-                      </td>
-
-                      <td className="px-4 py-4 text-gray-700">
-                        {team.sport?.name || "Not added"}
-                      </td>
-
-                      <td className="px-4 py-4 text-gray-700">
-                        {getAgeGroupLabel(team.ageGroup)}
-                      </td>
-
-                      <td className="px-4 py-4 text-gray-700">
-                        {team.year}
-                      </td>
-
-                      <td className="px-4 py-4">
-                        <div className="flex flex-wrap gap-2">
-                          <button
-                            onClick={() => handleEdit(team)}
-                            className="rounded-lg bg-ananda-gold px-3 py-2 text-sm font-semibold text-ananda-dark-maroon hover:opacity-90"
-                          >
-                            Edit
-                          </button>
-
-                          <button
-                            onClick={() => handleDelete(team._id)}
-                            className="rounded-lg bg-red-600 px-3 py-2 text-sm font-semibold text-white hover:bg-red-700"
-                          >
-                            Delete
-                          </button>
-                        </div>
-                      </td>
+            <div className="overflow-hidden border border-ananda-gold/15 rounded-2xl shadow-sm">
+              <div className="overflow-x-auto">
+                <table className="w-full border-collapse text-left">
+                  <thead>
+                    <tr className="border-b border-ananda-gold/15 bg-ananda-cream/35 font-display text-xs font-bold uppercase tracking-wider text-ananda-dark-maroon">
+                      <th className="px-5 py-4">Team</th>
+                      <th className="px-5 py-4">Sport</th>
+                      <th className="px-5 py-4">Age Group</th>
+                      <th className="px-5 py-4">Year</th>
+                      <th className="px-5 py-4 text-right">Actions</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+
+                  <tbody className="divide-y divide-gray-100">
+                    {teams.map((team) => (
+                      <tr key={team._id} className="hover:bg-gray-50/50 transition">
+                        <td className="px-5 py-4">
+                          <p className="font-semibold text-ananda-dark-maroon">
+                            {team.name}
+                          </p>
+                          <p className="text-xs text-gray-400">
+                            Coach: {team.coachName || "Not added"}
+                          </p>
+                        </td>
+
+                        <td className="px-5 py-4 text-sm text-gray-700 font-semibold">
+                          {team.sport?.name || "Not added"}
+                        </td>
+
+                        <td className="px-5 py-4 text-xs font-bold uppercase tracking-wider text-gray-500">
+                          {getAgeGroupLabel(team.ageGroup)}
+                        </td>
+
+                        <td className="px-5 py-4 text-sm font-semibold text-gray-700">
+                          {team.year}
+                        </td>
+
+                        <td className="px-5 py-4 text-right">
+                          <div className="flex justify-end gap-2">
+                            <button
+                              onClick={() => handleEdit(team)}
+                              className="font-display text-[10px] font-bold uppercase tracking-wider bg-ananda-gold hover:bg-ananda-light-gold text-ananda-dark-maroon px-3 py-1.5 rounded-lg transition duration-250 cursor-pointer"
+                            >
+                              Edit
+                            </button>
+
+                            <button
+                              onClick={() => handleDelete(team._id)}
+                              className="font-display text-[10px] font-bold uppercase tracking-wider bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-lg transition duration-250 cursor-pointer"
+                            >
+                              Delete
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           )}
-        </div>
+        </Reveal>
       </div>
     </div>
   );

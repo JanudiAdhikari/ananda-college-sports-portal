@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   createSport,
   deleteSport,
@@ -12,6 +12,36 @@ const initialFormData = {
   description: "",
   displayOrder: 0,
 };
+
+// Scroll-triggered reveal wrapper — fades sections in once
+function Reveal({ children, className = "" }) {
+  const ref = useRef(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const node = ref.current;
+    if (!node) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.15 }
+    );
+
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div ref={ref} className={`${visible ? "reveal" : "opacity-0"} ${className}`}>
+      {children}
+    </div>
+  );
+}
 
 function AdminSports() {
   const [sports, setSports] = useState([]);
@@ -153,39 +183,40 @@ function AdminSports() {
 
   return (
     <div>
-      <p className="mb-2 text-sm font-semibold uppercase text-ananda-gold">
+      <p className="font-display mb-1 text-xs font-semibold uppercase tracking-wider text-ananda-gold">
         Admin Panel
       </p>
 
-      <h1 className="mb-2 text-3xl font-bold text-ananda-dark-maroon">
+      <h1 className="font-display mb-2 text-3xl font-bold uppercase tracking-tight text-ananda-dark-maroon">
         Manage Sports
       </h1>
 
-      <p className="mb-8 text-gray-700">
+      <p className="mb-8 text-sm text-gray-600">
         Add, edit, and delete sports available at Ananda College.
       </p>
 
       {message && (
-        <div className="mb-6 rounded-xl bg-green-50 px-4 py-3 text-green-700">
+        <div className="mb-6 rounded-xl bg-green-50 border border-green-200 px-4 py-3 text-sm font-semibold text-green-700">
           {message}
         </div>
       )}
 
       {error && (
-        <div className="mb-6 rounded-xl bg-red-50 px-4 py-3 text-red-700">
+        <div className="mb-6 rounded-xl bg-red-50 border border-red-200 px-4 py-3 text-sm font-semibold text-red-700">
           {error}
         </div>
       )}
 
       <div className="grid gap-8 lg:grid-cols-3">
-        <div className="rounded-2xl bg-white p-6 shadow-md lg:col-span-1">
-          <h2 className="mb-5 text-xl font-bold text-ananda-maroon">
+        {/* Form Column */}
+        <Reveal className="rounded-2xl border border-ananda-gold/15 bg-white p-6 shadow-sm lg:col-span-1 h-fit">
+          <h2 className="font-display mb-5 text-lg font-bold uppercase tracking-tight text-ananda-maroon">
             {editingSportId ? "Edit Sport" : "Add New Sport"}
           </h2>
 
           <form className="space-y-5" onSubmit={handleSubmit}>
             <div>
-              <label className="mb-2 block font-semibold text-gray-700">
+              <label className="font-display text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5 block">
                 Sport Name
               </label>
               <input
@@ -194,31 +225,38 @@ function AdminSports() {
                 value={formData.name}
                 onChange={handleChange}
                 placeholder="Example: Cricket"
-                className="w-full rounded-xl border border-gray-300 px-4 py-3 outline-none focus:border-ananda-maroon"
+                className="w-full rounded-xl border border-ananda-gold/25 bg-white px-4 py-3 outline-none focus:border-ananda-maroon focus:ring-1 focus:ring-ananda-maroon transition shadow-sm text-sm"
                 required
               />
             </div>
 
             <div>
-              <label className="mb-2 block font-semibold text-gray-700">
+              <label className="font-display text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5 block">
                 Category
               </label>
-              <select
-                name="category"
-                value={formData.category}
-                onChange={handleChange}
-                className="w-full rounded-xl border border-gray-300 px-4 py-3 outline-none focus:border-ananda-maroon"
-              >
-                <option value="TEAM">Team Sport</option>
-                <option value="INDIVIDUAL">Individual Sport</option>
-                <option value="AQUATIC">Aquatic Sport</option>
-                <option value="ATHLETICS">Athletics</option>
-                <option value="OTHER">Other</option>
-              </select>
+              <div className="relative">
+                <select
+                  name="category"
+                  value={formData.category}
+                  onChange={handleChange}
+                  className="w-full appearance-none rounded-xl border border-ananda-gold/25 bg-white px-4 py-3 pr-10 outline-none focus:border-ananda-maroon focus:ring-1 focus:ring-ananda-maroon transition shadow-sm text-sm"
+                >
+                  <option value="TEAM">Team Sport</option>
+                  <option value="INDIVIDUAL">Individual Sport</option>
+                  <option value="AQUATIC">Aquatic Sport</option>
+                  <option value="ATHLETICS">Athletics</option>
+                  <option value="OTHER">Other</option>
+                </select>
+                <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-4 text-gray-500">
+                  <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </div>
             </div>
 
             <div>
-              <label className="mb-2 block font-semibold text-gray-700">
+              <label className="font-display text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5 block">
                 Display Order
               </label>
               <input
@@ -226,12 +264,12 @@ function AdminSports() {
                 name="displayOrder"
                 value={formData.displayOrder}
                 onChange={handleChange}
-                className="w-full rounded-xl border border-gray-300 px-4 py-3 outline-none focus:border-ananda-maroon"
+                className="w-full rounded-xl border border-ananda-gold/25 bg-white px-4 py-3 outline-none focus:border-ananda-maroon focus:ring-1 focus:ring-ananda-maroon transition shadow-sm text-sm"
               />
             </div>
 
             <div>
-              <label className="mb-2 block font-semibold text-gray-700">
+              <label className="font-display text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5 block">
                 Description
               </label>
               <textarea
@@ -240,101 +278,113 @@ function AdminSports() {
                 onChange={handleChange}
                 rows="5"
                 placeholder="Write a short description about this sport..."
-                className="w-full rounded-xl border border-gray-300 px-4 py-3 outline-none focus:border-ananda-maroon"
+                className="w-full rounded-xl border border-ananda-gold/25 bg-white px-4 py-3 outline-none focus:border-ananda-maroon focus:ring-1 focus:ring-ananda-maroon transition shadow-sm text-sm"
               />
             </div>
 
-            <button
-              type="submit"
-              disabled={saving}
-              className="w-full rounded-xl bg-ananda-maroon px-6 py-3 font-semibold text-white hover:bg-ananda-dark-maroon disabled:cursor-not-allowed disabled:opacity-70"
-            >
-              {saving
-                ? "Saving..."
-                : editingSportId
-                  ? "Update Sport"
-                  : "Add Sport"}
-            </button>
-
-            {editingSportId && (
+            <div className="space-y-2">
               <button
-                type="button"
-                onClick={handleCancelEdit}
-                className="w-full rounded-xl border border-ananda-maroon px-6 py-3 font-semibold text-ananda-maroon hover:bg-ananda-light-gold"
+                type="submit"
+                disabled={saving}
+                className="w-full rounded-xl bg-ananda-maroon px-6 py-3 font-semibold text-white hover:bg-ananda-dark-maroon disabled:cursor-not-allowed disabled:opacity-70 transition duration-300 font-display text-xs font-bold uppercase tracking-wider cursor-pointer hover:scale-[1.01]"
               >
-                Cancel Edit
+                {saving
+                  ? "Saving..."
+                  : editingSportId
+                    ? "Update Sport"
+                    : "Add Sport"}
               </button>
-            )}
-          </form>
-        </div>
 
-        <div className="rounded-2xl bg-white p-6 shadow-md lg:col-span-2">
-          <h2 className="mb-5 text-xl font-bold text-ananda-maroon">
+              {editingSportId && (
+                <button
+                  type="button"
+                  onClick={handleCancelEdit}
+                  className="w-full rounded-xl border border-ananda-maroon/30 px-6 py-3 font-semibold text-ananda-maroon hover:bg-ananda-cream/45 transition duration-300 font-display text-xs font-bold uppercase tracking-wider cursor-pointer"
+                >
+                  Cancel Edit
+                </button>
+              )}
+            </div>
+          </form>
+        </Reveal>
+
+        {/* List Column */}
+        <Reveal className="rounded-2xl border border-ananda-gold/15 bg-white p-6 shadow-sm lg:col-span-2">
+          <h2 className="font-display mb-5 text-lg font-bold uppercase tracking-tight text-ananda-maroon">
             Sports List
           </h2>
 
-          {loading && <p className="text-gray-600">Loading sports...</p>}
+          {loading && (
+            <div className="flex flex-col items-center gap-3 py-16 text-center">
+              <div className="h-8 w-8 animate-spin rounded-full border-4 border-ananda-gold/30 border-t-ananda-maroon" />
+              <p className="font-display text-xs uppercase tracking-wider text-ananda-maroon animate-pulse">Loading sports...</p>
+            </div>
+          )}
 
           {!loading && sports.length === 0 && (
-            <p className="text-gray-600">No sports found.</p>
+            <div className="rounded-xl border border-dashed border-gray-200 bg-gray-50 p-8 text-center text-sm text-gray-500">
+              No sports found.
+            </div>
           )}
 
           {!loading && sports.length > 0 && (
-            <div className="overflow-x-auto">
-              <table className="w-full border-collapse text-left">
-                <thead>
-                  <tr className="border-b bg-ananda-cream text-sm text-ananda-dark-maroon">
-                    <th className="px-4 py-3">Name</th>
-                    <th className="px-4 py-3">Category</th>
-                    <th className="px-4 py-3">Order</th>
-                    <th className="px-4 py-3">Actions</th>
-                  </tr>
-                </thead>
-
-                <tbody>
-                  {sports.map((sport) => (
-                    <tr key={sport._id} className="border-b">
-                      <td className="px-4 py-4">
-                        <p className="font-semibold text-ananda-dark-maroon">
-                          {sport.name}
-                        </p>
-                        <p className="text-sm text-gray-500">
-                          /sports/{sport.slug}
-                        </p>
-                      </td>
-
-                      <td className="px-4 py-4 text-gray-700">
-                        {sport.category}
-                      </td>
-
-                      <td className="px-4 py-4 text-gray-700">
-                        {sport.displayOrder}
-                      </td>
-
-                      <td className="px-4 py-4">
-                        <div className="flex flex-wrap gap-2">
-                          <button
-                            onClick={() => handleEdit(sport)}
-                            className="rounded-lg bg-ananda-gold px-3 py-2 text-sm font-semibold text-ananda-dark-maroon hover:opacity-90"
-                          >
-                            Edit
-                          </button>
-
-                          <button
-                            onClick={() => handleDelete(sport._id)}
-                            className="rounded-lg bg-red-600 px-3 py-2 text-sm font-semibold text-white hover:bg-red-700"
-                          >
-                            Delete
-                          </button>
-                        </div>
-                      </td>
+            <div className="overflow-hidden border border-ananda-gold/15 rounded-2xl shadow-sm">
+              <div className="overflow-x-auto">
+                <table className="w-full border-collapse text-left">
+                  <thead>
+                    <tr className="border-b border-ananda-gold/15 bg-ananda-cream/35 font-display text-xs font-bold uppercase tracking-wider text-ananda-dark-maroon">
+                      <th className="px-5 py-4">Name</th>
+                      <th className="px-5 py-4">Category</th>
+                      <th className="px-5 py-4">Order</th>
+                      <th className="px-5 py-4 text-right">Actions</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+
+                  <tbody className="divide-y divide-gray-100">
+                    {sports.map((sport) => (
+                      <tr key={sport._id} className="hover:bg-gray-50/50 transition">
+                        <td className="px-5 py-4">
+                          <p className="font-semibold text-ananda-dark-maroon">
+                            {sport.name}
+                          </p>
+                          <p className="text-xs text-gray-400">
+                            /sports/{sport.slug}
+                          </p>
+                        </td>
+
+                        <td className="px-5 py-4 text-xs font-semibold uppercase tracking-wider text-gray-500">
+                          {sport.category}
+                        </td>
+
+                        <td className="px-5 py-4 text-sm font-semibold text-gray-700">
+                          {sport.displayOrder}
+                        </td>
+
+                        <td className="px-5 py-4 text-right">
+                          <div className="flex justify-end gap-2">
+                            <button
+                              onClick={() => handleEdit(sport)}
+                              className="font-display text-[10px] font-bold uppercase tracking-wider bg-ananda-gold hover:bg-ananda-light-gold text-ananda-dark-maroon px-3 py-1.5 rounded-lg transition duration-250 cursor-pointer"
+                            >
+                              Edit
+                            </button>
+
+                            <button
+                              onClick={() => handleDelete(sport._id)}
+                              className="font-display text-[10px] font-bold uppercase tracking-wider bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-lg transition duration-250 cursor-pointer"
+                            >
+                              Delete
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           )}
-        </div>
+        </Reveal>
       </div>
     </div>
   );
