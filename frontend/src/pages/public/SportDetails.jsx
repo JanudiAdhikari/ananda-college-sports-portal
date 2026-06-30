@@ -19,6 +19,19 @@ const getAgeGroupLabel = (value) => {
   return ageGroupOptions.find((item) => item.value === value)?.label || value;
 };
 
+function TeamCardSkeleton() {
+  return (
+    <div className="animate-pulse rounded-2xl border border-ananda-gold/10 bg-white p-6 shadow-sm">
+      <div className="mb-3 h-3 w-32 rounded bg-ananda-light-gold" />
+      <div className="mb-4 h-7 w-1/2 rounded bg-gray-200" />
+      <div className="grid gap-3 md:grid-cols-2">
+        <div className="h-3 w-3/4 rounded bg-gray-100" />
+        <div className="h-3 w-3/4 rounded bg-gray-100" />
+      </div>
+    </div>
+  );
+}
+
 function SportDetails() {
   const { sportId } = useParams();
 
@@ -74,9 +87,12 @@ function SportDetails() {
 
   if (loadingSport) {
     return (
-      <section className="mx-auto max-w-7xl px-6 py-12">
-        <div className="rounded-2xl bg-white p-6 shadow-md">
-          Loading sport details...
+      <section className="mx-auto max-w-7xl px-6 py-24">
+        <div className="flex flex-col items-center gap-4 text-center">
+          <div className="h-10 w-10 animate-spin rounded-full border-4 border-ananda-gold/30 border-t-ananda-maroon" />
+          <p className="font-display uppercase tracking-wide text-ananda-maroon">
+            Loading sport details...
+          </p>
         </div>
       </section>
     );
@@ -85,7 +101,7 @@ function SportDetails() {
   if (error) {
     return (
       <section className="mx-auto max-w-7xl px-6 py-12">
-        <div className="rounded-2xl bg-red-50 p-6 text-red-700 shadow-md">
+        <div className="rounded-2xl border border-red-200 bg-red-50 p-6 text-red-700 shadow-sm">
           {error}
         </div>
       </section>
@@ -93,111 +109,170 @@ function SportDetails() {
   }
 
   return (
-    <section className="mx-auto max-w-7xl px-6 py-12">
-      <p className="mb-2 text-sm font-semibold uppercase text-ananda-gold">
-        {sport.category}
-      </p>
+    <div>
+      {/* HEADER */}
+      <section className="relative overflow-hidden bg-ananda-dark-maroon">
+        <div
+          className="pointer-events-none absolute inset-0 opacity-[0.06]"
+          style={{
+            backgroundImage:
+              "repeating-linear-gradient(135deg, white 0px, white 1px, transparent 1px, transparent 28px)",
+          }}
+        />
+        <div className="relative mx-auto max-w-7xl px-6 py-14">
+          <Link
+            to="/sports"
+            className="font-display mb-5 inline-flex items-center gap-1 text-xs font-semibold uppercase tracking-wide text-ananda-light-gold/80 transition hover:text-ananda-gold"
+          >
+            &larr; All Sports
+          </Link>
 
-      <h1 className="mb-4 text-3xl font-bold text-ananda-dark-maroon">
-        {sport.name}
-      </h1>
+          <p className="font-display mb-3 text-xs font-semibold uppercase tracking-[0.3em] text-ananda-gold">
+            {sport.category}
+          </p>
 
-      <p className="mb-8 max-w-3xl text-gray-700">
-        {sport.description || "Sport details will be added soon."}
-      </p>
+          <h1 className="font-display text-4xl font-bold uppercase tracking-tight text-white md:text-5xl">
+            {sport.name}
+          </h1>
 
-      {sport.achievements?.length > 0 && (
-        <div className="mb-8 rounded-2xl bg-white p-6 shadow-md">
-          <h2 className="mb-4 text-xl font-bold text-ananda-maroon">
-            Achievements
-          </h2>
+          <p className="mt-4 max-w-2xl text-ananda-light-gold/90">
+            {sport.description || "Sport details will be added soon."}
+          </p>
+        </div>
+      </section>
 
-          <div className="space-y-3">
-            {sport.achievements.map((achievement) => (
-              <div
-                key={`${achievement.title}-${achievement.year}`}
-                className="rounded-xl bg-ananda-cream p-4"
-              >
-                <p className="font-semibold text-ananda-dark-maroon">
-                  {achievement.title}{" "}
-                  {achievement.year && `(${achievement.year})`}
-                </p>
+      <section className="mx-auto max-w-7xl px-6 py-12">
+        {/* ACHIEVEMENTS */}
+        {sport.achievements?.length > 0 && (
+          <div className="mb-12">
+            <h2 className="font-display mb-5 text-xs font-semibold uppercase tracking-[0.25em] text-ananda-gold">
+              Achievements
+            </h2>
 
-                {achievement.description && (
-                  <p className="text-sm text-gray-600">
-                    {achievement.description}
-                  </p>
-                )}
-              </div>
-            ))}
+            <div className="grid gap-4 md:grid-cols-2">
+              {sport.achievements.map((achievement) => (
+                <div
+                  key={`${achievement.title}-${achievement.year}`}
+                  className="flex gap-4 rounded-2xl border border-ananda-gold/15 bg-white p-5 shadow-sm"
+                >
+                  <div className="font-display flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-ananda-light-gold text-ananda-maroon">
+                    🏆
+                  </div>
+                  <div>
+                    <p className="font-display font-bold uppercase tracking-tight text-ananda-dark-maroon">
+                      {achievement.title}{" "}
+                      {achievement.year && (
+                        <span className="text-ananda-gold">
+                          &middot; {achievement.year}
+                        </span>
+                      )}
+                    </p>
+
+                    {achievement.description && (
+                      <p className="mt-1 text-sm text-gray-600">
+                        {achievement.description}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* TEAMS */}
+        <div className="mb-6 flex flex-col gap-5 border-b border-ananda-gold/20 pb-6 md:flex-row md:items-end md:justify-between">
+          <div>
+            <p className="font-display mb-2 text-xs font-semibold uppercase tracking-[0.25em] text-ananda-gold">
+              Squads
+            </p>
+            <h2 className="font-display text-2xl font-bold uppercase tracking-tight text-ananda-dark-maroon">
+              Teams
+            </h2>
           </div>
         </div>
-      )}
 
-      <h2 className="mb-4 text-2xl font-bold text-ananda-dark-maroon">
-        Teams
-      </h2>
-
-      <div className="mb-8 flex flex-wrap gap-3">
-        {ageGroupOptions.map((ageGroup) => (
-          <button
-            key={ageGroup.value}
-            onClick={() => setSelectedAgeGroup(ageGroup.value)}
-            className={
-              selectedAgeGroup === ageGroup.value
-                ? "rounded-full bg-ananda-maroon px-5 py-2 text-white"
-                : "rounded-full border border-ananda-maroon px-5 py-2 text-ananda-maroon hover:bg-ananda-light-gold"
-            }
-          >
-            {ageGroup.label}
-          </button>
-        ))}
-      </div>
-
-      {loadingTeams && (
-        <div className="rounded-2xl bg-white p-6 shadow-md">
-          Loading teams...
+        <div className="mb-8 flex flex-wrap gap-2">
+          {ageGroupOptions.map((ageGroup) => {
+            const active = selectedAgeGroup === ageGroup.value;
+            return (
+              <button
+                key={ageGroup.value}
+                type="button"
+                onClick={() => setSelectedAgeGroup(ageGroup.value)}
+                className={`font-display rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-wide transition ${
+                  active
+                    ? "bg-ananda-maroon text-white shadow-sm"
+                    : "bg-ananda-cream text-ananda-dark-maroon hover:bg-ananda-light-gold"
+                }`}
+              >
+                {ageGroup.label}
+              </button>
+            );
+          })}
         </div>
-      )}
 
-      {!loadingTeams && teams.length === 0 && (
-        <div className="rounded-2xl bg-white p-6 text-gray-700 shadow-md">
-          No teams added for this sport yet.
-        </div>
-      )}
+        {loadingTeams && (
+          <div className="grid gap-6 md:grid-cols-2">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <TeamCardSkeleton key={i} />
+            ))}
+          </div>
+        )}
 
-      {!loadingTeams && teams.length > 0 && (
-        <div className="grid gap-6 md:grid-cols-2">
-          {teams.map((team) => (
-            <Link
-              key={team._id}
-              to={`/teams/${team._id}`}
-              className="rounded-2xl bg-white p-6 shadow-md transition hover:-translate-y-1 hover:shadow-lg"
-            >
-              <p className="mb-2 text-sm font-semibold text-ananda-gold">
-                {getAgeGroupLabel(team.ageGroup)} | {team.year}
-              </p>
+        {!loadingTeams && teams.length === 0 && (
+          <div className="rounded-2xl border border-ananda-gold/15 bg-white p-12 text-center shadow-sm">
+            <p className="font-display text-lg font-semibold uppercase text-ananda-maroon">
+              No teams yet
+            </p>
+            <p className="mt-2 text-sm text-gray-500">
+              {selectedAgeGroup === "ALL"
+                ? "Teams for this sport will appear here once added."
+                : "Try a different age group, or check back later."}
+            </p>
+          </div>
+        )}
 
-              <h3 className="mb-3 text-2xl font-bold text-ananda-maroon">
-                {team.name}
-              </h3>
-
-              <div className="grid gap-3 text-sm text-gray-600 md:grid-cols-2">
-                <p>
-                  <span className="font-semibold">Coach:</span>{" "}
-                  {team.coachName || "Not added"}
+        {!loadingTeams && teams.length > 0 && (
+          <div className="grid gap-6 md:grid-cols-2">
+            {teams.map((team, index) => (
+              <Link
+                key={team._id}
+                to={`/teams/${team._id}`}
+                style={{ animationDelay: `${index * 40}ms` }}
+                className="reveal group rounded-2xl border border-transparent bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-ananda-gold/40 hover:shadow-lg"
+              >
+                <p className="font-display mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-ananda-gold">
+                  {getAgeGroupLabel(team.ageGroup)} &middot; {team.year}
                 </p>
 
-                <p>
-                  <span className="font-semibold">Captain:</span>{" "}
-                  {team.captain?.fullName || "Not added"}
-                </p>
-              </div>
-            </Link>
-          ))}
-        </div>
-      )}
-    </section>
+                <h3 className="font-display mb-4 text-xl font-bold uppercase text-ananda-maroon transition group-hover:text-ananda-dark-maroon">
+                  {team.name}
+                </h3>
+
+                <div className="grid gap-3 border-t border-ananda-gold/10 pt-4 text-sm text-gray-600 md:grid-cols-2">
+                  <p>
+                    <span className="font-display text-xs font-semibold uppercase tracking-wide text-gray-400">
+                      Coach
+                    </span>
+                    <br />
+                    {team.coachName || "Not added"}
+                  </p>
+
+                  <p>
+                    <span className="font-display text-xs font-semibold uppercase tracking-wide text-gray-400">
+                      Captain
+                    </span>
+                    <br />
+                    {team.captain?.fullName || "Not added"}
+                  </p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
+      </section>
+    </div>
   );
 }
 

@@ -52,41 +52,46 @@ function AdminLayout({ children }) {
   );
 
   const linkClass = ({ isActive }) =>
-    isActive
-      ? "block rounded-xl bg-ananda-maroon px-4 py-3 font-semibold text-white"
-      : "block rounded-xl px-4 py-3 font-semibold text-ananda-dark-maroon hover:bg-ananda-cream";
+    `font-display text-xs font-bold uppercase tracking-wider block rounded-xl px-4 py-3 transition duration-200 ${
+      isActive
+        ? "bg-ananda-maroon text-white shadow-md"
+        : "text-ananda-dark-maroon hover:bg-ananda-cream/50 hover:text-ananda-maroon"
+    }`;
 
   return (
-    <section className="mx-auto max-w-7xl px-6 py-8">
-      <div className="mb-6 rounded-2xl bg-white p-5 shadow-md">
-        <p className="text-sm font-semibold uppercase text-ananda-gold">
+    <section className="mx-auto max-w-7xl px-6 py-8 animate-fade-in">
+      {/* Admin Header */}
+      <div className="mb-6 rounded-2xl border border-ananda-gold/15 bg-white p-6 shadow-sm">
+        <p className="font-display text-xs font-semibold uppercase tracking-wider text-ananda-gold">
           Admin Area
         </p>
 
-        <div className="mt-1 flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+        <div className="mt-2 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-ananda-dark-maroon">
+            <h1 className="font-display text-2xl font-bold uppercase tracking-tight text-ananda-dark-maroon">
               Management Panel
             </h1>
-            <p className="text-sm text-gray-600">
-              {user?.fullName} | {user?.role}
+            <p className="mt-1 text-xs text-gray-500 font-semibold uppercase tracking-wider">
+              {user?.fullName} <span className="text-ananda-gold/60 font-normal">|</span> {user?.role?.replace("_", " ")}
             </p>
           </div>
 
-          <p className="rounded-full bg-ananda-cream px-4 py-2 text-sm font-semibold text-ananda-maroon">
+          <span className="font-display self-start md:self-auto rounded-full bg-ananda-cream/70 border border-ananda-gold/15 px-4 py-2 text-xs font-bold uppercase tracking-wider text-ananda-maroon">
             Authorized Access
-          </p>
+          </span>
         </div>
       </div>
 
+      {/* Main Grid */}
       <div className="grid gap-8 lg:grid-cols-4">
+        {/* Sidebar */}
         <aside className="lg:col-span-1">
-          <div className="sticky top-28 rounded-2xl bg-white p-4 shadow-md">
-            <p className="mb-3 px-4 text-sm font-semibold uppercase text-gray-500">
+          <div className="sticky top-28 rounded-2xl border border-ananda-gold/15 bg-white p-4 shadow-sm">
+            <p className="font-display mb-3 px-4 text-xs font-bold uppercase tracking-wider text-gray-400">
               Admin Menu
             </p>
 
-            <nav className="space-y-2">
+            <nav className="space-y-1.5">
               {visibleLinks.map((link) => (
                 <NavLink
                   key={link.path}
@@ -101,6 +106,7 @@ function AdminLayout({ children }) {
           </div>
         </aside>
 
+        {/* Content Area */}
         <div className="lg:col-span-3">{children}</div>
       </div>
     </section>
