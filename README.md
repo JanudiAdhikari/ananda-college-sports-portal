@@ -74,7 +74,7 @@ ananda-college-sports-portal/
 ### 1. Clone the repository
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/JanudiAdhikari/ananda-college-sports-portal
 cd ananda-college-sports-portal
 ```
 
