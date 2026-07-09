@@ -60,7 +60,7 @@ function ImageSlideshow() {
   );
 }
 
-// Scroll-triggered reveal wrapper — fades sections in once, respects user's intent to not animate
+// Scroll-triggered reveal wrapper — fades sections in once
 function Reveal({ children, className = "" }) {
   const ref = useRef(null);
   const [visible, setVisible] = useState(false);
@@ -93,37 +93,47 @@ function Reveal({ children, className = "" }) {
 const StatCard = ({ label, value, link }) => (
   <Link
     to={link}
-    className="group rounded-2xl border border-ananda-gold/20 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-ananda-gold/50 hover:shadow-lg"
+    className="group rounded-2xl border border-ananda-gold/15 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-ananda-gold/40 hover:shadow-md flex items-center justify-between"
   >
-    <p className="font-display text-xs font-semibold uppercase tracking-[0.2em] text-ananda-gold">
-      {label}
-    </p>
-    <p className="font-display mt-2 text-5xl font-bold text-ananda-maroon transition group-hover:text-ananda-dark-maroon">
-      {value}
-    </p>
+    <div>
+      <p className="font-display text-[10px] font-bold uppercase tracking-wider text-gray-400">
+        {label}
+      </p>
+      <p className="font-display mt-1 text-4xl font-extrabold text-ananda-maroon transition duration-300 group-hover:text-ananda-dark-maroon">
+        {value}
+      </p>
+    </div>
+    <div className="h-10 w-10 rounded-xl bg-ananda-cream/40 flex items-center justify-center text-ananda-maroon group-hover:bg-ananda-gold/20 group-hover:text-ananda-dark-maroon transition duration-300">
+      <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+      </svg>
+    </div>
   </Link>
 );
 
 const SectionHeader = ({ eyebrow, title, description, link, linkText }) => (
-  <div className="mb-8 flex flex-col gap-3 border-b border-ananda-gold/20 pb-6 md:flex-row md:items-end md:justify-between">
+  <div className="mb-8 flex flex-col gap-4 border-b border-ananda-gold/15 pb-6 md:flex-row md:items-end md:justify-between">
     <div>
       {eyebrow && (
-        <p className="font-display mb-2 text-xs font-semibold uppercase tracking-[0.25em] text-ananda-gold">
+        <p className="font-display mb-1.5 text-xs font-bold uppercase tracking-wider text-ananda-gold">
           {eyebrow}
         </p>
       )}
-      <h2 className="font-display text-3xl font-bold uppercase tracking-tight text-ananda-dark-maroon">
+      <h2 className="font-display text-2xl font-bold uppercase tracking-tight text-ananda-dark-maroon">
         {title}
       </h2>
-      <p className="mt-1 text-gray-600">{description}</p>
+      <p className="mt-1 text-sm text-gray-600 leading-relaxed">{description}</p>
     </div>
 
     {link && (
       <Link
         to={link}
-        className="font-display whitespace-nowrap text-sm font-semibold uppercase tracking-wide text-ananda-maroon transition hover:text-ananda-dark-maroon"
+        className="font-display inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-ananda-maroon hover:text-ananda-dark-maroon transition duration-200"
       >
-        {linkText} &rarr;
+        {linkText}
+        <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+        </svg>
       </Link>
     )}
   </div>
@@ -197,7 +207,7 @@ function Home() {
       <section className="mx-auto max-w-7xl px-6 py-24">
         <div className="flex flex-col items-center gap-4 text-center">
           <div className="h-10 w-10 animate-spin rounded-full border-4 border-ananda-gold/30 border-t-ananda-maroon" />
-          <p className="font-display uppercase tracking-wide text-ananda-maroon">
+          <p className="font-display text-xs font-bold uppercase tracking-wider text-ananda-maroon animate-pulse">
             Loading the scoreboard...
           </p>
         </div>
@@ -208,7 +218,7 @@ function Home() {
   if (error) {
     return (
       <section className="mx-auto max-w-7xl px-6 py-12">
-        <div className="rounded-2xl border border-red-200 bg-red-50 p-6 text-red-700 shadow-sm">
+        <div className="rounded-2xl border border-red-200 bg-red-50 p-6 text-sm font-semibold text-red-700 shadow-sm">
           {error}
         </div>
       </section>
@@ -218,7 +228,7 @@ function Home() {
   return (
     <div>
       {/* HERO with SLIDESHOW */}
-      <section className="relative overflow-hidden min-h-screen flex items-center">
+      <section className="relative overflow-hidden min-h-screen flex items-center bg-ananda-dark-maroon">
         {/* Slideshow Background */}
         <div className="absolute inset-0">
           {SLIDESHOW_IMAGES.map((image, index) => (
@@ -227,26 +237,27 @@ function Home() {
               src={image}
               alt={`Hero ${index + 1}`}
               className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
-                index === currentImageIndex ? "opacity-100" : "opacity-0"
+                index === currentImageIndex ? "opacity-35" : "opacity-0"
               }`}
             />
           ))}
-          {/* Dark overlay */}
-          <div className="absolute inset-0 bg-gradient-to-r from-ananda-dark-maroon/85 via-ananda-dark-maroon/60 to-transparent" />
+
+          {/* Dark gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-r from-ananda-dark-maroon/90 via-ananda-dark-maroon/70 to-transparent" />
         </div>
 
         {/* Content */}
-        <div className="relative mx-auto grid max-w-7xl gap-12 px-6 py-24 w-full lg:grid-cols-2 lg:items-center">
+        <div className="relative mx-auto grid max-w-7xl gap-12 px-6 py-24 w-full lg:grid-cols-2 lg:items-center z-10">
           <div className="max-w-2xl">
-            <p className="font-display mb-4 text-sm font-semibold uppercase tracking-[0.3em] text-ananda-gold">
+            <p className="font-display mb-4 text-xs font-semibold uppercase tracking-[0.25em] text-ananda-gold">
               Ananda College &middot; Colombo 10
             </p>
 
-            <h1 className="font-display mb-6 text-5xl font-bold uppercase leading-[1.1] text-white md:text-6xl lg:text-7xl">
+            <h1 className="font-display mb-6 text-4xl font-bold uppercase leading-[1.1] text-white md:text-5xl lg:text-6xl">
               Where every <span className="text-ananda-gold">match</span> tells the <span className="text-ananda-gold">story</span>
             </h1>
 
-            <p className="mb-8 max-w-xl text-lg text-white/90 leading-relaxed">
+            <p className="mb-8 max-w-lg text-base text-white/80 leading-relaxed font-medium">
               Teams, players, fixtures, results, and live coverage from across
               the school &mdash; all in one place. Experience the passion and
               pride of Ananda College athletics.
@@ -255,14 +266,14 @@ function Home() {
             <div className="flex flex-wrap gap-4">
               <Link
                 to="/sports"
-                className="font-display rounded-xl bg-ananda-gold px-8 py-3.5 text-sm font-bold uppercase tracking-wide text-ananda-dark-maroon transition hover:scale-[1.05] hover:shadow-xl shadow-lg"
+                className="font-display rounded-xl bg-ananda-gold px-8 py-3.5 text-xs font-bold uppercase tracking-wider text-ananda-dark-maroon transition hover:scale-[1.03] hover:shadow-xl shadow-lg cursor-pointer hover:bg-ananda-light-gold"
               >
                 Explore Sports
               </Link>
 
               <Link
                 to="/live-matches"
-                className="font-display rounded-xl border-2 border-ananda-gold px-8 py-3.5 text-sm font-bold uppercase tracking-wide text-ananda-gold transition hover:bg-ananda-gold hover:text-ananda-dark-maroon hover:shadow-xl"
+                className="font-display rounded-xl border border-ananda-gold px-8 py-3.5 text-xs font-bold uppercase tracking-wider text-ananda-gold transition hover:bg-ananda-gold hover:text-ananda-dark-maroon hover:shadow-xl cursor-pointer"
               >
                 Live Matches
               </Link>
@@ -271,53 +282,57 @@ function Home() {
 
           {/* Live Match Panel - Right Side */}
           {liveMatch && (
-            <div className="overflow-hidden rounded-3xl border border-ananda-gold/40 bg-ananda-maroon/95 shadow-2xl backdrop-blur-sm">
-              <div className="flex items-center justify-between border-b border-ananda-gold/25 px-6 py-4">
+            <div className="overflow-hidden rounded-3xl border border-ananda-gold/30 bg-ananda-maroon/90 shadow-2xl backdrop-blur-md">
+              <div className="flex items-center justify-between border-b border-ananda-gold/15 px-6 py-4">
                 <div className="flex items-center gap-2">
-                  {liveMatch.status === "LIVE" && (
-                    <span className="live-dot h-2.5 w-2.5 rounded-full bg-red-400 animate-pulse" />
+                  {liveMatch.status === "LIVE" ? (
+                    <span className="inline-flex items-center gap-1 rounded-full bg-red-500/20 border border-red-500/30 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-red-400 animate-pulse">
+                      <span className="h-1.5 w-1.5 rounded-full bg-red-500" />
+                      Live Now
+                    </span>
+                  ) : (
+                    <span className="inline-flex items-center rounded-full bg-ananda-gold/20 border border-ananda-gold/30 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-ananda-gold">
+                      Latest Match
+                    </span>
                   )}
-                  <span className="font-display text-xs font-bold uppercase tracking-[0.25em] text-ananda-gold">
-                    {liveMatch.status === "LIVE" ? "🔴 Live Now" : "Latest Match"}
-                  </span>
                 </div>
-                <span className="font-display text-xs uppercase tracking-wide text-ananda-light-gold/70">
+                <span className="font-display text-[10px] font-bold uppercase tracking-wider text-ananda-light-gold/70">
                   {liveMatch.sport?.name}
                 </span>
               </div>
 
               <div className="px-6 py-8">
-                <h2 className="font-display mb-6 text-lg font-bold uppercase tracking-tight text-white line-clamp-2">
+                <h2 className="font-display mb-6 text-base font-bold uppercase tracking-tight text-white line-clamp-2">
                   {liveMatch.title}
                 </h2>
 
                 <div className="grid grid-cols-2 gap-4 mb-6">
-                  <div className="rounded-2xl bg-black/30 p-5 text-center border border-ananda-gold/20">
-                    <p className="mb-2 truncate text-xs font-medium uppercase tracking-wide text-ananda-light-gold/70">
+                  <div className="rounded-2xl bg-black/20 p-5 text-center border border-ananda-gold/10">
+                    <p className="mb-2 truncate text-[10px] font-bold uppercase tracking-wider text-ananda-light-gold/60">
                       {liveMatch.anandaTeamName}
                     </p>
-                    <p className="font-display text-5xl font-bold text-white">
+                    <p className="font-display text-4xl font-extrabold text-white">
                       {liveMatch.score?.anandaScore || "-"}
                     </p>
                   </div>
 
-                  <div className="rounded-2xl bg-black/30 p-5 text-center border border-ananda-gold/20">
-                    <p className="mb-2 truncate text-xs font-medium uppercase tracking-wide text-ananda-light-gold/70">
+                  <div className="rounded-2xl bg-black/20 p-5 text-center border border-ananda-gold/10">
+                    <p className="mb-2 truncate text-[10px] font-bold uppercase tracking-wider text-ananda-light-gold/60">
                       {liveMatch.opponentTeamName}
                     </p>
-                    <p className="font-display text-5xl font-bold text-white">
+                    <p className="font-display text-4xl font-extrabold text-white">
                       {liveMatch.score?.opponentScore || "-"}
                     </p>
                   </div>
                 </div>
 
-                <p className="font-display mb-6 rounded-lg bg-ananda-gold/20 border border-ananda-gold/40 px-4 py-3 text-center text-xs font-semibold uppercase tracking-wide text-ananda-gold">
+                <div className="font-display mb-6 rounded-xl bg-ananda-gold/10 border border-ananda-gold/25 px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-ananda-gold">
                   {liveMatch.score?.currentStatus || liveMatch.status}
-                </p>
+                </div>
 
                 <Link
                   to="/live-matches"
-                  className="font-display block rounded-xl bg-ananda-gold py-3 text-center text-sm font-bold uppercase tracking-wide text-ananda-dark-maroon transition hover:bg-ananda-light-gold hover:shadow-lg"
+                  className="font-display block rounded-xl bg-ananda-gold py-3.5 text-center text-xs font-bold uppercase tracking-wider text-ananda-dark-maroon transition hover:bg-ananda-light-gold hover:shadow-lg cursor-pointer"
                 >
                   View Live Center
                 </Link>
@@ -332,10 +347,10 @@ function Home() {
             <button
               key={index}
               onClick={() => setCurrentImageIndex(index)}
-              className={`h-2 rounded-full transition-all duration-300 ${
+              className={`h-1.5 rounded-full transition-all duration-300 ${
                 index === currentImageIndex
                   ? "bg-ananda-gold w-8"
-                  : "bg-white/50 hover:bg-white/80 w-2"
+                  : "bg-white/30 hover:bg-white/60 w-1.5"
               }`}
               aria-label={`Go to slide ${index + 1}`}
             />
@@ -345,7 +360,7 @@ function Home() {
 
       {/* STATS */}
       <section className="mx-auto max-w-7xl px-6 py-14">
-        <Reveal className="grid gap-6 md:grid-cols-4">
+        <Reveal className="grid gap-6 grid-cols-2 md:grid-cols-4">
           <StatCard label="Sports" value={sports.length} link="/sports" />
           <StatCard label="Players" value={players.length} link="/sports" />
           <StatCard label="Upcoming" value={upcomingFixtures.length} link="/fixtures-results" />
@@ -358,7 +373,7 @@ function Home() {
         <Reveal>
           <SectionHeader
             eyebrow="School Sports"
-            title="Sports"
+            title="Sports Categories"
             description="Browse the main sports available at Ananda College."
             link="/sports"
             linkText="View all"
@@ -366,7 +381,7 @@ function Home() {
         </Reveal>
 
         {featuredSports.length === 0 ? (
-          <div className="rounded-2xl bg-white p-6 text-gray-700 shadow-sm">
+          <div className="rounded-2xl border border-dashed border-gray-200 bg-gray-50 p-8 text-center text-sm text-gray-500">
             No sports added yet.
           </div>
         ) : (
@@ -375,17 +390,22 @@ function Home() {
               <Link
                 key={sport._id}
                 to={`/sports/${sport.slug}`}
-                className="group rounded-2xl border border-transparent bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-ananda-gold/40 hover:shadow-lg"
+                className="group rounded-2xl border border-ananda-gold/15 bg-white p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-ananda-gold/35 hover:shadow-md flex flex-col justify-between"
               >
-                <p className="font-display mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-ananda-gold">
-                  {sport.category}
-                </p>
-                <h3 className="font-display mb-3 text-xl font-bold uppercase text-ananda-maroon transition group-hover:text-ananda-dark-maroon">
-                  {sport.name}
-                </h3>
-                <p className="line-clamp-3 text-sm text-gray-600">
-                  {sport.description || "Sport details will be added soon."}
-                </p>
+                <div>
+                  <p className="font-display mb-1.5 text-[10px] font-bold uppercase tracking-wider text-ananda-gold">
+                    {sport.category}
+                  </p>
+                  <h3 className="font-display mb-3 text-lg font-bold uppercase text-ananda-maroon transition duration-300 group-hover:text-ananda-dark-maroon">
+                    {sport.name}
+                  </h3>
+                  <p className="line-clamp-3 text-xs text-gray-500 leading-relaxed">
+                    {sport.description || "Sport details will be added soon."}
+                  </p>
+                </div>
+                <span className="font-display mt-4 inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-ananda-maroon opacity-0 transition group-hover:opacity-100 duration-300">
+                  View teams &rarr;
+                </span>
               </Link>
             ))}
           </Reveal>
@@ -405,7 +425,7 @@ function Home() {
         </Reveal>
 
         {featuredFixtures.length === 0 ? (
-          <div className="rounded-2xl bg-white p-6 text-gray-700 shadow-sm">
+          <div className="rounded-2xl border border-dashed border-gray-200 bg-gray-50 p-8 text-center text-sm text-gray-500">
             No featured fixtures added yet.
           </div>
         ) : (
@@ -413,25 +433,34 @@ function Home() {
             {featuredFixtures.map((fixture) => (
               <div
                 key={fixture._id}
-                className="rounded-2xl border border-ananda-gold/15 bg-white p-6 shadow-sm transition hover:shadow-md"
+                className="rounded-2xl border border-ananda-gold/15 bg-white p-6 shadow-sm hover:border-ananda-gold/35 transition duration-300"
               >
-                <p className="font-display mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-ananda-gold">
-                  {fixture.sport?.name} &middot; {fixture.status}
-                </p>
-                <h3 className="font-display mb-2 text-lg font-bold uppercase text-ananda-maroon">
+                <div className="mb-2 flex items-center justify-between">
+                  <span className="font-display text-[10px] font-bold uppercase tracking-wider text-ananda-gold">
+                    {fixture.sport?.name}
+                  </span>
+                  <span className="inline-flex items-center rounded-full bg-blue-50 border border-blue-200 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-blue-600">
+                    {fixture.status}
+                  </span>
+                </div>
+                <h3 className="font-display mb-1 text-base font-bold uppercase text-ananda-maroon">
                   {fixture.title}
                 </h3>
-                <p className="text-sm text-gray-600">
+                <p className="text-xs text-gray-500 font-semibold mb-2">
                   Ananda College vs {fixture.opponent}
                 </p>
-                <p className="mt-2 text-xs uppercase tracking-wide text-gray-400">
+                <p className="text-[10px] font-semibold uppercase tracking-wider text-gray-400 flex items-center gap-1">
+                  <svg className="h-3.5 w-3.5 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
                   {new Date(fixture.matchDate).toLocaleString()}
                 </p>
 
                 {fixture.result?.resultText && (
-                  <p className="font-display mt-4 rounded-lg bg-ananda-light-gold px-3 py-2.5 text-xs font-semibold uppercase tracking-wide text-ananda-dark-maroon">
+                  <div className="font-display mt-4 rounded-xl bg-ananda-gold/15 border border-ananda-gold/25 px-4 py-3 text-xs font-semibold text-ananda-dark-maroon leading-relaxed">
+                    <span className="font-display text-[9px] font-bold uppercase tracking-wider text-ananda-maroon block mb-0.5">Result</span>
                     {fixture.result.resultText}
-                  </p>
+                  </div>
                 )}
               </div>
             ))}
@@ -452,25 +481,27 @@ function Home() {
         </Reveal>
 
         {featuredPlayers.length === 0 ? (
-          <div className="rounded-2xl bg-white p-6 text-gray-700 shadow-sm">
+          <div className="rounded-2xl border border-dashed border-gray-200 bg-gray-50 p-8 text-center text-sm text-gray-500">
             No players added yet.
           </div>
         ) : (
-          <Reveal className="grid gap-6 md:grid-cols-4">
+          <Reveal className="grid gap-6 grid-cols-2 md:grid-cols-4">
             {featuredPlayers.map((player) => (
               <Link
                 key={player._id}
                 to={`/players/${player._id}`}
-                className="group rounded-2xl bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
+                className="group rounded-2xl border border-ananda-gold/15 bg-white p-5 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-ananda-gold/35 hover:shadow-md flex flex-col items-center text-center"
               >
-                <div className="font-display mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-ananda-light-gold text-2xl font-bold text-ananda-maroon transition group-hover:bg-ananda-gold">
+                <div className="font-display mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-ananda-cream/40 border border-ananda-gold/20 text-lg font-bold text-ananda-maroon transition duration-300 group-hover:bg-ananda-gold/20 group-hover:text-ananda-dark-maroon">
                   {player.fullName.charAt(0)}
                 </div>
-                <h3 className="font-display text-base font-bold uppercase text-ananda-maroon">
+                <h3 className="font-display text-sm font-bold uppercase text-ananda-maroon truncate w-full">
                   {player.fullName}
                 </h3>
-                <p className="mt-1 text-sm text-gray-600">
-                  {player.sport?.name || "Sport"} &middot;{" "}
+                <p className="mt-1 text-[10px] font-semibold uppercase tracking-wider text-gray-400">
+                  {player.sport?.name || "Sport"}
+                </p>
+                <p className="mt-0.5 text-xs font-semibold text-gray-500 line-clamp-1">
                   {player.role || player.position || "Player"}
                 </p>
               </Link>
@@ -485,14 +516,14 @@ function Home() {
           <SectionHeader
             eyebrow="In Pictures"
             title="Latest Gallery Albums"
-            description="Photos from school sports events and special encounters."
+            description="Photos from school sports events and encounters."
             link="/gallery"
             linkText="View gallery"
           />
         </Reveal>
 
         {latestGalleryAlbums.length === 0 ? (
-          <div className="rounded-2xl bg-white p-6 text-gray-700 shadow-sm">
+          <div className="rounded-2xl border border-dashed border-gray-200 bg-gray-50 p-8 text-center text-sm text-gray-500">
             No gallery albums added yet.
           </div>
         ) : (
@@ -501,32 +532,32 @@ function Home() {
               <Link
                 key={album._id}
                 to={`/gallery/${album.slug}`}
-                className="group overflow-hidden rounded-2xl bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
+                className="group overflow-hidden rounded-2xl border border-ananda-gold/15 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:border-ananda-gold/35 hover:shadow-md"
               >
                 {album.coverImage?.url ? (
-                  <div className="h-48 overflow-hidden">
+                  <div className="h-44 overflow-hidden relative">
                     <img
                       src={album.coverImage.url}
                       alt={album.title}
                       className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
                     />
+                    <span className="absolute bottom-3 right-3 rounded-lg bg-black/60 px-2 py-1 text-[9px] font-bold uppercase tracking-wider text-white">
+                      {album.images?.length || 0} Photos
+                    </span>
                   </div>
                 ) : (
-                  <div className="flex h-48 items-center justify-center bg-ananda-light-gold text-ananda-maroon">
+                  <div className="flex h-44 items-center justify-center bg-ananda-cream/40 border-b border-ananda-gold/15 text-ananda-maroon font-semibold text-xs">
                     No cover image
                   </div>
                 )}
 
                 <div className="p-5">
-                  <p className="font-display mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-ananda-gold">
+                  <p className="font-display mb-1 text-[10px] font-bold uppercase tracking-wider text-ananda-gold">
                     {album.sport?.name || "General Event"}
                   </p>
-                  <h3 className="font-display text-lg font-bold uppercase text-ananda-maroon">
+                  <h3 className="font-display text-base font-bold uppercase text-ananda-maroon line-clamp-1">
                     {album.title}
                   </h3>
-                  <p className="mt-2 text-sm text-gray-500">
-                    {album.images?.length || 0} images
-                  </p>
                 </div>
               </Link>
             ))}
@@ -535,12 +566,12 @@ function Home() {
       </section>
 
       {/* CTA */}
-      <section className="bg-ananda-dark-maroon">
-        <div className="mx-auto max-w-7xl px-6 py-16 text-center">
-          <h2 className="font-display text-3xl font-bold uppercase tracking-tight text-white">
+      <section className="relative overflow-hidden bg-gradient-to-b from-white to-ananda-cream/35 border-t border-ananda-gold/15">
+        <div className="relative mx-auto max-w-7xl px-6 py-16 text-center z-10">
+          <h2 className="font-display text-2xl font-bold uppercase tracking-tight text-ananda-dark-maroon">
             Follow Ananda College Sports
           </h2>
-          <p className="mx-auto mt-3 max-w-2xl text-ananda-light-gold/90">
+          <p className="mx-auto mt-2 max-w-xl text-xs font-semibold uppercase tracking-wider text-gray-500 leading-relaxed">
             Stay updated with teams, player profiles, fixtures, results,
             event photos, and live coverage.
           </p>
@@ -548,13 +579,13 @@ function Home() {
           <div className="mt-8 flex flex-wrap justify-center gap-4">
             <Link
               to="/fixtures-results"
-              className="font-display rounded-xl bg-ananda-gold px-7 py-3 text-sm font-bold uppercase tracking-wide text-ananda-dark-maroon transition hover:scale-[1.03]"
+              className="font-display rounded-xl bg-ananda-maroon px-7 py-3 text-xs font-bold uppercase tracking-wider text-white transition hover:scale-[1.03] cursor-pointer hover:bg-ananda-dark-maroon shadow-sm hover:shadow-md"
             >
               View Fixtures
             </Link>
             <Link
               to="/gallery"
-              className="font-display rounded-xl border border-ananda-gold/60 px-7 py-3 text-sm font-bold uppercase tracking-wide text-ananda-gold transition hover:bg-ananda-gold hover:text-ananda-dark-maroon"
+              className="font-display rounded-xl border border-ananda-maroon/30 px-7 py-3 text-xs font-bold uppercase tracking-wider text-ananda-maroon transition hover:bg-ananda-cream/45 cursor-pointer"
             >
               View Gallery
             </Link>
