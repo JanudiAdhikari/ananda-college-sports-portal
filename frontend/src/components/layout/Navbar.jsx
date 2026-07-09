@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
+import logo from "../../assets/logo.png";
 
 function Navbar() {
   const navigate = useNavigate();
@@ -36,9 +37,7 @@ function Navbar() {
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
         {/* Logo and Brand */}
         <Link to="/" onClick={closeMenu} className="flex items-center gap-3 group">
-          <div className="font-display flex h-10 w-10 items-center justify-center rounded-xl bg-ananda-gold text-ananda-dark-maroon font-extrabold shadow-md transition duration-300 group-hover:scale-[1.05]">
-            AC
-          </div>
+          <img src={logo} alt="Ananda College Logo" className="h-10 w-auto object-contain shadow-md transition duration-300 group-hover:scale-[1.05]" />
           <div className="flex flex-col">
             <span className="font-display text-sm font-bold uppercase tracking-[0.15em] leading-tight md:text-base text-white group-hover:text-ananda-gold transition duration-300">
               Ananda College
