@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import logo from "../../assets/logo.png";
 
 function Footer() {
   return (
@@ -17,9 +18,7 @@ function Footer() {
           {/* Brand Column */}
           <div className="space-y-4">
             <Link to="/" className="flex items-center gap-3 group">
-              <div className="font-display flex h-10 w-10 items-center justify-center rounded-xl bg-ananda-gold text-ananda-dark-maroon font-extrabold shadow-md transition duration-300 group-hover:scale-[1.05]">
-                AC
-              </div>
+              <img src={logo} alt="Ananda College Logo" className="h-10 w-auto object-contain shadow-md transition duration-300 group-hover:scale-[1.05]" />
               <div className="flex flex-col">
                 <span className="font-display text-sm font-bold uppercase tracking-[0.15em] leading-tight text-white group-hover:text-ananda-gold transition duration-300">
                   Ananda College
