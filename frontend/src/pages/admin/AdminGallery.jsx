@@ -52,6 +52,7 @@ function AdminGallery() {
 
   const [formData, setFormData] = useState(initialFormData);
   const [editingAlbumId, setEditingAlbumId] = useState(null);
+  const [activeForm, setActiveForm] = useState(null); // null, 'ALBUM', or 'UPLOAD'
 
   const [selectedAlbumId, setSelectedAlbumId] = useState("");
   const [selectedFiles, setSelectedFiles] = useState(null);
@@ -59,6 +60,9 @@ function AdminGallery() {
 
   const [search, setSearch] = useState("");
   const [filterSport, setFilterSport] = useState("ALL");
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 4;
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -88,6 +92,7 @@ function AdminGallery() {
 
       const data = await getGalleryAlbums(buildAlbumParams());
       setAlbums(data.albums);
+      setCurrentPage(1);
 
       if (data.albums.length > 0 && !selectedAlbumId) {
         setSelectedAlbumId(data.albums[0]._id);
@@ -144,6 +149,7 @@ function AdminGallery() {
           }
 
           setAlbums(data.albums);
+          setCurrentPage(1);
 
           if (data.albums.length > 0 && !selectedAlbumId) {
             setSelectedAlbumId(data.albums[0]._id);
@@ -224,6 +230,7 @@ function AdminGallery() {
 
       setEditingAlbumId(null);
       setFormData(initialFormData);
+      setActiveForm(null);
 
       await loadAlbums();
     } catch (error) {
@@ -245,12 +252,13 @@ function AdminGallery() {
 
     setMessage("");
     setError("");
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    setActiveForm("ALBUM");
   };
 
   const handleCancelEdit = () => {
     setEditingAlbumId(null);
     setFormData(initialFormData);
+    setActiveForm(null);
     setMessage("");
     setError("");
   };
@@ -300,6 +308,7 @@ function AdminGallery() {
       setMessage("Images uploaded successfully.");
       setSelectedFiles(null);
       setFileInputKey((previousKey) => previousKey + 1);
+      setActiveForm(null);
 
       await loadAlbums();
     } catch (error) {
@@ -332,36 +341,276 @@ function AdminGallery() {
 
   const selectedAlbum = albums.find((album) => album._id === selectedAlbumId);
 
+  // Pagination Logic
+  const totalPages = Math.ceil(albums.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const paginatedAlbums = albums.slice(startIndex, startIndex + itemsPerPage);
+
   return (
     <div>
-      <p className="font-display mb-1 text-xs font-semibold uppercase tracking-wider text-ananda-gold">
-        Admin Panel
-      </p>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
+        <div>
+          <p className="font-display mb-1 text-xs font-semibold uppercase tracking-wider text-ananda-gold">
+            Admin Panel
+          </p>
+          <h1 className="font-display text-3xl font-bold uppercase tracking-tight text-ananda-dark-maroon">
+            Manage Gallery
+          </h1>
+        </div>
 
-      <h1 className="font-display mb-2 text-3xl font-bold uppercase tracking-tight text-ananda-dark-maroon">
-        Manage Gallery
-      </h1>
+        <div className="flex flex-wrap gap-2.5">
+          <button
+            onClick={() => {
+              setEditingAlbumId(null);
+              setFormData(initialFormData);
+              setActiveForm("ALBUM");
+              setMessage("");
+              setError("");
+            }}
+            className="font-display rounded-xl bg-ananda-gold px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-ananda-dark-maroon hover:bg-ananda-light-gold transition cursor-pointer flex items-center gap-1.5 shadow-sm hover:shadow-md hover:scale-[1.02]"
+          >
+            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" />
+            </svg>
+            Create Album
+          </button>
+
+          <button
+            onClick={() => {
+              setActiveForm("UPLOAD");
+              setMessage("");
+              setError("");
+            }}
+            className="font-display rounded-xl border border-ananda-maroon px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-ananda-maroon hover:bg-ananda-cream/45 transition cursor-pointer flex items-center gap-1.5 shadow-sm hover:scale-[1.02]"
+          >
+            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+            </svg>
+            Upload Photos
+          </button>
+        </div>
+      </div>
 
       <p className="mb-8 text-sm text-gray-600">
         Create event albums and upload sports event images.
       </p>
 
       {message && (
-        <div className="mb-6 rounded-xl bg-green-50 border border-green-200 px-4 py-3 text-sm font-semibold text-green-700">
+        <div className="mb-6 rounded-xl bg-green-50 border border-green-200 px-4 py-3 text-sm font-semibold text-green-700 animate-fade-in">
           {message}
         </div>
       )}
 
       {error && (
-        <div className="mb-6 rounded-xl bg-red-50 border border-red-200 px-4 py-3 text-sm font-semibold text-red-700">
+        <div className="mb-6 rounded-xl bg-red-50 border border-red-200 px-4 py-3 text-sm font-semibold text-red-700 animate-fade-in">
           {error}
         </div>
       )}
 
-      <div className="grid gap-8 lg:grid-cols-3">
-        <div className="space-y-8 lg:col-span-1">
-          {/* Create Album Form */}
-          <Reveal className="rounded-2xl border border-ananda-gold/15 bg-white p-6 shadow-sm h-fit">
+      {/* Full-width spacious view */}
+      <Reveal className="rounded-2xl border border-ananda-gold/15 bg-white p-6 shadow-sm">
+        <div className="mb-6 flex flex-col gap-4">
+          <h2 className="font-display text-lg font-bold uppercase tracking-tight text-ananda-maroon">
+            Gallery Albums
+          </h2>
+
+          <div className="grid gap-3 grid-cols-1 sm:grid-cols-2">
+            {/* Search */}
+            <input
+              type="text"
+              value={search}
+              onChange={handleSearchChange}
+              placeholder="Search albums..."
+              className="rounded-xl border border-ananda-gold/25 bg-white px-4 py-2.5 text-xs font-semibold outline-none focus:border-ananda-maroon focus:ring-1 focus:ring-ananda-maroon transition shadow-sm"
+            />
+
+            {/* Sport Filter */}
+            <div className="relative">
+              <select
+                value={filterSport}
+                onChange={handleFilterSportChange}
+                className="w-full appearance-none rounded-xl border border-ananda-gold/25 bg-white pl-3 pr-8 py-2.5 text-xs font-semibold uppercase tracking-wider outline-none focus:border-ananda-maroon focus:ring-1 focus:ring-ananda-maroon transition shadow-sm"
+              >
+                <option value="ALL">All Sports</option>
+                {sports.map((sport) => (
+                  <option key={sport._id} value={sport._id}>
+                    {sport.name}
+                  </option>
+                ))}
+              </select>
+              <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2.5 text-gray-555">
+                <svg className="h-3 w-3 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {loading && (
+          <div className="flex flex-col items-center gap-3 py-16 text-center">
+            <div className="h-8 w-8 animate-spin rounded-full border-4 border-ananda-gold/30 border-t-ananda-maroon" />
+            <p className="font-display text-xs uppercase tracking-wider text-ananda-maroon animate-pulse">Loading albums...</p>
+          </div>
+        )}
+
+        {!loading && albums.length === 0 && (
+          <div className="rounded-xl border border-dashed border-gray-200 bg-gray-50 p-8 text-center text-sm text-gray-500">
+            No albums found.
+          </div>
+        )}
+
+        {!loading && albums.length > 0 && (
+          <div>
+            <div className="space-y-6">
+              {paginatedAlbums.map((album) => (
+                <div
+                  key={album._id}
+                  className="rounded-2xl border border-ananda-gold/15 bg-white p-6 shadow-sm hover:border-ananda-gold/35 transition duration-250"
+                >
+                  <div className="mb-4 flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+                    <div>
+                      <p className="mb-1 text-[10px] font-bold uppercase tracking-wider text-ananda-gold">
+                        {album.sport?.name || "General Event"}
+                      </p>
+
+                      <h3 className="font-display text-lg font-bold uppercase tracking-tight text-ananda-maroon">
+                        {album.title}
+                      </h3>
+
+                      <p className="text-xs text-gray-400 font-semibold mt-0.5">
+                        {album.images?.length || 0} images
+                      </p>
+
+                      {album.description && (
+                        <p className="mt-2 text-xs text-gray-650 leading-relaxed">
+                          {album.description}
+                        </p>
+                      )}
+                    </div>
+
+                    <div className="flex flex-wrap gap-2">
+                      <button
+                        onClick={() => {
+                          setSelectedAlbumId(album._id);
+                          setMessage("Selected album: " + album.title);
+                          setError("");
+                        }}
+                        className="font-display text-[10px] font-bold uppercase tracking-wider bg-ananda-maroon hover:bg-ananda-dark-maroon text-white px-3 py-1.5 rounded-lg transition duration-250 cursor-pointer"
+                      >
+                        Select For Upload
+                      </button>
+
+                      <button
+                        onClick={() => handleEdit(album)}
+                        className="font-display text-[10px] font-bold uppercase tracking-wider bg-ananda-gold hover:bg-ananda-light-gold text-ananda-dark-maroon px-3 py-1.5 rounded-lg transition duration-250 cursor-pointer"
+                      >
+                        Edit
+                      </button>
+
+                      <button
+                        onClick={() => handleDeleteAlbum(album._id)}
+                        className="font-display text-[10px] font-bold uppercase tracking-wider bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-lg transition duration-250 cursor-pointer"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+
+                  {album.images?.length > 0 && (
+                    <div className="grid gap-4 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 mt-4">
+                      {album.images.map((image) => (
+                        <div
+                          key={image._id}
+                          className="group overflow-hidden rounded-xl border border-ananda-gold/15 bg-white shadow-xs relative"
+                        >
+                          <img
+                            src={image.url}
+                            alt={album.title}
+                            className="h-28 w-full object-cover transition duration-300 group-hover:scale-105"
+                          />
+
+                          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center p-3">
+                            <button
+                              onClick={() =>
+                                handleDeleteImage(album._id, image._id)
+                              }
+                              className="font-display text-[9px] font-bold uppercase tracking-wider bg-red-600 hover:bg-red-700 text-white px-2.5 py-1.5 rounded-lg transition duration-250 cursor-pointer shadow-sm"
+                            >
+                              Delete Image
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+
+            {/* Pagination Controls */}
+            {totalPages > 1 && (
+              <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-t border-gray-100 pt-4">
+                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                  Showing {startIndex + 1} to {Math.min(startIndex + itemsPerPage, albums.length)} of {albums.length} entries
+                </p>
+                <div className="flex flex-wrap gap-1">
+                  <button
+                    onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                    disabled={currentPage === 1}
+                    className="font-display text-[10px] font-bold uppercase tracking-wider border border-gray-200 bg-white hover:bg-gray-50 text-gray-750 px-3 py-1.5 rounded-lg disabled:opacity-40 disabled:cursor-not-allowed transition duration-200 cursor-pointer"
+                  >
+                    Previous
+                  </button>
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                    <button
+                      key={page}
+                      onClick={() => setCurrentPage(page)}
+                      className={`font-display text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-lg transition duration-200 cursor-pointer ${
+                        currentPage === page
+                          ? "bg-ananda-maroon text-white shadow-xs"
+                          : "border border-gray-200 bg-white hover:bg-gray-50 text-gray-700"
+                      }`}
+                    >
+                      {page}
+                    </button>
+                  ))}
+                  <button
+                    onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                    disabled={currentPage === totalPages}
+                    className="font-display text-[10px] font-bold uppercase tracking-wider border border-gray-200 bg-white hover:bg-gray-50 text-gray-750 px-3 py-1.5 rounded-lg disabled:opacity-40 disabled:cursor-not-allowed transition duration-200 cursor-pointer"
+                  >
+                    Next
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {selectedAlbum && (
+          <div className="mt-6 rounded-xl border border-ananda-gold/25 bg-ananda-gold/10 px-4 py-3 text-xs font-semibold text-ananda-dark-maroon flex items-center gap-2">
+            <span className="h-2 w-2 rounded-full bg-ananda-gold animate-pulse" />
+            <span>Selected album for upload:</span>
+            <span className="font-bold underline">{selectedAlbum.title}</span>
+          </div>
+        )}
+      </Reveal>
+
+      {/* Album Creation/Edit Overlay Modal */}
+      {activeForm === "ALBUM" && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fade-in">
+          <div className="relative w-full max-w-lg rounded-2xl border border-ananda-gold/15 bg-white p-6 shadow-2xl animate-scale-in max-h-[90vh] overflow-y-auto">
+            {/* Close Button */}
+            <button
+              onClick={handleCancelEdit}
+              className="absolute right-4 top-4 text-gray-400 hover:text-gray-655 cursor-pointer transition hover:scale-110"
+            >
+              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+
             <h2 className="font-display mb-5 text-lg font-bold uppercase tracking-tight text-ananda-maroon">
               {editingAlbumId ? "Edit Album" : "Create Album"}
             </h2>
@@ -435,11 +684,11 @@ function AdminGallery() {
                 />
               </div>
 
-              <div className="space-y-2">
+              <div className="pt-2">
                 <button
                   type="submit"
                   disabled={saving}
-                  className="w-full rounded-xl bg-ananda-maroon px-6 py-3 font-semibold text-white hover:bg-ananda-dark-maroon disabled:cursor-not-allowed disabled:opacity-70 transition duration-300 font-display text-xs font-bold uppercase tracking-wider cursor-pointer hover:scale-[1.01]"
+                  className="w-full rounded-xl bg-ananda-maroon px-6 py-3.5 font-semibold text-white hover:bg-ananda-dark-maroon disabled:cursor-not-allowed disabled:opacity-70 transition duration-300 font-display text-xs font-bold uppercase tracking-wider cursor-pointer hover:scale-[1.01]"
                 >
                   {saving
                     ? "Saving..."
@@ -447,22 +696,26 @@ function AdminGallery() {
                       ? "Update Album"
                       : "Create Album"}
                 </button>
-
-                {editingAlbumId && (
-                  <button
-                    type="button"
-                    onClick={handleCancelEdit}
-                    className="w-full rounded-xl border border-ananda-maroon/30 px-6 py-3 font-semibold text-ananda-maroon hover:bg-ananda-cream/45 transition duration-300 font-display text-xs font-bold uppercase tracking-wider cursor-pointer"
-                  >
-                    Cancel Edit
-                  </button>
-                )}
               </div>
             </form>
-          </Reveal>
+          </div>
+        </div>
+      )}
 
-          {/* Upload Images Form */}
-          <Reveal className="rounded-2xl border border-ananda-gold/15 bg-white p-6 shadow-sm h-fit">
+      {/* Upload Images Overlay Modal */}
+      {activeForm === "UPLOAD" && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fade-in">
+          <div className="relative w-full max-w-lg rounded-2xl border border-ananda-gold/15 bg-white p-6 shadow-2xl animate-scale-in max-h-[90vh] overflow-y-auto">
+            {/* Close Button */}
+            <button
+              onClick={() => setActiveForm(null)}
+              className="absolute right-4 top-4 text-gray-400 hover:text-gray-655 cursor-pointer transition hover:scale-110"
+            >
+              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+
             <h2 className="font-display mb-5 text-lg font-bold uppercase tracking-tight text-ananda-maroon">
               Upload Images
             </h2>
@@ -511,167 +764,19 @@ function AdminGallery() {
                 </p>
               </div>
 
-              <button
-                type="submit"
-                disabled={uploading}
-                className="w-full rounded-xl bg-ananda-maroon px-6 py-3 font-semibold text-white hover:bg-ananda-dark-maroon disabled:cursor-not-allowed disabled:opacity-70 transition duration-300 font-display text-xs font-bold uppercase tracking-wider cursor-pointer hover:scale-[1.01]"
-              >
-                {uploading ? "Uploading..." : "Upload Images"}
-              </button>
-            </form>
-          </Reveal>
-        </div>
-
-        {/* Albums List Column */}
-        <Reveal className="rounded-2xl border border-ananda-gold/15 bg-white p-6 shadow-sm lg:col-span-2">
-          <div className="mb-6 flex flex-col gap-4">
-            <h2 className="font-display text-lg font-bold uppercase tracking-tight text-ananda-maroon">
-              Gallery Albums
-            </h2>
-
-            <div className="grid gap-3 grid-cols-1 sm:grid-cols-2">
-              {/* Search */}
-              <input
-                type="text"
-                value={search}
-                onChange={handleSearchChange}
-                placeholder="Search albums..."
-                className="rounded-xl border border-ananda-gold/25 bg-white px-4 py-2 text-xs font-semibold outline-none focus:border-ananda-maroon focus:ring-1 focus:ring-ananda-maroon transition shadow-sm"
-              />
-
-              {/* Sport Filter */}
-              <div className="relative">
-                <select
-                  value={filterSport}
-                  onChange={handleFilterSportChange}
-                  className="w-full appearance-none rounded-xl border border-ananda-gold/25 bg-white pl-3 pr-8 py-2.5 text-xs font-semibold uppercase tracking-wider outline-none focus:border-ananda-maroon focus:ring-1 focus:ring-ananda-maroon transition shadow-sm"
+              <div className="pt-2">
+                <button
+                  type="submit"
+                  disabled={uploading}
+                  className="w-full rounded-xl bg-ananda-maroon px-6 py-3.5 font-semibold text-white hover:bg-ananda-dark-maroon disabled:cursor-not-allowed disabled:opacity-70 transition duration-300 font-display text-xs font-bold uppercase tracking-wider cursor-pointer hover:scale-[1.01]"
                 >
-                  <option value="ALL">All Sports</option>
-                  {sports.map((sport) => (
-                    <option key={sport._id} value={sport._id}>
-                      {sport.name}
-                    </option>
-                  ))}
-                </select>
-                <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2.5 text-gray-555">
-                  <svg className="h-3 w-3 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </span>
+                  {uploading ? "Uploading..." : "Upload Images"}
+                </button>
               </div>
-            </div>
+            </form>
           </div>
-
-          {loading && (
-            <div className="flex flex-col items-center gap-3 py-16 text-center">
-              <div className="h-8 w-8 animate-spin rounded-full border-4 border-ananda-gold/30 border-t-ananda-maroon" />
-              <p className="font-display text-xs uppercase tracking-wider text-ananda-maroon animate-pulse">Loading albums...</p>
-            </div>
-          )}
-
-          {!loading && albums.length === 0 && (
-            <div className="rounded-xl border border-dashed border-gray-200 bg-gray-50 p-8 text-center text-sm text-gray-500">
-              No albums found.
-            </div>
-          )}
-
-          {!loading && albums.length > 0 && (
-            <div className="space-y-6">
-              {albums.map((album) => (
-                <div
-                  key={album._id}
-                  className="rounded-2xl border border-ananda-gold/15 bg-white p-6 shadow-sm hover:border-ananda-gold/35 transition duration-250"
-                >
-                  <div className="mb-4 flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-                    <div>
-                      <p className="mb-1 text-[10px] font-bold uppercase tracking-wider text-ananda-gold">
-                        {album.sport?.name || "General Event"}
-                      </p>
-
-                      <h3 className="font-display text-lg font-bold uppercase tracking-tight text-ananda-maroon">
-                        {album.title}
-                      </h3>
-
-                      <p className="text-xs text-gray-400 font-semibold mt-0.5">
-                        {album.images?.length || 0} images
-                      </p>
-
-                      {album.description && (
-                        <p className="mt-2 text-xs text-gray-600 leading-relaxed">
-                          {album.description}
-                        </p>
-                      )}
-                    </div>
-
-                    <div className="flex flex-wrap gap-2">
-                      <button
-                        onClick={() => {
-                          setSelectedAlbumId(album._id);
-                          setMessage("");
-                          setError("");
-                        }}
-                        className="font-display text-[10px] font-bold uppercase tracking-wider bg-ananda-maroon hover:bg-ananda-dark-maroon text-white px-3 py-1.5 rounded-lg transition duration-250 cursor-pointer"
-                      >
-                        Select
-                      </button>
-
-                      <button
-                        onClick={() => handleEdit(album)}
-                        className="font-display text-[10px] font-bold uppercase tracking-wider bg-ananda-gold hover:bg-ananda-light-gold text-ananda-dark-maroon px-3 py-1.5 rounded-lg transition duration-250 cursor-pointer"
-                      >
-                        Edit
-                      </button>
-
-                      <button
-                        onClick={() => handleDeleteAlbum(album._id)}
-                        className="font-display text-[10px] font-bold uppercase tracking-wider bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-lg transition duration-250 cursor-pointer"
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  </div>
-
-                  {album.images?.length > 0 && (
-                    <div className="grid gap-4 grid-cols-2 sm:grid-cols-3 mt-4">
-                      {album.images.map((image) => (
-                        <div
-                          key={image._id}
-                          className="group overflow-hidden rounded-xl border border-ananda-gold/15 bg-white shadow-xs relative"
-                        >
-                          <img
-                            src={image.url}
-                            alt={album.title}
-                            className="h-28 w-full object-cover transition duration-300 group-hover:scale-105"
-                          />
-
-                          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center p-3">
-                            <button
-                              onClick={() =>
-                                handleDeleteImage(album._id, image._id)
-                              }
-                              className="font-display text-[9px] font-bold uppercase tracking-wider bg-red-600 hover:bg-red-700 text-white px-2.5 py-1.5 rounded-lg transition duration-250 cursor-pointer shadow-sm"
-                            >
-                              Delete Image
-                            </button>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
-
-          {selectedAlbum && (
-            <div className="mt-6 rounded-xl border border-ananda-gold/25 bg-ananda-gold/10 px-4 py-3 text-xs font-semibold text-ananda-dark-maroon flex items-center gap-2">
-              <span className="h-2 w-2 rounded-full bg-ananda-gold animate-pulse" />
-              <span>Selected album for upload:</span>
-              <span className="font-bold underline">{selectedAlbum.title}</span>
-            </div>
-          )}
-        </Reveal>
-      </div>
+        </div>
+      )}
     </div>
   );
 }
