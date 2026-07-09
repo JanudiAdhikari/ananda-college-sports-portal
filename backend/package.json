@@ -10,7 +10,14 @@
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
     "seed:admin": "node src/seeders/seedSuperAdmin.js",
-    "seed:sports": "node src/seeders/seedSports.js"
+    "seed:sports": "node src/seeders/seedSports.js",
+    "seed:teams": "node src/seeders/seedTeams.js",
+    "seed:players": "node src/seeders/seedPlayers.js",
+    "seed:fixtures": "node src/seeders/seedFixtures.js",
+    "seed:live-matches": "node src/seeders/seedLiveMatches.js",
+    "seed:gallery": "node src/seeders/seedGalleryAlbums.js",
+    "seed:users": "node src/seeders/seedUsers.js",
+    "seed:all": "node src/seeders/seedAll.js"
   },
   "keywords": [],
   "author": "",
