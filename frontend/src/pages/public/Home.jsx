@@ -7,6 +7,59 @@ import { getFixtures } from "../../services/fixtureService";
 import { getGalleryAlbums } from "../../services/galleryService";
 import { getLiveMatches } from "../../services/liveMatchService";
 
+import img1 from "../../assets/img1.jpeg";
+import img2 from "../../assets/img2.jpeg";
+import img3 from "../../assets/img3.jpeg";
+import img4 from "../../assets/img4.jpeg";
+import img5 from "../../assets/img5.jpeg";
+import img6 from "../../assets/img6.jpeg";
+
+const SLIDESHOW_IMAGES = [img1, img2, img3, img4, img5, img6];
+
+// Image Slideshow Component
+function ImageSlideshow() {
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % SLIDESHOW_IMAGES.length);
+    }, 4000); // Change image every 4 seconds
+
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div className="relative overflow-hidden rounded-3xl h-96 md:h-[500px] shadow-2xl">
+      {SLIDESHOW_IMAGES.map((image, index) => (
+        <img
+          key={index}
+          src={image}
+          alt={`Slideshow ${index + 1}`}
+          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
+            index === currentImageIndex ? "opacity-100" : "opacity-0"
+          }`}
+        />
+      ))}
+
+      {/* Indicators */}
+      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+        {SLIDESHOW_IMAGES.map((_, index) => (
+          <button
+            key={index}
+            onClick={() => setCurrentImageIndex(index)}
+            className={`h-2 rounded-full transition-all duration-300 ${
+              index === currentImageIndex
+                ? "bg-ananda-gold w-8"
+                : "bg-white/50 hover:bg-white/80 w-2"
+            }`}
+            aria-label={`Go to slide ${index + 1}`}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 // Scroll-triggered reveal wrapper — fades sections in once, respects user's intent to not animate
 function Reveal({ children, className = "" }) {
   const ref = useRef(null);
@@ -85,6 +138,16 @@ function Home() {
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  // Slideshow auto-rotation
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % SLIDESHOW_IMAGES.length);
+    }, 5000); // Change image every 5 seconds
+
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     let isMounted = true;
@@ -154,117 +217,129 @@ function Home() {
 
   return (
     <div>
-      {/* HERO */}
-      <section className="relative overflow-hidden bg-ananda-dark-maroon">
-        <div
-          className="pointer-events-none absolute inset-0 opacity-[0.06]"
-          style={{
-            backgroundImage:
-              "repeating-linear-gradient(135deg, white 0px, white 1px, transparent 1px, transparent 28px)",
-          }}
-        />
+      {/* HERO with SLIDESHOW */}
+      <section className="relative overflow-hidden min-h-screen flex items-center">
+        {/* Slideshow Background */}
+        <div className="absolute inset-0">
+          {SLIDESHOW_IMAGES.map((image, index) => (
+            <img
+              key={index}
+              src={image}
+              alt={`Hero ${index + 1}`}
+              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
+                index === currentImageIndex ? "opacity-100" : "opacity-0"
+              }`}
+            />
+          ))}
+          {/* Dark overlay */}
+          <div className="absolute inset-0 bg-gradient-to-r from-ananda-dark-maroon/85 via-ananda-dark-maroon/60 to-transparent" />
+        </div>
 
-        <div className="relative mx-auto grid max-w-7xl gap-10 px-6 py-20 lg:grid-cols-2 lg:items-center">
-          <div>
+        {/* Content */}
+        <div className="relative mx-auto grid max-w-7xl gap-12 px-6 py-24 w-full lg:grid-cols-2 lg:items-center">
+          <div className="max-w-2xl">
             <p className="font-display mb-4 text-sm font-semibold uppercase tracking-[0.3em] text-ananda-gold">
               Ananda College &middot; Colombo 10
             </p>
 
-            <h1 className="font-display mb-5 text-5xl font-bold uppercase leading-[1.05] text-white md:text-6xl">
-              Where every <span className="text-ananda-gold">match</span> tells the story
+            <h1 className="font-display mb-6 text-5xl font-bold uppercase leading-[1.1] text-white md:text-6xl lg:text-7xl">
+              Where every <span className="text-ananda-gold">match</span> tells the <span className="text-ananda-gold">story</span>
             </h1>
 
-            <p className="max-w-xl text-lg text-ananda-light-gold/90">
+            <p className="mb-8 max-w-xl text-lg text-white/90 leading-relaxed">
               Teams, players, fixtures, results, and live coverage from across
-              the school &mdash; all in one place.
+              the school &mdash; all in one place. Experience the passion and
+              pride of Ananda College athletics.
             </p>
 
-            <div className="mt-9 flex flex-wrap gap-4">
+            <div className="flex flex-wrap gap-4">
               <Link
                 to="/sports"
-                className="font-display rounded-xl bg-ananda-gold px-7 py-3 text-sm font-bold uppercase tracking-wide text-ananda-dark-maroon transition hover:scale-[1.03] hover:shadow-lg"
+                className="font-display rounded-xl bg-ananda-gold px-8 py-3.5 text-sm font-bold uppercase tracking-wide text-ananda-dark-maroon transition hover:scale-[1.05] hover:shadow-xl shadow-lg"
               >
                 Explore Sports
               </Link>
 
               <Link
                 to="/live-matches"
-                className="font-display rounded-xl border border-ananda-gold/60 px-7 py-3 text-sm font-bold uppercase tracking-wide text-ananda-gold transition hover:bg-ananda-gold hover:text-ananda-dark-maroon"
+                className="font-display rounded-xl border-2 border-ananda-gold px-8 py-3.5 text-sm font-bold uppercase tracking-wide text-ananda-gold transition hover:bg-ananda-gold hover:text-ananda-dark-maroon hover:shadow-xl"
               >
                 Live Matches
               </Link>
             </div>
           </div>
 
-          {/* SIGNATURE: scoreboard panel */}
-          <div className="overflow-hidden rounded-3xl border border-ananda-gold/30 bg-ananda-maroon shadow-2xl">
-            {liveMatch ? (
-              <>
-                <div className="flex items-center justify-between border-b border-ananda-gold/25 px-6 py-4">
-                  <div className="flex items-center gap-2">
-                    {liveMatch.status === "LIVE" && (
-                      <span className="live-dot h-2.5 w-2.5 rounded-full bg-red-400" />
-                    )}
-                    <span className="font-display text-xs font-bold uppercase tracking-[0.25em] text-ananda-gold">
-                      {liveMatch.status === "LIVE" ? "Live Now" : "Latest Match"}
-                    </span>
-                  </div>
-                  <span className="font-display text-xs uppercase tracking-wide text-ananda-light-gold/70">
-                    {liveMatch.sport?.name}
+          {/* Live Match Panel - Right Side */}
+          {liveMatch && (
+            <div className="overflow-hidden rounded-3xl border border-ananda-gold/40 bg-ananda-maroon/95 shadow-2xl backdrop-blur-sm">
+              <div className="flex items-center justify-between border-b border-ananda-gold/25 px-6 py-4">
+                <div className="flex items-center gap-2">
+                  {liveMatch.status === "LIVE" && (
+                    <span className="live-dot h-2.5 w-2.5 rounded-full bg-red-400 animate-pulse" />
+                  )}
+                  <span className="font-display text-xs font-bold uppercase tracking-[0.25em] text-ananda-gold">
+                    {liveMatch.status === "LIVE" ? "🔴 Live Now" : "Latest Match"}
                   </span>
                 </div>
+                <span className="font-display text-xs uppercase tracking-wide text-ananda-light-gold/70">
+                  {liveMatch.sport?.name}
+                </span>
+              </div>
 
-                <div className="px-6 py-6">
-                  <h2 className="font-display mb-5 text-xl font-bold uppercase tracking-tight text-white">
-                    {liveMatch.title}
-                  </h2>
+              <div className="px-6 py-8">
+                <h2 className="font-display mb-6 text-lg font-bold uppercase tracking-tight text-white line-clamp-2">
+                  {liveMatch.title}
+                </h2>
 
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="rounded-xl bg-black/20 p-4 text-center">
-                      <p className="mb-1 truncate text-xs font-medium uppercase tracking-wide text-ananda-light-gold/70">
-                        {liveMatch.anandaTeamName}
-                      </p>
-                      <p className="font-display text-4xl font-bold text-white">
-                        {liveMatch.score?.anandaScore || "-"}
-                      </p>
-                    </div>
-
-                    <div className="rounded-xl bg-black/20 p-4 text-center">
-                      <p className="mb-1 truncate text-xs font-medium uppercase tracking-wide text-ananda-light-gold/70">
-                        {liveMatch.opponentTeamName}
-                      </p>
-                      <p className="font-display text-4xl font-bold text-white">
-                        {liveMatch.score?.opponentScore || "-"}
-                      </p>
-                    </div>
+                <div className="grid grid-cols-2 gap-4 mb-6">
+                  <div className="rounded-2xl bg-black/30 p-5 text-center border border-ananda-gold/20">
+                    <p className="mb-2 truncate text-xs font-medium uppercase tracking-wide text-ananda-light-gold/70">
+                      {liveMatch.anandaTeamName}
+                    </p>
+                    <p className="font-display text-5xl font-bold text-white">
+                      {liveMatch.score?.anandaScore || "-"}
+                    </p>
                   </div>
 
-                  <p className="font-display mt-5 rounded-lg bg-ananda-gold/15 px-4 py-2.5 text-center text-xs font-semibold uppercase tracking-wide text-ananda-gold">
-                    {liveMatch.score?.currentStatus || liveMatch.status}
-                  </p>
-
-                  <Link
-                    to="/live-matches"
-                    className="font-display mt-5 block rounded-xl bg-ananda-gold py-3 text-center text-sm font-bold uppercase tracking-wide text-ananda-dark-maroon transition hover:opacity-90"
-                  >
-                    Open Live Center
-                  </Link>
+                  <div className="rounded-2xl bg-black/30 p-5 text-center border border-ananda-gold/20">
+                    <p className="mb-2 truncate text-xs font-medium uppercase tracking-wide text-ananda-light-gold/70">
+                      {liveMatch.opponentTeamName}
+                    </p>
+                    <p className="font-display text-5xl font-bold text-white">
+                      {liveMatch.score?.opponentScore || "-"}
+                    </p>
+                  </div>
                 </div>
-              </>
-            ) : (
-              <div className="px-6 py-12 text-center">
-                <p className="font-display mb-2 text-xs font-bold uppercase tracking-[0.25em] text-ananda-gold">
-                  Live Center
+
+                <p className="font-display mb-6 rounded-lg bg-ananda-gold/20 border border-ananda-gold/40 px-4 py-3 text-center text-xs font-semibold uppercase tracking-wide text-ananda-gold">
+                  {liveMatch.score?.currentStatus || liveMatch.status}
                 </p>
-                <h2 className="font-display mb-3 text-2xl font-bold uppercase text-white">
-                  No live matches right now
-                </h2>
-                <p className="text-sm text-ananda-light-gold/80">
-                  Scores will appear here the moment a match goes live.
-                </p>
+
+                <Link
+                  to="/live-matches"
+                  className="font-display block rounded-xl bg-ananda-gold py-3 text-center text-sm font-bold uppercase tracking-wide text-ananda-dark-maroon transition hover:bg-ananda-light-gold hover:shadow-lg"
+                >
+                  View Live Center
+                </Link>
               </div>
-            )}
-          </div>
+            </div>
+          )}
+        </div>
+
+        {/* Slideshow Indicators */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+          {SLIDESHOW_IMAGES.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentImageIndex(index)}
+              className={`h-2 rounded-full transition-all duration-300 ${
+                index === currentImageIndex
+                  ? "bg-ananda-gold w-8"
+                  : "bg-white/50 hover:bg-white/80 w-2"
+              }`}
+              aria-label={`Go to slide ${index + 1}`}
+            />
+          ))}
         </div>
       </section>
 
