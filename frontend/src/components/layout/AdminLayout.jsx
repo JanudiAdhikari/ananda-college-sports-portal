@@ -52,33 +52,39 @@ function AdminLayout({ children }) {
   );
 
   const linkClass = ({ isActive }) =>
-    `font-display text-xs font-bold uppercase tracking-wider block rounded-xl px-4 py-3 transition duration-200 ${
+    `font-display text-xs font-bold uppercase tracking-wider block rounded-xl px-4 py-3 transition duration-200 hover:translate-x-0.5 ${
       isActive
-        ? "bg-ananda-maroon text-white shadow-md"
-        : "text-ananda-dark-maroon hover:bg-ananda-cream/50 hover:text-ananda-maroon"
+        ? "bg-gradient-to-r from-ananda-maroon to-ananda-dark-maroon text-white shadow-md"
+        : "text-ananda-dark-maroon hover:bg-ananda-cream/60 hover:text-ananda-maroon"
     }`;
 
   return (
     <section className="mx-auto max-w-7xl px-6 py-8 animate-fade-in">
       {/* Admin Header */}
-      <div className="mb-6 rounded-2xl border border-ananda-gold/15 bg-white p-6 shadow-sm">
-        <p className="font-display text-xs font-semibold uppercase tracking-wider text-ananda-gold">
-          Admin Area
-        </p>
+      <div className="relative overflow-hidden mb-6 rounded-2xl border border-ananda-gold/15 bg-gradient-to-r from-ananda-dark-maroon via-ananda-maroon to-[#2d000a] p-6 shadow-sm text-white">
+        {/* Glowing spotlights */}
+        <div className="absolute right-0 top-0 -mr-20 -mt-20 h-48 w-48 rounded-full bg-gradient-to-br from-ananda-gold/15 to-transparent blur-2xl pointer-events-none" />
+        <div className="absolute left-0 bottom-0 -ml-20 -mb-20 h-40 w-40 rounded-full bg-gradient-to-tr from-ananda-maroon/20 to-transparent blur-2xl pointer-events-none" />
 
-        <div className="mt-2 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-          <div>
-            <h1 className="font-display text-2xl font-bold uppercase tracking-tight text-ananda-dark-maroon">
-              Management Panel
-            </h1>
-            <p className="mt-1 text-xs text-gray-500 font-semibold uppercase tracking-wider">
-              {user?.fullName} <span className="text-ananda-gold/60 font-normal">|</span> {user?.role?.replace("_", " ")}
-            </p>
+        <div className="relative z-10">
+          <p className="font-display text-[10px] font-bold uppercase tracking-wider text-ananda-gold">
+            Admin Area
+          </p>
+
+          <div className="mt-2 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+            <div>
+              <h1 className="font-display text-2xl font-bold uppercase tracking-tight text-white">
+                Management Panel
+              </h1>
+              <p className="mt-1 text-[10px] text-ananda-light-gold/80 font-bold uppercase tracking-wider">
+                {user?.fullName} <span className="text-ananda-gold/40 font-normal mx-1">|</span> {user?.role?.replace("_", " ")}
+              </p>
+            </div>
+
+            <span className="font-display self-start md:self-auto rounded-full bg-ananda-gold/10 border border-ananda-gold/30 px-3.5 py-1.5 text-[10px] font-bold uppercase tracking-wider text-ananda-gold">
+              Authorized Access
+            </span>
           </div>
-
-          <span className="font-display self-start md:self-auto rounded-full bg-ananda-cream/70 border border-ananda-gold/15 px-4 py-2 text-xs font-bold uppercase tracking-wider text-ananda-maroon">
-            Authorized Access
-          </span>
         </div>
       </div>
 

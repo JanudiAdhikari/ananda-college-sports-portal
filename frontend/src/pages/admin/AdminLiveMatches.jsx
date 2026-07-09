@@ -68,6 +68,7 @@ function AdminLiveMatches() {
 
   const [formData, setFormData] = useState(initialFormData);
   const [editingLiveMatchId, setEditingLiveMatchId] = useState(null);
+  const [activeForm, setActiveForm] = useState(null); // null, 'MATCH', or 'SCORE'
 
   const [selectedMatchId, setSelectedMatchId] = useState("");
   const [scoreFormData, setScoreFormData] = useState({
@@ -78,6 +79,10 @@ function AdminLiveMatches() {
     wickets: "",
     updateText: "",
   });
+
+  const [search, setSearch] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
 
   const [filterStatus, setFilterStatus] = useState("ALL");
   const [filterSport, setFilterSport] = useState("ALL");
@@ -110,6 +115,7 @@ function AdminLiveMatches() {
 
       const data = await getLiveMatches(buildParams());
       setLiveMatches(data.liveMatches);
+      setCurrentPage(1);
 
       if (data.liveMatches.length > 0 && !selectedMatchId) {
         const firstMatch = data.liveMatches[0];
@@ -182,6 +188,7 @@ function AdminLiveMatches() {
         }
 
         setLiveMatches(data.liveMatches);
+        setCurrentPage(1);
 
         if (data.liveMatches.length > 0 && !selectedMatchId) {
           const firstMatch = data.liveMatches[0];
@@ -257,6 +264,11 @@ function AdminLiveMatches() {
     setError("");
   };
 
+  const handleSearchChange = (event) => {
+    setSearch(event.target.value);
+    setCurrentPage(1);
+  };
+
   const getPayload = () => {
     return {
       sport: formData.sport,
@@ -299,6 +311,7 @@ function AdminLiveMatches() {
         ...initialFormData,
         sport: sports[0]?._id || "",
       });
+      setActiveForm(null);
 
       await loadLiveMatches();
     } catch (error) {
@@ -330,17 +343,16 @@ function AdminLiveMatches() {
 
     setMessage("");
     setError("");
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    setActiveForm("MATCH");
   };
 
   const handleCancelEdit = () => {
     setEditingLiveMatchId(null);
-
     setFormData({
       ...initialFormData,
       sport: sports[0]?._id || "",
     });
-
+    setActiveForm(null);
     setMessage("");
     setError("");
   };
@@ -386,6 +398,7 @@ function AdminLiveMatches() {
         ...scoreFormData,
         updateText: "",
       });
+      setActiveForm(null);
 
       await loadLiveMatches();
     } catch (error) {
@@ -440,50 +453,327 @@ function AdminLiveMatches() {
         );
       case "CANCELLED":
         return (
-          <span className="inline-flex items-center rounded-full bg-gray-100 border border-gray-200 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-gray-500">
+          <span className="inline-flex items-center rounded-full bg-gray-100 border border-gray-200 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-gray-550">
             Cancelled
           </span>
         );
       default:
         return (
-          <span className="inline-flex items-center rounded-full bg-gray-50 border border-gray-200 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-gray-600">
+          <span className="inline-flex items-center rounded-full bg-gray-50 border border-gray-200 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-gray-650">
             {status}
           </span>
         );
     }
   };
 
+  // Local Search & Filtering
+  const filteredMatches = liveMatches.filter((match) =>
+    match.title.toLowerCase().includes(search.toLowerCase()) ||
+    match.opponentTeamName.toLowerCase().includes(search.toLowerCase()) ||
+    (match.sport?.name || "").toLowerCase().includes(search.toLowerCase()) ||
+    (match.venue || "").toLowerCase().includes(search.toLowerCase())
+  );
+
+  // Pagination Logic
+  const totalPages = Math.ceil(filteredMatches.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const paginatedMatches = filteredMatches.slice(startIndex, startIndex + itemsPerPage);
+
   return (
     <div>
-      <p className="font-display mb-1 text-xs font-semibold uppercase tracking-wider text-ananda-gold">
-        Admin Panel
-      </p>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
+        <div>
+          <p className="font-display mb-1 text-xs font-semibold uppercase tracking-wider text-ananda-gold">
+            Admin Panel
+          </p>
+          <h1 className="font-display text-3xl font-bold uppercase tracking-tight text-ananda-dark-maroon">
+            Manage Live Matches
+          </h1>
+        </div>
 
-      <h1 className="font-display mb-2 text-3xl font-bold uppercase tracking-tight text-ananda-dark-maroon">
-        Manage Live Matches
-      </h1>
+        <div className="flex flex-wrap gap-2.5">
+          <button
+            onClick={() => {
+              setEditingLiveMatchId(null);
+              setFormData({
+                ...initialFormData,
+                sport: sports[0]?._id || "",
+              });
+              setActiveForm("MATCH");
+              setMessage("");
+              setError("");
+            }}
+            className="font-display rounded-xl bg-ananda-gold px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-ananda-dark-maroon hover:bg-ananda-light-gold transition cursor-pointer flex items-center gap-1.5 shadow-sm hover:shadow-md hover:scale-[1.02]"
+          >
+            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" />
+            </svg>
+            Add Live Match
+          </button>
+
+          <button
+            onClick={() => {
+              setActiveForm("SCORE");
+              setMessage("");
+              setError("");
+            }}
+            className="font-display rounded-xl border border-ananda-maroon px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-ananda-maroon hover:bg-ananda-cream/45 transition cursor-pointer flex items-center gap-1.5 shadow-sm hover:scale-[1.02]"
+          >
+            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+            </svg>
+            Update Live Score
+          </button>
+        </div>
+      </div>
 
       <p className="mb-8 text-sm text-gray-600">
         Add live match links and update live scores.
       </p>
 
       {message && (
-        <div className="mb-6 rounded-xl bg-green-50 border border-green-200 px-4 py-3 text-sm font-semibold text-green-700">
+        <div className="mb-6 rounded-xl bg-green-50 border border-green-200 px-4 py-3 text-sm font-semibold text-green-700 animate-fade-in">
           {message}
         </div>
       )}
 
       {error && (
-        <div className="mb-6 rounded-xl bg-red-50 border border-red-200 px-4 py-3 text-sm font-semibold text-red-700">
+        <div className="mb-6 rounded-xl bg-red-50 border border-red-200 px-4 py-3 text-sm font-semibold text-red-700 animate-fade-in">
           {error}
         </div>
       )}
 
-      <div className="grid gap-8 xl:grid-cols-3">
-        {/* Form and Score Updates Column */}
-        <div className="space-y-8 xl:col-span-1">
-          {/* Add/Edit Form */}
-          <Reveal className="rounded-2xl border border-ananda-gold/15 bg-white p-6 shadow-sm h-fit">
+      {/* Full-width spacious view */}
+      <Reveal className="rounded-2xl border border-ananda-gold/15 bg-white p-6 shadow-sm">
+        <div className="mb-6 flex flex-col gap-4">
+          <h2 className="font-display text-lg font-bold uppercase tracking-tight text-ananda-maroon">
+            Live Matches List
+          </h2>
+
+          <div className="grid gap-3 grid-cols-1 sm:grid-cols-3">
+            {/* Search Input */}
+            <input
+              type="text"
+              value={search}
+              onChange={handleSearchChange}
+              placeholder="Search opponent or title..."
+              className="rounded-xl border border-ananda-gold/25 bg-white px-3 py-2.5 text-xs font-semibold outline-none focus:border-ananda-maroon focus:ring-1 focus:ring-ananda-maroon transition shadow-sm"
+            />
+
+            {/* Status Filter */}
+            <div className="relative">
+              <select
+                value={filterStatus}
+                onChange={handleFilterStatusChange}
+                className="w-full appearance-none rounded-xl border border-ananda-gold/25 bg-white pl-3 pr-8 py-2.5 text-xs font-semibold uppercase tracking-wider outline-none focus:border-ananda-maroon focus:ring-1 focus:ring-ananda-maroon transition shadow-sm"
+              >
+                <option value="ALL">All Status</option>
+                {statusOptions.map((status) => (
+                  <option key={status.value} value={status.value}>
+                    {status.label}
+                  </option>
+                ))}
+              </select>
+              <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2.5 text-gray-555">
+                <svg className="h-3 w-3 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </span>
+            </div>
+
+            {/* Sport Filter */}
+            <div className="relative">
+              <select
+                value={filterSport}
+                onChange={handleFilterSportChange}
+                className="w-full appearance-none rounded-xl border border-ananda-gold/25 bg-white pl-3 pr-8 py-2.5 text-xs font-semibold uppercase tracking-wider outline-none focus:border-ananda-maroon focus:ring-1 focus:ring-ananda-maroon transition shadow-sm"
+              >
+                <option value="ALL">All Sports</option>
+                {sports.map((sport) => (
+                  <option key={sport._id} value={sport._id}>
+                    {sport.name}
+                  </option>
+                ))}
+              </select>
+              <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2.5 text-gray-555">
+                <svg className="h-3 w-3 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {loading && (
+          <div className="flex flex-col items-center gap-3 py-16 text-center">
+            <div className="h-8 w-8 animate-spin rounded-full border-4 border-ananda-gold/30 border-t-ananda-maroon" />
+            <p className="font-display text-xs uppercase tracking-wider text-ananda-maroon animate-pulse">Loading live matches...</p>
+          </div>
+        )}
+
+        {!loading && filteredMatches.length === 0 && (
+          <div className="rounded-xl border border-dashed border-gray-200 bg-gray-50 p-8 text-center text-sm text-gray-500">
+            No live matches found.
+          </div>
+        )}
+
+        {!loading && filteredMatches.length > 0 && (
+          <div>
+            <div className="space-y-6">
+              {paginatedMatches.map((match) => (
+                <div
+                  key={match._id}
+                  className="rounded-2xl border border-ananda-gold/15 bg-white p-6 shadow-sm hover:border-ananda-gold/35 transition duration-250"
+                >
+                  <div className="mb-4 flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+                    <div>
+                      <div className="mb-1.5 flex flex-wrap items-center gap-2">
+                        <span className="font-display text-[10px] font-bold uppercase tracking-wider text-ananda-gold">
+                          {match.sport?.name}
+                        </span>
+                        <span className="text-gray-300 text-xs">|</span>
+                        {getStatusBadge(match.status)}
+                      </div>
+
+                      <h3 className="font-display text-lg font-bold uppercase tracking-tight text-ananda-maroon">
+                        {match.title}
+                      </h3>
+
+                      <p className="mt-1 text-xs font-semibold text-gray-600 flex items-center gap-1.5">
+                        <svg className="h-3.5 w-3.5 text-gray-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                        Teams: {match.anandaTeamName} vs {match.opponentTeamName}
+                      </p>
+
+                      <p className="mt-0.5 text-xs text-gray-500 flex items-center gap-1.5">
+                        <svg className="h-3.5 w-3.5 text-gray-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                        Venue: {match.venue || "Venue not added"}
+                      </p>
+
+                      <p className="mt-0.5 text-xs text-gray-550 flex items-center gap-1.5 font-medium">
+                        <svg className="h-3.5 w-3.5 text-gray-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                        Date: {new Date(match.matchDate).toLocaleString()}
+                      </p>
+                    </div>
+
+                    <div className="flex flex-wrap gap-2">
+                      <button
+                        onClick={() => handleEdit(match)}
+                        className="font-display text-[10px] font-bold uppercase tracking-wider bg-ananda-gold hover:bg-ananda-light-gold text-ananda-dark-maroon px-3 py-1.5 rounded-lg transition duration-250 cursor-pointer"
+                      >
+                        Edit
+                      </button>
+
+                      <button
+                        onClick={() => handleDelete(match._id)}
+                        className="font-display text-[10px] font-bold uppercase tracking-wider bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-lg transition duration-250 cursor-pointer"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="grid gap-3 grid-cols-2 sm:grid-cols-4 mt-4">
+                    <div className="rounded-xl border border-ananda-gold/10 bg-ananda-cream/15 p-3 text-center">
+                      <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400 truncate">{match.anandaTeamName}</p>
+                      <p className="font-display text-sm font-extrabold text-ananda-maroon mt-0.5">
+                        {match.score?.anandaScore || "-"}
+                      </p>
+                    </div>
+
+                    <div className="rounded-xl border border-ananda-gold/10 bg-ananda-cream/15 p-3 text-center">
+                      <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400 truncate">{match.opponentTeamName}</p>
+                      <p className="font-display text-sm font-extrabold text-ananda-maroon mt-0.5">
+                        {match.score?.opponentScore || "-"}
+                      </p>
+                    </div>
+
+                    <div className="rounded-xl border border-ananda-gold/10 bg-ananda-cream/15 p-3 text-center">
+                      <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Overs / Wickets</p>
+                      <p className="font-display text-sm font-extrabold text-ananda-maroon mt-0.5">
+                        {match.score?.overs || "-"}{match.score?.wickets ? ` (${match.score.wickets} Wkts)` : ""}
+                      </p>
+                    </div>
+
+                    <div className="rounded-xl border border-ananda-gold/10 bg-ananda-cream/15 p-3 text-center">
+                      <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Public Visibility</p>
+                      <p className="font-display text-xs font-bold text-gray-600 mt-0.5 uppercase tracking-wide">
+                        {match.isVisible ? "Visible" : "Hidden"}
+                      </p>
+                    </div>
+                  </div>
+
+                  {match.score?.currentStatus && (
+                    <div className="mt-4 rounded-xl bg-ananda-gold/15 border border-ananda-gold/25 p-3.5 text-xs font-semibold text-ananda-dark-maroon leading-relaxed">
+                      <span className="font-display text-[10px] font-bold uppercase tracking-wider text-ananda-maroon block mb-1">Live Status</span>
+                      {match.score.currentStatus}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+
+            {/* Pagination Controls */}
+            {totalPages > 1 && (
+              <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-t border-gray-100 pt-4">
+                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                  Showing {startIndex + 1} to {Math.min(startIndex + itemsPerPage, filteredMatches.length)} of {filteredMatches.length} entries
+                </p>
+                <div className="flex flex-wrap gap-1">
+                  <button
+                    onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                    disabled={currentPage === 1}
+                    className="font-display text-[10px] font-bold uppercase tracking-wider border border-gray-200 bg-white hover:bg-gray-50 text-gray-750 px-3 py-1.5 rounded-lg disabled:opacity-40 disabled:cursor-not-allowed transition duration-200 cursor-pointer"
+                  >
+                    Previous
+                  </button>
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                    <button
+                      key={page}
+                      onClick={() => setCurrentPage(page)}
+                      className={`font-display text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-lg transition duration-200 cursor-pointer ${
+                        currentPage === page
+                          ? "bg-ananda-maroon text-white shadow-xs"
+                          : "border border-gray-200 bg-white hover:bg-gray-50 text-gray-705"
+                      }`}
+                    >
+                      {page}
+                    </button>
+                  ))}
+                  <button
+                    onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                    disabled={currentPage === totalPages}
+                    className="font-display text-[10px] font-bold uppercase tracking-wider border border-gray-200 bg-white hover:bg-gray-50 text-gray-750 px-3 py-1.5 rounded-lg disabled:opacity-40 disabled:cursor-not-allowed transition duration-200 cursor-pointer"
+                  >
+                    Next
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+      </Reveal>
+
+      {/* Add/Edit Match Overlay Modal */}
+      {activeForm === "MATCH" && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fade-in">
+          <div className="relative w-full max-w-2xl rounded-2xl border border-ananda-gold/15 bg-white p-6 shadow-2xl animate-scale-in max-h-[90vh] overflow-y-auto">
+            {/* Close Button */}
+            <button
+              onClick={handleCancelEdit}
+              className="absolute right-4 top-4 text-gray-400 hover:text-gray-655 cursor-pointer transition hover:scale-110"
+            >
+              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+
             <h2 className="font-display mb-5 text-lg font-bold uppercase tracking-tight text-ananda-maroon">
               {editingLiveMatchId ? "Edit Live Match" : "Add Live Match"}
             </h2>
@@ -697,11 +987,11 @@ function AdminLiveMatches() {
                 </span>
               </label>
 
-              <div className="space-y-2">
+              <div className="pt-2">
                 <button
                   type="submit"
                   disabled={saving}
-                  className="w-full rounded-xl bg-ananda-maroon px-6 py-3 font-semibold text-white hover:bg-ananda-dark-maroon disabled:cursor-not-allowed disabled:opacity-70 transition duration-300 font-display text-xs font-bold uppercase tracking-wider cursor-pointer hover:scale-[1.01]"
+                  className="w-full rounded-xl bg-ananda-maroon px-6 py-3.5 font-semibold text-white hover:bg-ananda-dark-maroon disabled:cursor-not-allowed disabled:opacity-70 transition duration-300 font-display text-xs font-bold uppercase tracking-wider cursor-pointer hover:scale-[1.01]"
                 >
                   {saving
                     ? "Saving..."
@@ -709,22 +999,26 @@ function AdminLiveMatches() {
                       ? "Update Match"
                       : "Create Match"}
                 </button>
-
-                {editingLiveMatchId && (
-                  <button
-                    type="button"
-                    onClick={handleCancelEdit}
-                    className="w-full rounded-xl border border-ananda-maroon/30 px-6 py-3 font-semibold text-ananda-maroon hover:bg-ananda-cream/45 transition duration-300 font-display text-xs font-bold uppercase tracking-wider cursor-pointer"
-                  >
-                    Cancel Edit
-                  </button>
-                )}
               </div>
             </form>
-          </Reveal>
+          </div>
+        </div>
+      )}
 
-          {/* Quick Score Update Form */}
-          <Reveal className="rounded-2xl border border-ananda-gold/15 bg-white p-6 shadow-sm h-fit">
+      {/* Update Score Overlay Modal */}
+      {activeForm === "SCORE" && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fade-in">
+          <div className="relative w-full max-w-lg rounded-2xl border border-ananda-gold/15 bg-white p-6 shadow-2xl animate-scale-in max-h-[90vh] overflow-y-auto">
+            {/* Close Button */}
+            <button
+              onClick={() => setActiveForm(null)}
+              className="absolute right-4 top-4 text-gray-400 hover:text-gray-655 cursor-pointer transition hover:scale-110"
+            >
+              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+
             <h2 className="font-display mb-5 text-lg font-bold uppercase tracking-tight text-ananda-maroon">
               Update Live Score
             </h2>
@@ -832,185 +1126,19 @@ function AdminLiveMatches() {
                 </div>
               </div>
 
-              <button
-                type="submit"
-                disabled={updatingScore}
-                className="w-full rounded-xl bg-ananda-maroon px-6 py-3 font-semibold text-white hover:bg-ananda-dark-maroon disabled:cursor-not-allowed disabled:opacity-70 transition duration-300 font-display text-xs font-bold uppercase tracking-wider cursor-pointer hover:scale-[1.01]"
-              >
-                {updatingScore ? "Updating..." : "Update Score"}
-              </button>
+              <div className="pt-2">
+                <button
+                  type="submit"
+                  disabled={updatingScore}
+                  className="w-full rounded-xl bg-ananda-maroon px-6 py-3.5 font-semibold text-white hover:bg-ananda-dark-maroon disabled:cursor-not-allowed disabled:opacity-70 transition duration-300 font-display text-xs font-bold uppercase tracking-wider cursor-pointer hover:scale-[1.01]"
+                >
+                  {updatingScore ? "Updating..." : "Update Score"}
+                </button>
+              </div>
             </form>
-          </Reveal>
-        </div>
-
-        {/* Live Matches List Column */}
-        <Reveal className="rounded-2xl border border-ananda-gold/15 bg-white p-6 shadow-sm xl:col-span-2">
-          <div className="mb-6 flex flex-col gap-4">
-            <h2 className="font-display text-lg font-bold uppercase tracking-tight text-ananda-maroon">
-              Live Matches List
-            </h2>
-
-            <div className="grid gap-3 grid-cols-1 sm:grid-cols-2">
-              {/* Status Filter */}
-              <div className="relative">
-                <select
-                  value={filterStatus}
-                  onChange={handleFilterStatusChange}
-                  className="w-full appearance-none rounded-xl border border-ananda-gold/25 bg-white pl-3 pr-8 py-2.5 text-xs font-semibold uppercase tracking-wider outline-none focus:border-ananda-maroon focus:ring-1 focus:ring-ananda-maroon transition shadow-sm"
-                >
-                  <option value="ALL">All Status</option>
-                  {statusOptions.map((status) => (
-                    <option key={status.value} value={status.value}>
-                      {status.label}
-                    </option>
-                  ))}
-                </select>
-                <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2.5 text-gray-555">
-                  <svg className="h-3 w-3 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </span>
-              </div>
-
-              {/* Sport Filter */}
-              <div className="relative">
-                <select
-                  value={filterSport}
-                  onChange={handleFilterSportChange}
-                  className="w-full appearance-none rounded-xl border border-ananda-gold/25 bg-white pl-3 pr-8 py-2.5 text-xs font-semibold uppercase tracking-wider outline-none focus:border-ananda-maroon focus:ring-1 focus:ring-ananda-maroon transition shadow-sm"
-                >
-                  <option value="ALL">All Sports</option>
-                  {sports.map((sport) => (
-                    <option key={sport._id} value={sport._id}>
-                      {sport.name}
-                    </option>
-                  ))}
-                </select>
-                <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2.5 text-gray-555">
-                  <svg className="h-3 w-3 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </span>
-              </div>
-            </div>
           </div>
-
-          {loading && (
-            <div className="flex flex-col items-center gap-3 py-16 text-center">
-              <div className="h-8 w-8 animate-spin rounded-full border-4 border-ananda-gold/30 border-t-ananda-maroon" />
-              <p className="font-display text-xs uppercase tracking-wider text-ananda-maroon animate-pulse">Loading live matches...</p>
-            </div>
-          )}
-
-          {!loading && liveMatches.length === 0 && (
-            <div className="rounded-xl border border-dashed border-gray-200 bg-gray-50 p-8 text-center text-sm text-gray-500">
-              No live matches found.
-            </div>
-          )}
-
-          {!loading && liveMatches.length > 0 && (
-            <div className="space-y-6">
-              {liveMatches.map((match) => (
-                <div
-                  key={match._id}
-                  className="rounded-2xl border border-ananda-gold/15 bg-white p-6 shadow-sm hover:border-ananda-gold/35 transition duration-250"
-                >
-                  <div className="mb-4 flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-                    <div>
-                      <div className="mb-1.5 flex flex-wrap items-center gap-2">
-                        <span className="font-display text-[10px] font-bold uppercase tracking-wider text-ananda-gold">
-                          {match.sport?.name}
-                        </span>
-                        <span className="text-gray-300 text-xs">|</span>
-                        {getStatusBadge(match.status)}
-                      </div>
-
-                      <h3 className="font-display text-lg font-bold uppercase tracking-tight text-ananda-maroon">
-                        {match.title}
-                      </h3>
-
-                      <p className="mt-1 text-xs font-semibold text-gray-600 flex items-center gap-1.5">
-                        <svg className="h-3.5 w-3.5 text-gray-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                        </svg>
-                        Teams: {match.anandaTeamName} vs {match.opponentTeamName}
-                      </p>
-
-                      <p className="mt-0.5 text-xs text-gray-500 flex items-center gap-1.5">
-                        <svg className="h-3.5 w-3.5 text-gray-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                        </svg>
-                        Venue: {match.venue || "Venue not added"}
-                      </p>
-
-                      <p className="mt-0.5 text-xs text-gray-500 flex items-center gap-1.5 font-medium">
-                        <svg className="h-3.5 w-3.5 text-gray-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                        </svg>
-                        Date: {new Date(match.matchDate).toLocaleString()}
-                      </p>
-                    </div>
-
-                    <div className="flex flex-wrap gap-2">
-                      <button
-                        onClick={() => handleEdit(match)}
-                        className="font-display text-[10px] font-bold uppercase tracking-wider bg-ananda-gold hover:bg-ananda-light-gold text-ananda-dark-maroon px-3 py-1.5 rounded-lg transition duration-250 cursor-pointer"
-                      >
-                        Edit
-                      </button>
-
-                      <button
-                        onClick={() => handleDelete(match._id)}
-                        className="font-display text-[10px] font-bold uppercase tracking-wider bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-lg transition duration-250 cursor-pointer"
-                      >
-                        Remove
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="grid gap-3 grid-cols-2 sm:grid-cols-4 mt-4">
-                    <div className="rounded-xl border border-ananda-gold/10 bg-ananda-cream/15 p-3 text-center">
-                      <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400 truncate">{match.anandaTeamName}</p>
-                      <p className="font-display text-sm font-extrabold text-ananda-maroon mt-0.5">
-                        {match.score?.anandaScore || "-"}
-                      </p>
-                    </div>
-
-                    <div className="rounded-xl border border-ananda-gold/10 bg-ananda-cream/15 p-3 text-center">
-                      <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400 truncate">{match.opponentTeamName}</p>
-                      <p className="font-display text-sm font-extrabold text-ananda-maroon mt-0.5">
-                        {match.score?.opponentScore || "-"}
-                      </p>
-                    </div>
-
-                    <div className="rounded-xl border border-ananda-gold/10 bg-ananda-cream/15 p-3 text-center">
-                      <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Overs / Wickets</p>
-                      <p className="font-display text-sm font-extrabold text-ananda-maroon mt-0.5">
-                        {match.score?.overs || "-"}{match.score?.wickets ? ` (${match.score.wickets} Wkts)` : ""}
-                      </p>
-                    </div>
-
-                    <div className="rounded-xl border border-ananda-gold/10 bg-ananda-cream/15 p-3 text-center">
-                      <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Public Visibility</p>
-                      <p className="font-display text-xs font-bold text-gray-600 mt-0.5 uppercase tracking-wide">
-                        {match.isVisible ? "Visible" : "Hidden"}
-                      </p>
-                    </div>
-                  </div>
-
-                  {match.score?.currentStatus && (
-                    <div className="mt-4 rounded-xl bg-ananda-gold/15 border border-ananda-gold/25 p-3.5 text-xs font-semibold text-ananda-dark-maroon leading-relaxed">
-                      <span className="font-display text-[10px] font-bold uppercase tracking-wider text-ananda-maroon block mb-1">Live Status</span>
-                      {match.score.currentStatus}
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
-        </Reveal>
-      </div>
+        </div>
+      )}
     </div>
   );
 }
