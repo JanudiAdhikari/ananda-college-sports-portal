@@ -159,15 +159,12 @@ function TeamDetails() {
   return (
     <div>
       {/* HERO HEADER */}
-      <section className="relative overflow-hidden bg-ananda-dark-maroon py-16 text-white">
-        <div
-          className="pointer-events-none absolute inset-0 opacity-[0.06]"
-          style={{
-            backgroundImage:
-              "repeating-linear-gradient(135deg, white 0px, white 1px, transparent 1px, transparent 28px)",
-          }}
-        />
-        <div className="relative mx-auto max-w-7xl px-6">
+      <section className="relative overflow-hidden bg-gradient-to-r from-ananda-dark-maroon via-ananda-maroon to-[#2d000a] text-white border-b border-ananda-gold/15 py-16">
+        {/* Glowing visual accent spotlights */}
+        <div className="absolute right-0 top-0 -mr-40 -mt-40 h-96 w-96 rounded-full bg-gradient-to-br from-ananda-gold/15 to-transparent blur-3xl" />
+        <div className="absolute left-0 bottom-0 -ml-40 -mb-40 h-80 w-80 rounded-full bg-gradient-to-tr from-ananda-maroon/20 to-transparent blur-3xl" />
+
+        <div className="relative mx-auto max-w-7xl px-6 z-10">
           <Link
             to={`/sports/${team.sport?.slug || ""}`}
             className="font-display mb-4 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-ananda-gold transition hover:text-white"
