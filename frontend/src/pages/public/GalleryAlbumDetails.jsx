@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { getGalleryAlbumBySlug } from "../../services/galleryService";
+import { getOptimizedCloudinaryUrl } from "../../utils/cloudinaryUrl";
 
 // Scroll-triggered reveal wrapper — fades sections in once
 function Reveal({ children, className = "" }) {
@@ -18,7 +19,7 @@ function Reveal({ children, className = "" }) {
           observer.disconnect();
         }
       },
-      { threshold: 0.15 }
+      { threshold: 0.01 }
     );
 
     observer.observe(node);
@@ -145,9 +146,10 @@ function GalleryAlbumDetails() {
               >
                 <div className="h-64 overflow-hidden relative">
                   <img
-                    src={image.url}
+                    src={getOptimizedCloudinaryUrl(image.url, 500)}
                     alt={album.title}
                     className="h-full w-full object-cover transition duration-505 group-hover:scale-105"
+                    loading="lazy"
                   />
                   {/* Hover Overlay */}
                   <div className="absolute inset-0 bg-black/20 opacity-0 transition duration-300 group-hover:opacity-100 flex items-center justify-center">
@@ -183,7 +185,7 @@ function GalleryAlbumDetails() {
             onClick={(e) => e.stopPropagation()}
           >
             <img
-              src={selectedImage.url}
+              src={getOptimizedCloudinaryUrl(selectedImage.url, 1200)}
               alt={album.title}
               className="max-h-[82vh] w-full object-contain rounded-xl"
             />

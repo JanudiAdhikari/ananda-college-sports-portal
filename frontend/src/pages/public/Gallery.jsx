@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { getSports } from "../../services/sportService";
 import { getGalleryAlbums } from "../../services/galleryService";
 
+import { getOptimizedCloudinaryUrl } from "../../utils/cloudinaryUrl";
+
 // Scroll-triggered reveal wrapper — fades sections in once
 function Reveal({ children, className = "" }) {
   const ref = useRef(null);
@@ -19,7 +21,7 @@ function Reveal({ children, className = "" }) {
           observer.disconnect();
         }
       },
-      { threshold: 0.15 }
+      { threshold: 0.01 }
     );
 
     observer.observe(node);
@@ -221,9 +223,10 @@ function Gallery() {
                 <div className="h-52 overflow-hidden relative bg-ananda-cream/35">
                   {album.images?.[0]?.url || album.coverImage?.url ? (
                     <img
-                      src={album.images?.[0]?.url || album.coverImage?.url}
+                      src={getOptimizedCloudinaryUrl(album.images?.[0]?.url || album.coverImage?.url, 600)}
                       alt={album.title}
                       className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                      loading="lazy"
                     />
                   ) : (
                     <div className="flex h-full items-center justify-center bg-ananda-light-gold/30 text-ananda-maroon font-display uppercase tracking-wider text-xs">

@@ -57,9 +57,9 @@ const sports = [
   },
   {
     name: "Rowing",
-    category: "OTHER",
+    category: "AQUATIC",
     description:
-      "Rowing strengthens endurance and coordination while emphasizing discipline, rhythm, and collective effort.",
+      "Rowing develops endurance, strength, coordination, and discipline through competitive water-based team and individual events.",
     displayOrder: 8,
   },
   {
@@ -295,9 +295,9 @@ const sports = [
   },
   {
     name: "Elle",
-    category: "OTHER",
+    category: "TEAM",
     description:
-      "Elle is a recognized school activity that encourages discipline, coordination, and creative expression.",
+      "Elle is a traditional Sri Lankan bat-and-ball team sport that develops teamwork, speed, coordination, and school spirit.",
     displayOrder: 42,
   },
 ];
