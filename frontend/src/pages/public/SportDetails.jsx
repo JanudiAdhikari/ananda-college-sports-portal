@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { getSportBySlug } from "../../services/sportService";
 import { getTeams } from "../../services/teamService";
@@ -32,35 +32,35 @@ function TeamCardSkeleton() {
   );
 }
 
-// Scroll-triggered reveal wrapper — fades sections in once
-function Reveal({ children, className = "" }) {
-  const ref = useRef(null);
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const node = ref.current;
-    if (!node) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.15 }
-    );
-
-    observer.observe(node);
-    return () => observer.disconnect();
-  }, []);
-
-  return (
-    <div ref={ref} className={`${visible ? "reveal" : "opacity-0"} ${className}`}>
-      {children}
-    </div>
-  );
-}
+// // Scroll-triggered reveal wrapper — fades sections in once
+// function Reveal({ children, className = "" }) {
+//   const ref = useRef(null);
+//   const [visible, setVisible] = useState(false);
+// 
+//   useEffect(() => {
+//     const node = ref.current;
+//     if (!node) return;
+// 
+//     const observer = new IntersectionObserver(
+//       ([entry]) => {
+//         if (entry.isIntersecting) {
+//           setVisible(true);
+//           observer.disconnect();
+//         }
+//       },
+//       { threshold: 0.15 }
+//     );
+// 
+//     observer.observe(node);
+//     return () => observer.disconnect();
+//   }, []);
+// 
+//   return (
+//     <div ref={ref} className={`${visible ? "reveal" : "opacity-0"} ${className}`}>
+//       {children}
+//     </div>
+//   );
+// }
 
 function SportDetails() {
   const { sportId } = useParams();

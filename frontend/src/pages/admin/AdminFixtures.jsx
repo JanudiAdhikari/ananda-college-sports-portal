@@ -40,9 +40,9 @@ const matchTypeOptions = [
   { value: "OTHER", label: "Other" },
 ];
 
-const getStatusLabel = (value) => {
-  return statusOptions.find((item) => item.value === value)?.label || value;
-};
+// const getStatusLabel = (value) => {
+//   return statusOptions.find((item) => item.value === value)?.label || value;
+// };
 
 const getMatchTypeLabel = (value) => {
   return matchTypeOptions.find((item) => item.value === value)?.label || value;

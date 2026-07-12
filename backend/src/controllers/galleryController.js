@@ -297,10 +297,10 @@ const uploadAlbumImages = async (req, res) => {
 
     album.images.push(...uploadedImages);
 
-    if (!album.coverImage?.url && uploadedImages.length > 0) {
+    if (album.images.length > 0) {
       album.coverImage = {
-        url: uploadedImages[0].url,
-        publicId: uploadedImages[0].publicId,
+        url: album.images[0].url,
+        publicId: album.images[0].publicId,
       };
     }
 
@@ -351,15 +351,13 @@ const deleteAlbumImage = async (req, res) => {
 
     album.images.pull({ _id: imageId });
 
-    if (album.coverImage?.publicId === image.publicId) {
-      const nextCoverImage = album.images[0];
-
-      album.coverImage = nextCoverImage
-        ? {
-            url: nextCoverImage.url,
-            publicId: nextCoverImage.publicId,
-          }
-        : undefined;
+    if (album.images.length > 0) {
+      album.coverImage = {
+        url: album.images[0].url,
+        publicId: album.images[0].publicId,
+      };
+    } else {
+      album.coverImage = undefined;
     }
 
     await album.save();
