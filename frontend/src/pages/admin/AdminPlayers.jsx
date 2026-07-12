@@ -7,6 +7,7 @@ import {
   getPlayers,
   updatePlayer,
 } from "../../services/playerService";
+import { getSportConfig } from "../../utils/sportConfig";
 
 const initialFormData = {
   team: "",
@@ -66,7 +67,7 @@ function Reveal({ children, className = "" }) {
           observer.disconnect();
         }
       },
-      { threshold: 0.15 }
+      { threshold: 0.01 }
     );
 
     observer.observe(node);
@@ -88,6 +89,10 @@ function AdminPlayers() {
   const [formData, setFormData] = useState(initialFormData);
   const [editingPlayerId, setEditingPlayerId] = useState(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
+
+  const selectedTeam = teams.find((t) => t._id === formData.team);
+  const sportSlug = selectedTeam?.sport?.slug || "";
+  const sportConfig = getSportConfig(sportSlug);
 
   const [filterSport, setFilterSport] = useState("");
   const [filterTeam, setFilterTeam] = useState("");
@@ -267,7 +272,7 @@ function AdminPlayers() {
   };
 
   const getPayload = () => {
-    return {
+    const payload = {
       team: formData.team,
       fullName: formData.fullName,
       admissionNumber: formData.admissionNumber,
@@ -278,27 +283,38 @@ function AdminPlayers() {
         : undefined,
       role: formData.role,
       position: formData.position,
-      battingStyle: formData.battingStyle,
-      bowlingStyle: formData.bowlingStyle,
+      battingStyle: sportConfig.hasCricketStyles ? formData.battingStyle : "",
+      bowlingStyle: sportConfig.hasCricketStyles ? formData.bowlingStyle : "",
       performanceSummary: formData.performanceSummary,
       statistics: {
-        matches: Number(formData.matches),
-        runs: Number(formData.runs),
-        wickets: Number(formData.wickets),
-        goals: Number(formData.goals),
-        assists: Number(formData.assists),
         bestPerformance: formData.bestPerformance,
       },
-      skillsRating: {
-        batting: Number(formData.batting),
-        bowling: Number(formData.bowling),
-        fielding: Number(formData.fielding),
-        speed: Number(formData.speed),
-        stamina: Number(formData.stamina),
-        teamwork: Number(formData.teamwork),
-        technique: Number(formData.technique),
-      },
+      skillsRating: {},
     };
+
+    // Map only sportConfig statistics, reset others to 0
+    const statKeys = ["matches", "runs", "wickets", "goals", "assists"];
+    statKeys.forEach((key) => {
+      const isConfigured = sportConfig.stats.some((s) => s.key === key);
+      payload.statistics[key] = isConfigured ? Number(formData[key]) : 0;
+    });
+
+    // Map only sportConfig skills, reset others to 0
+    const skillKeys = [
+      "batting",
+      "bowling",
+      "fielding",
+      "speed",
+      "stamina",
+      "teamwork",
+      "technique",
+    ];
+    skillKeys.forEach((key) => {
+      const isConfigured = sportConfig.skills.some((s) => s.key === key);
+      payload.skillsRating[key] = isConfigured ? Number(formData[key]) : 0;
+    });
+
+    return payload;
   };
 
   const handleSubmit = async (event) => {
@@ -800,35 +816,37 @@ function AdminPlayers() {
                 </div>
               </div>
 
-              <div className="grid gap-4 md:grid-cols-2">
-                <div>
-                  <label className="font-display text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5 block">
-                    Batting Style
-                  </label>
-                  <input
-                    type="text"
-                    name="battingStyle"
-                    value={formData.battingStyle}
-                    onChange={handleChange}
-                    placeholder="Right hand batsman"
-                    className="w-full rounded-xl border border-ananda-gold/25 bg-white px-4 py-3 outline-none focus:border-ananda-maroon focus:ring-1 focus:ring-ananda-maroon transition shadow-sm text-sm"
-                  />
-                </div>
+              {sportConfig.hasCricketStyles && (
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div>
+                    <label className="font-display text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5 block">
+                      Batting Style
+                    </label>
+                    <input
+                      type="text"
+                      name="battingStyle"
+                      value={formData.battingStyle}
+                      onChange={handleChange}
+                      placeholder="Right hand batsman"
+                      className="w-full rounded-xl border border-ananda-gold/25 bg-white px-4 py-3 outline-none focus:border-ananda-maroon focus:ring-1 focus:ring-ananda-maroon transition shadow-sm text-sm"
+                    />
+                  </div>
 
-                <div>
-                  <label className="font-display text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5 block">
-                    Bowling Style
-                  </label>
-                  <input
-                    type="text"
-                    name="bowlingStyle"
-                    value={formData.bowlingStyle}
-                    onChange={handleChange}
-                    placeholder="Right arm fast"
-                    className="w-full rounded-xl border border-ananda-gold/25 bg-white px-4 py-3 outline-none focus:border-ananda-maroon focus:ring-1 focus:ring-ananda-maroon transition shadow-sm text-sm"
-                  />
+                  <div>
+                    <label className="font-display text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5 block">
+                      Bowling Style
+                    </label>
+                    <input
+                      type="text"
+                      name="bowlingStyle"
+                      value={formData.bowlingStyle}
+                      onChange={handleChange}
+                      placeholder="Right arm fast"
+                      className="w-full rounded-xl border border-ananda-gold/25 bg-white px-4 py-3 outline-none focus:border-ananda-maroon focus:ring-1 focus:ring-ananda-maroon transition shadow-sm text-sm"
+                    />
+                  </div>
                 </div>
-              </div>
+              )}
 
               <div>
                 <label className="font-display text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5 block">
@@ -851,22 +869,20 @@ function AdminPlayers() {
                 </h3>
 
                 <div className="grid gap-3 grid-cols-2 sm:grid-cols-3">
-                  {["matches", "runs", "wickets", "goals", "assists"].map(
-                    (field) => (
-                      <div key={field}>
-                        <label className="font-display text-[10px] font-bold uppercase tracking-wider text-gray-500 mb-1 block">
-                          {field}
-                        </label>
-                        <input
-                          type="number"
-                          name={field}
-                          value={formData[field]}
-                          onChange={handleChange}
-                          className="w-full rounded-lg border border-ananda-gold/25 bg-white px-3 py-2 outline-none focus:border-ananda-maroon transition text-xs font-semibold"
-                        />
-                      </div>
-                    )
-                  )}
+                  {sportConfig.stats.map((stat) => (
+                    <div key={stat.key}>
+                      <label className="font-display text-[10px] font-bold uppercase tracking-wider text-gray-500 mb-1 block">
+                        {stat.label}
+                      </label>
+                      <input
+                        type="number"
+                        name={stat.key}
+                        value={formData[stat.key]}
+                        onChange={handleChange}
+                        className="w-full rounded-lg border border-ananda-gold/25 bg-white px-3 py-2 outline-none focus:border-ananda-maroon transition text-xs font-semibold"
+                      />
+                    </div>
+                  ))}
                 </div>
 
                 <div className="pt-2">
@@ -891,26 +907,18 @@ function AdminPlayers() {
                 </h3>
 
                 <div className="grid gap-4 sm:grid-cols-2">
-                  {[
-                    "batting",
-                    "bowling",
-                    "fielding",
-                    "speed",
-                    "stamina",
-                    "teamwork",
-                    "technique",
-                  ].map((field) => (
-                    <div key={field} className="space-y-1">
+                  {sportConfig.skills.map((skill) => (
+                    <div key={skill.key} className="space-y-1">
                       <div className="flex justify-between items-center text-[10px] font-bold uppercase tracking-wider text-gray-500">
-                        <span>{field}</span>
-                        <span className="text-ananda-maroon">{formData[field]}%</span>
+                        <span>{skill.label}</span>
+                        <span className="text-ananda-maroon">{formData[skill.key]}%</span>
                       </div>
                       <input
                         type="range"
-                        name={field}
+                        name={skill.key}
                         min="0"
                         max="100"
-                        value={formData[field]}
+                        value={formData[skill.key]}
                         onChange={handleChange}
                         className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-ananda-maroon"
                       />

@@ -263,7 +263,11 @@ function AdminGallery() {
     setError("");
   };
 
-  const handleDeleteAlbum = async (albumId) => {
+  const handleDeleteAlbum = async (e, albumId) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     const confirmed = window.confirm(
       "Are you sure you want to delete this album?"
     );
@@ -279,7 +283,9 @@ function AdminGallery() {
       await deleteGalleryAlbum(albumId);
       setMessage("Album deleted successfully.");
       setSelectedAlbumId("");
-      await loadAlbums();
+      
+      // Update local state inline to prevent full-page layout refetch flashing
+      setAlbums((prevAlbums) => prevAlbums.filter((album) => album._id !== albumId));
     } catch (error) {
       setError(error.response?.data?.message || "Failed to delete album.");
     }
@@ -318,7 +324,11 @@ function AdminGallery() {
     }
   };
 
-  const handleDeleteImage = async (albumId, imageId) => {
+  const handleDeleteImage = async (e, albumId, imageId) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     const confirmed = window.confirm(
       "Are you sure you want to delete this image?"
     );
@@ -333,7 +343,20 @@ function AdminGallery() {
 
       await deleteAlbumImage(albumId, imageId);
       setMessage("Image deleted successfully.");
-      await loadAlbums();
+      
+      // Update local state inline to prevent full-page layout refetch flashing
+      setAlbums((prevAlbums) =>
+        prevAlbums.map((album) => {
+          if (album._id === albumId) {
+            const updatedImages = album.images.filter((img) => img._id !== imageId);
+            return {
+              ...album,
+              images: updatedImages,
+            };
+          }
+          return album;
+        })
+      );
     } catch (error) {
       setError(error.response?.data?.message || "Failed to delete image.");
     }
@@ -491,6 +514,7 @@ function AdminGallery() {
 
                     <div className="flex flex-wrap gap-2">
                       <button
+                        type="button"
                         onClick={() => {
                           setSelectedAlbumId(album._id);
                           setMessage("Selected album: " + album.title);
@@ -502,6 +526,7 @@ function AdminGallery() {
                       </button>
 
                       <button
+                        type="button"
                         onClick={() => handleEdit(album)}
                         className="font-display text-[10px] font-bold uppercase tracking-wider bg-ananda-gold hover:bg-ananda-light-gold text-ananda-dark-maroon px-3 py-1.5 rounded-lg transition duration-250 cursor-pointer"
                       >
@@ -509,7 +534,8 @@ function AdminGallery() {
                       </button>
 
                       <button
-                        onClick={() => handleDeleteAlbum(album._id)}
+                        type="button"
+                        onClick={(e) => handleDeleteAlbum(e, album._id)}
                         className="font-display text-[10px] font-bold uppercase tracking-wider bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-lg transition duration-250 cursor-pointer"
                       >
                         Delete
@@ -532,8 +558,9 @@ function AdminGallery() {
 
                           <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center p-3">
                             <button
-                              onClick={() =>
-                                handleDeleteImage(album._id, image._id)
+                              type="button"
+                              onClick={(e) =>
+                                handleDeleteImage(e, album._id, image._id)
                               }
                               className="font-display text-[9px] font-bold uppercase tracking-wider bg-red-600 hover:bg-red-700 text-white px-2.5 py-1.5 rounded-lg transition duration-250 cursor-pointer shadow-sm"
                             >

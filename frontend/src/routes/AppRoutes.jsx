@@ -35,7 +35,6 @@ function AppRoutes() {
       <Route path="/login" element={<Login />} />
       <Route path="/gallery/:albumSlug" element={<GalleryAlbumDetails />} />
       <Route path="/fixtures-results" element={<FixturesResults />} />
-      <Route path="/fixtures-results" element={<FixturesResults />} />
       <Route
         path="/admin"
         element={
