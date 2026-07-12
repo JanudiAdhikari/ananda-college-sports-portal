@@ -7,58 +7,58 @@ import { getFixtures } from "../../services/fixtureService";
 import { getGalleryAlbums } from "../../services/galleryService";
 import { getLiveMatches } from "../../services/liveMatchService";
 
-import img1 from "../../assets/img1.jpeg";
-import img2 from "../../assets/img2.jpeg";
-import img3 from "../../assets/img3.jpeg";
-import img4 from "../../assets/img4.jpeg";
-import img5 from "../../assets/img5.jpeg";
-import img6 from "../../assets/img6.jpeg";
+import img1 from "../../assets/img1.jpg";
+import img2 from "../../assets/img2.jpg";
+import img3 from "../../assets/img3.jpg";
+import img4 from "../../assets/img4.jpg";
+import img5 from "../../assets/img5.jpg";
+import img6 from "../../assets/img6.jpg";
 
 const SLIDESHOW_IMAGES = [img1, img2, img3, img4, img5, img6];
 
-// Image Slideshow Component
-function ImageSlideshow() {
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % SLIDESHOW_IMAGES.length);
-    }, 4000); // Change image every 4 seconds
-
-    return () => clearInterval(interval);
-  }, []);
-
-  return (
-    <div className="relative overflow-hidden rounded-3xl h-96 md:h-[500px] shadow-2xl">
-      {SLIDESHOW_IMAGES.map((image, index) => (
-        <img
-          key={index}
-          src={image}
-          alt={`Slideshow ${index + 1}`}
-          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
-            index === currentImageIndex ? "opacity-100" : "opacity-0"
-          }`}
-        />
-      ))}
-
-      {/* Indicators */}
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
-        {SLIDESHOW_IMAGES.map((_, index) => (
-          <button
-            key={index}
-            onClick={() => setCurrentImageIndex(index)}
-            className={`h-2 rounded-full transition-all duration-300 ${
-              index === currentImageIndex
-                ? "bg-ananda-gold w-8"
-                : "bg-white/50 hover:bg-white/80 w-2"
-            }`}
-            aria-label={`Go to slide ${index + 1}`}
-          />
-        ))}
-      </div>
-    </div>
-  );
-}
+// // Image Slideshow Component
+// function ImageSlideshow() {
+//   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+// 
+//   useEffect(() => {
+//     const interval = setInterval(() => {
+//       setCurrentImageIndex((prevIndex) => (prevIndex + 1) % SLIDESHOW_IMAGES.length);
+//     }, 4000); // Change image every 4 seconds
+// 
+//     return () => clearInterval(interval);
+//   }, []);
+// 
+//   return (
+//     <div className="relative overflow-hidden rounded-3xl h-96 md:h-[500px] shadow-2xl">
+//       {SLIDESHOW_IMAGES.map((image, index) => (
+//         <img
+//           key={index}
+//           src={image}
+//           alt={`Slideshow ${index + 1}`}
+//           className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
+//             index === currentImageIndex ? "opacity-100" : "opacity-0"
+//           }`}
+//         />
+//       ))}
+// 
+//       {/* Indicators */}
+//       <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+//         {SLIDESHOW_IMAGES.map((_, index) => (
+//           <button
+//             key={index}
+//             onClick={() => setCurrentImageIndex(index)}
+//             className={`h-2 rounded-full transition-all duration-300 ${
+//               index === currentImageIndex
+//                 ? "bg-ananda-gold w-8"
+//                 : "bg-white/50 hover:bg-white/80 w-2"
+//             }`}
+//             aria-label={`Go to slide ${index + 1}`}
+//           />
+//         ))}
+//       </div>
+//     </div>
+//   );
+// }
 
 // Scroll-triggered reveal wrapper — fades sections in once
 function Reveal({ children, className = "" }) {
@@ -534,10 +534,10 @@ function Home() {
                 to={`/gallery/${album.slug}`}
                 className="group overflow-hidden rounded-2xl border border-ananda-gold/15 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:border-ananda-gold/35 hover:shadow-md"
               >
-                {album.coverImage?.url ? (
+                {album.images?.[0]?.url || album.coverImage?.url ? (
                   <div className="h-44 overflow-hidden relative">
                     <img
-                      src={album.coverImage.url}
+                      src={album.images?.[0]?.url || album.coverImage.url}
                       alt={album.title}
                       className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
                     />
