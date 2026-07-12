@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
+import backgroundImg from "../../assets/background1.jpeg";
 
 // Scroll-triggered reveal wrapper — fades sections in once
 function Reveal({ children, className = "" }) {
@@ -18,7 +19,7 @@ function Reveal({ children, className = "" }) {
           observer.disconnect();
         }
       },
-      { threshold: 0.15 }
+      { threshold: 0.01 }
     );
 
     observer.observe(node);
@@ -65,39 +66,17 @@ function Login() {
   };
 
   return (
-    <section className="flex min-h-[calc(100vh-80px)] items-stretch">
-      {/* BRAND PANEL */}
-      <div className="relative hidden w-1/2 overflow-hidden bg-gradient-to-br from-ananda-dark-maroon via-ananda-maroon to-[#2d000a] lg:flex lg:flex-col lg:justify-between lg:p-12">
-        {/* Glowing visual accent spotlights */}
-        <div className="absolute right-0 top-0 -mr-40 -mt-40 h-96 w-96 rounded-full bg-gradient-to-br from-ananda-gold/15 to-transparent blur-3xl" />
-        <div className="absolute left-0 bottom-0 -ml-40 -mb-40 h-80 w-80 rounded-full bg-gradient-to-tr from-ananda-maroon/20 to-transparent blur-3xl" />
+    <section
+      className="relative flex min-h-[calc(100vh-80px)] items-center justify-center bg-cover bg-center bg-no-repeat px-6 py-16"
+      style={{ backgroundImage: `url(${backgroundImg})` }}
+    >
+      {/* Dark overlay with slight blur */}
+      <div className="absolute inset-0 bg-ananda-dark-maroon/65 backdrop-blur-[2px]" />
 
-        <p className="font-display relative text-xs font-semibold uppercase tracking-[0.25em] text-ananda-gold z-10">
-          Ananda College &middot; Colombo 10
-        </p>
-
-        <div className="relative z-10">
-          <h1 className="font-display text-4xl font-bold uppercase leading-tight tracking-tight text-white">
-            Sports Portal
-            <br />
-            Control Room
-          </h1>
-          <p className="mt-4 max-w-sm text-xs font-semibold uppercase tracking-wider text-ananda-light-gold/85 leading-relaxed">
-            This area is reserved for sports teachers, the photography club,
-            and the videography club to manage teams, fixtures, galleries,
-            and live coverage.
-          </p>
-        </div>
-
-        <p className="font-display relative text-[10px] font-bold uppercase tracking-wider text-ananda-light-gold/50 z-10">
-          Authorized access only
-        </p>
-      </div>
-
-      {/* FORM PANEL */}
-      <div className="flex w-full items-center justify-center bg-ananda-cream/40 px-6 py-16 lg:w-1/2">
-        <Reveal className="w-full max-w-md rounded-3xl border border-ananda-gold/15 bg-white p-8 shadow-lg sm:p-10">
-          <div className="mb-2 flex items-center gap-2 lg:hidden">
+      {/* FORM PANEL CONTAINER */}
+      <div className="relative z-10 w-full max-w-md">
+        <Reveal className="w-full rounded-3xl border border-ananda-gold/20 bg-white/95 p-8 shadow-2xl sm:p-10 backdrop-blur-md">
+          <div className="mb-2 flex items-center gap-2">
             <span className="font-display text-xs font-semibold uppercase tracking-[0.25em] text-ananda-gold">
               Ananda College
             </span>
@@ -133,7 +112,7 @@ function Login() {
             <div>
               <label
                 htmlFor="username"
-                className="font-display mb-1.5 block text-xs font-bold uppercase tracking-wider text-gray-500"
+                className="font-display mb-1.5 block text-xs font-bold uppercase tracking-wider text-gray-505"
               >
                 Username
               </label>
