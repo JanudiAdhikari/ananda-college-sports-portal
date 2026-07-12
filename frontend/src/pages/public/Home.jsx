@@ -6,6 +6,7 @@ import { getPlayers } from "../../services/playerService";
 import { getFixtures } from "../../services/fixtureService";
 import { getGalleryAlbums } from "../../services/galleryService";
 import { getLiveMatches } from "../../services/liveMatchService";
+import { getOptimizedCloudinaryUrl } from "../../utils/cloudinaryUrl";
 
 import img1 from "../../assets/img1.jpg";
 import img2 from "../../assets/img2.jpg";
@@ -76,7 +77,7 @@ function Reveal({ children, className = "" }) {
           observer.disconnect();
         }
       },
-      { threshold: 0.15 }
+      { threshold: 0.01 }
     );
 
     observer.observe(node);
@@ -208,7 +209,7 @@ function Home() {
         <div className="flex flex-col items-center gap-4 text-center">
           <div className="h-10 w-10 animate-spin rounded-full border-4 border-ananda-gold/30 border-t-ananda-maroon" />
           <p className="font-display text-xs font-bold uppercase tracking-wider text-ananda-maroon animate-pulse">
-            Loading the scoreboard...
+            Loading...
           </p>
         </div>
       </section>
@@ -537,9 +538,10 @@ function Home() {
                 {album.images?.[0]?.url || album.coverImage?.url ? (
                   <div className="h-44 overflow-hidden relative">
                     <img
-                      src={album.images?.[0]?.url || album.coverImage.url}
+                      src={getOptimizedCloudinaryUrl(album.images?.[0]?.url || album.coverImage.url, 600)}
                       alt={album.title}
                       className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                      loading="lazy"
                     />
                     <span className="absolute bottom-3 right-3 rounded-lg bg-black/60 px-2 py-1 text-[9px] font-bold uppercase tracking-wider text-white">
                       {album.images?.length || 0} Photos
