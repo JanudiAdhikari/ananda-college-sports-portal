@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { getPlayerById } from "../../services/playerService";
+import { getSportConfig } from "../../utils/sportConfig";
 
 const ageGroupLabels = {
   UNDER_12: "Under 12",
@@ -147,6 +148,10 @@ function PlayerProfile() {
     );
   }
 
+  if (!player) return null;
+
+  const sportConfig = getSportConfig(player.sport?.slug);
+
   return (
     <div>
       {/* HERO HEADER */}
@@ -227,7 +232,7 @@ function PlayerProfile() {
                     <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Role / Position</p>
                     <p className="font-semibold text-gray-800">{player.role || player.position || "Not specified"}</p>
                   </div>
-                  {(player.battingStyle || player.bowlingStyle) && (
+                  {sportConfig.hasCricketStyles && (player.battingStyle || player.bowlingStyle) && (
                     <>
                       {player.battingStyle && (
                         <div>
@@ -272,11 +277,13 @@ function PlayerProfile() {
                   title="Career Statistics"
                 />
                 <div className="grid gap-4 grid-cols-2 sm:grid-cols-5">
-                  <StatCard label="Matches" value={player.statistics?.matches} />
-                  <StatCard label="Runs" value={player.statistics?.runs} />
-                  <StatCard label="Wickets" value={player.statistics?.wickets} />
-                  <StatCard label="Goals" value={player.statistics?.goals} />
-                  <StatCard label="Assists" value={player.statistics?.assists} />
+                  {sportConfig.stats.map((stat) => (
+                    <StatCard
+                      key={stat.key}
+                      label={stat.label}
+                      value={player.statistics?.[stat.key]}
+                    />
+                  ))}
                 </div>
 
                 {player.statistics?.bestPerformance && (
@@ -303,13 +310,13 @@ function PlayerProfile() {
                   title="Attribute Ratings"
                 />
                 <div className="grid gap-6 sm:grid-cols-2">
-                  <SkillBar label="Batting" value={player.skillsRating?.batting} />
-                  <SkillBar label="Bowling" value={player.skillsRating?.bowling} />
-                  <SkillBar label="Fielding" value={player.skillsRating?.fielding} />
-                  <SkillBar label="Speed" value={player.skillsRating?.speed} />
-                  <SkillBar label="Stamina" value={player.skillsRating?.stamina} />
-                  <SkillBar label="Teamwork" value={player.skillsRating?.teamwork} />
-                  <SkillBar label="Technique" value={player.skillsRating?.technique} />
+                  {sportConfig.skills.map((skill) => (
+                    <SkillBar
+                      key={skill.key}
+                      label={skill.label}
+                      value={player.skillsRating?.[skill.key]}
+                    />
+                  ))}
                 </div>
               </div>
             </Reveal>
