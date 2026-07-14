@@ -25,14 +25,14 @@ const seedUsers = async () => {
         role: "SPORTS_TEACHER",
       },
       {
-        fullName: "Photo Club Manager",
+        fullName: "Photography Club",
         username: "photo_club",
         email: "photoclub@anandacollege.edu",
         password: "PhotoPass@123",
         role: "PHOTO_CLUB",
       },
       {
-        fullName: "Video Club Manager",
+        fullName: "Videography Club",
         username: "video_club",
         email: "videoclub@anandacollege.edu",
         password: "VideoPass@123",
@@ -49,18 +49,16 @@ const seedUsers = async () => {
       });
 
       if (!existingUser) {
-        // Hash password
-        const hashedPassword = await bcryptjs.hash(userData.password, 10);
-
-        await User.create({
-          ...userData,
-          password: hashedPassword,
-        });
-
+        await User.create(userData);
         console.log(`Created user: ${userData.fullName} (${userData.role})`);
         createdCount++;
       } else {
-        console.log(`User already exists: ${userData.fullName}`);
+        // Update password and details to trigger User pre-save hook and correct the hashed password
+        existingUser.fullName = userData.fullName;
+        existingUser.password = userData.password;
+        existingUser.role = userData.role;
+        await existingUser.save();
+        console.log(`Updated user: ${userData.fullName} (${userData.role})`);
         updatedCount++;
       }
     }

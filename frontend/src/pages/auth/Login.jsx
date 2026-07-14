@@ -1,10 +1,10 @@
-import { useEffect, useRef, useState } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
-import { useAuth } from "../../hooks/useAuth";
-import backgroundImg from "../../assets/background1.jpeg";
+import { useEffect, useRef, useState } from"react";
+import { Navigate, useNavigate } from"react-router-dom";
+import { useAuth } from"../../hooks/useAuth";
+import backgroundImg from"../../assets/background1.jpeg";
 
 // Scroll-triggered reveal wrapper — fades sections in once
-function Reveal({ children, className = "" }) {
+function Reveal({ children, className ="" }) {
   const ref = useRef(null);
   const [visible, setVisible] = useState(false);
 
@@ -27,7 +27,7 @@ function Reveal({ children, className = "" }) {
   }, []);
 
   return (
-    <div ref={ref} className={`${visible ? "reveal" : "opacity-0"} ${className}`}>
+    <div ref={ref} className={`${visible ?"reveal" :"opacity-0"} ${className}`}>
       {children}
     </div>
   );
@@ -37,8 +37,8 @@ function Login() {
   const navigate = useNavigate();
   const { login, loading, isAuthenticated } = useAuth();
   const [formData, setFormData] = useState({
-    username: "",
-    password: "",
+    username:"",
+    password:"",
   });
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -68,7 +68,7 @@ function Login() {
   return (
     <section
       className="relative flex min-h-[calc(100vh-80px)] items-center justify-center bg-cover bg-center bg-no-repeat px-6 py-16"
-      style={{ backgroundImage: `url(${backgroundImg})` }}
+      style={{ backgroundImage:`url(${backgroundImg})` }}
     >
       {/* Dark overlay with slight blur */}
       <div className="absolute inset-0 bg-ananda-dark-maroon/65 backdrop-blur-[2px]" />
@@ -77,20 +77,20 @@ function Login() {
       <div className="relative z-10 w-full max-w-md">
         <Reveal className="w-full rounded-3xl border border-ananda-gold/20 bg-white/95 p-8 shadow-2xl sm:p-10 backdrop-blur-md">
           <div className="mb-2 flex items-center gap-2">
-            <span className="font-display text-xs font-semibold uppercase tracking-[0.25em] text-ananda-gold">
+            <span className="font-display text-xs font-semibold tracking-[0.25em] text-ananda-gold">
               Ananda College
             </span>
           </div>
 
-          <h2 className="font-display text-2xl font-bold uppercase tracking-tight text-ananda-dark-maroon">
+          <h2 className="font-display text-2xl font-bold tracking-tight text-ananda-dark-maroon">
             Admin Login
           </h2>
-          <p className="mb-8 mt-1 text-xs font-semibold uppercase tracking-wider text-gray-400">
+          <p className="mb-8 mt-1 text-xs font-semibold tracking-wider text-gray-400">
             Sign in with your school-issued credentials.
           </p>
 
           {error && (
-            <div className="mb-5 flex items-start gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-xs font-bold uppercase tracking-wider text-red-700">
+            <div className="mb-5 flex items-start gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-xs font-bold tracking-wider text-red-700">
               <svg
                 className="mt-0.5 h-4 w-4 shrink-0"
                 fill="none"
@@ -112,7 +112,7 @@ function Login() {
             <div>
               <label
                 htmlFor="username"
-                className="font-display mb-1.5 block text-xs font-bold uppercase tracking-wider text-gray-505"
+                className="font-display mb-1.5 block text-xs font-bold tracking-wider text-gray-505"
               >
                 Username
               </label>
@@ -132,14 +132,14 @@ function Login() {
             <div>
               <label
                 htmlFor="password"
-                className="font-display mb-1.5 block text-xs font-bold uppercase tracking-wider text-gray-500"
+                className="font-display mb-1.5 block text-xs font-bold tracking-wider text-gray-500"
               >
                 Password
               </label>
               <div className="relative">
                 <input
                   id="password"
-                  type={showPassword ? "text" : "password"}
+                  type={showPassword ?"text" :"password"}
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
@@ -151,10 +151,10 @@ function Login() {
                 <button
                   type="button"
                   onClick={() => setShowPassword((prev) => !prev)}
-                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[10px] font-extrabold uppercase tracking-wider text-gray-400 transition hover:text-ananda-maroon cursor-pointer"
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[10px] font-extrabold tracking-wider text-gray-400 transition hover:text-ananda-maroon cursor-pointer"
                   tabIndex={-1}
                 >
-                  {showPassword ? "Hide" : "Show"}
+                  {showPassword ?"Hide" :"Show"}
                 </button>
               </div>
             </div>
@@ -162,16 +162,16 @@ function Login() {
             <button
               type="submit"
               disabled={loading}
-              className="font-display flex w-full items-center justify-center gap-2 rounded-xl bg-ananda-maroon px-6 py-3.5 text-xs font-bold uppercase tracking-wider text-white transition hover:bg-ananda-dark-maroon disabled:cursor-not-allowed disabled:opacity-70 cursor-pointer hover:scale-[1.01]"
+              className="font-display flex w-full items-center justify-center gap-2 rounded-xl bg-ananda-maroon px-6 py-3.5 text-xs font-bold tracking-wider text-white transition hover:bg-ananda-dark-maroon disabled:cursor-not-allowed disabled:opacity-70 cursor-pointer hover:scale-[1.01]"
             >
               {loading && (
                 <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" />
               )}
-              {loading ? "Logging in..." : "Login"}
+              {loading ?"Logging in..." :"Login"}
             </button>
           </form>
 
-          <p className="mt-8 text-center text-[10px] font-bold uppercase tracking-wider text-gray-400">
+          <p className="mt-8 text-center text-[10px] font-bold tracking-wider text-gray-400">
             Accounts are created by the school administrator. There is no
             public registration.
           </p>
