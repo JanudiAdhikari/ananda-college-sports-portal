@@ -485,28 +485,31 @@ function Home() {
             No sports added yet.
           </div>
         ) : (
-          <Reveal className="grid gap-6 md:grid-cols-3">
+          <Reveal className="grid gap-8 md:grid-cols-3 pb-4">
             {featuredSports.map((sport) => (
               <Link
                 key={sport._id}
                 to={`/sports/${sport.slug}`}
-                className="group rounded-2xl border border-ananda-gold/15 bg-white p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-ananda-gold/35 hover:shadow-md flex flex-col justify-between"
+                className="group relative rounded-2xl border border-ananda-gold/20 bg-white p-6 shadow-[5px_5px_0px_0px_#e5a93b] hover:shadow-[7px_7px_0px_0px_#8b0000] hover:border-ananda-maroon/30 transition-all duration-300 flex flex-col justify-between cursor-pointer"
               >
                 <div>
-                  <p className="font-display mb-1.5 text-[10px] font-bold tracking-wider text-ananda-gold">
+                  <p className="font-display mb-3 text-[10px] font-bold tracking-wider text-ananda-gold">
                     {sport.category}
                   </p>
-                  <h3 className="font-display mb-3 text-lg font-bold text-ananda-maroon transition duration-300 group-hover:text-ananda-dark-maroon">
-                    {sport.name}
-                  </h3>
-                  <p className="line-clamp-3 text-xs text-gray-500 leading-relaxed">
-                    {sport.description ||"Sport details will be added soon."}
-                  </p>
-                </div>
-                <span className="font-display mt-4 inline-flex items-center gap-1 text-[10px] font-bold tracking-wider text-ananda-maroon opacity-0 transition group-hover:opacity-100 duration-300">
-                  View teams &rarr;
-                </span>
-              </Link>
+                    <h3 className="font-display mb-3 text-lg font-bold text-ananda-maroon transition duration-300 group-hover:text-ananda-dark-maroon">
+                      {sport.name}
+                    </h3>
+                    <p className="line-clamp-3 text-xs text-gray-550 leading-relaxed font-semibold">
+                      {sport.description ||"Sport details will be added soon."}
+                    </p>
+                  </div>
+                  <span className="font-display mt-4 inline-flex items-center gap-1.5 text-[10px] font-bold tracking-wider text-ananda-maroon group-hover:translate-x-1 transition duration-300">
+                    View teams
+                    <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </span>
+                </Link>
             ))}
           </Reveal>
         )}

@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" role="img" aria-labelledby="title desc">
+  <title id="title">Wushu</title>
+  <desc id="desc">Modern sports card illustration for Wushu</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#061A2E"/>
+      <stop offset="100%" stop-color="#0B2D4A"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#1F6FEB" stop-opacity=".45"/>
+      <stop offset="100%" stop-color="#1F6FEB" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="18" stdDeviation="20" flood-color="#000" flood-opacity=".35"/>
+    </filter>
+  </defs>
+
+  <rect width="1200" height="800" rx="44" fill="url(#bg)"/>
+  <circle cx="905" cy="180" r="260" fill="url(#glow)"/>
+  <circle cx="180" cy="690" r="250" fill="#F2B705" opacity=".06"/>
+
+  <path d="M0 640 C220 540, 380 760, 620 650 S980 520, 1200 640 L1200 800 L0 800 Z"
+        fill="#08121F" opacity=".78"/>
+  <path d="M0 680 C240 600, 410 760, 650 675 S980 585, 1200 695"
+        fill="none" stroke="#1F6FEB" stroke-width="6" opacity=".55"/>
+
+  <g opacity=".18">
+    <circle cx="80" cy="90" r="6" fill="#FFFFFF"/>
+    <circle cx="110" cy="90" r="6" fill="#FFFFFF"/>
+    <circle cx="140" cy="90" r="6" fill="#FFFFFF"/>
+    <circle cx="80" cy="120" r="6" fill="#FFFFFF"/>
+    <circle cx="110" cy="120" r="6" fill="#FFFFFF"/>
+    <circle cx="140" cy="120" r="6" fill="#FFFFFF"/>
+  </g>
+
+  <g transform="translate(600 345)" filter="url(#shadow)">
+    <circle r="180" fill="#0C2138" stroke="#1F6FEB" stroke-width="6"/>
+    <circle r="150" fill="#102A46" stroke="#F2B705" stroke-width="3" opacity=".95"/>
+    <text x="0" y="35" text-anchor="middle" font-size="170"
+          font-family="Segoe UI Emoji, Apple Color Emoji, Noto Color Emoji, sans-serif">🥋</text>
+  </g>
+
+  <g transform="translate(84 92)">
+    <rect width="250" height="42" rx="21" fill="#F2B705" opacity=".95"/>
+    <text x="125" y="29" text-anchor="middle" font-size="20" font-weight="700"
+          font-family="Inter, Arial, sans-serif" fill="#061A2E" letter-spacing="2">ANANDA SPORTS</text>
+  </g>
+
+  <text x="600" y="650" text-anchor="middle"
+        font-size="58" font-weight="800"
+        font-family="Inter, Arial, sans-serif" fill="#FFFFFF">Wushu</text>
+  <text x="600" y="705" text-anchor="middle"
+        font-size="24" font-family="Inter, Arial, sans-serif" fill="#B7C6D8">
+    Excellence • Discipline • Teamwork
+  </text>
+</svg>

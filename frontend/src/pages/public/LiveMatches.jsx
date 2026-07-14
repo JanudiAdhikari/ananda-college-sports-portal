@@ -1,25 +1,26 @@
-import { useEffect, useRef, useState } from"react";
-import { getLiveMatches } from"../../services/liveMatchService";
+import { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
+import { getLiveMatches } from "../../services/liveMatchService";
 
 const getEmbedUrl = (url) => {
   if (!url) {
-    return"";
+    return "";
   }
 
   if (url.includes("youtube.com/watch?v=")) {
-    return url.replace("watch?v=","embed/");
+    return url.replace("watch?v=", "embed/");
   }
 
   if (url.includes("youtu.be/")) {
     const videoId = url.split("youtu.be/")[1]?.split("?")[0];
-    return videoId ?`https://www.youtube.com/embed/${videoId}` : url;
+    return videoId ? `https://www.youtube.com/embed/${videoId}` : url;
   }
 
   return url;
 };
 
 // Scroll-triggered reveal wrapper — fades sections in once
-function Reveal({ children, className ="" }) {
+function Reveal({ children, className = "" }) {
   const ref = useRef(null);
   const [visible, setVisible] = useState(false);
 
@@ -42,7 +43,7 @@ function Reveal({ children, className ="" }) {
   }, []);
 
   return (
-    <div ref={ref} className={`${visible ?"reveal" :"opacity-0"} ${className}`}>
+    <div ref={ref} className={`${visible ? "reveal" : "opacity-0"} ${className}`}>
       {children}
     </div>
   );
@@ -58,7 +59,7 @@ function LiveMatches() {
     let isMounted = true;
 
     const fetchLiveMatches = () => {
-      getLiveMatches({ visibleOnly:"true" })
+      getLiveMatches({ visibleOnly: "true" })
         .then((data) => {
           if (!isMounted) return;
 
@@ -66,7 +67,7 @@ function LiveMatches() {
 
           if (data.liveMatches.length > 0 && !selectedMatchId) {
             const liveMatch =
-              data.liveMatches.find((match) => match.status ==="LIVE") ||
+              data.liveMatches.find((match) => match.status === "LIVE") ||
               data.liveMatches[0];
             setSelectedMatchId(liveMatch._id);
           }
@@ -76,7 +77,7 @@ function LiveMatches() {
         .catch((error) => {
           if (!isMounted) return;
           setError(
-            error.response?.data?.message ||"Failed to load live matches."
+            error.response?.data?.message || "Failed to load live matches."
           );
         })
         .finally(() => {
@@ -107,8 +108,18 @@ function LiveMatches() {
         <div className="absolute left-0 bottom-0 -ml-40 -mb-40 h-80 w-80 rounded-full bg-gradient-to-tr from-ananda-maroon/20 to-transparent blur-3xl" />
 
         <div className="relative mx-auto max-w-7xl px-6 py-16 z-10">
+          <Link
+            to="/"
+            className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-ananda-light-gold transition duration-200 hover:bg-white/10 hover:text-white hover:border-white/20 shadow-sm hover:scale-[1.02] cursor-pointer"
+          >
+            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Back to Home
+          </Link>
+
           <p className="font-display mb-3 flex items-center gap-2 text-xs font-semibold tracking-[0.3em] text-ananda-gold">
-            {liveMatches.some((m) => m.status ==="LIVE") && (
+            {liveMatches.some((m) => m.status === "LIVE") && (
               <span className="live-dot h-2 w-2 rounded-full bg-red-400 animate-pulse" />
             )}
             Live Coverage
