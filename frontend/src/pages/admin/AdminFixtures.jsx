@@ -1,43 +1,43 @@
-import { useEffect, useRef, useState } from "react";
-import { getSports } from "../../services/sportService";
-import { getTeams } from "../../services/teamService";
+import { useEffect, useRef, useState } from"react";
+import { getSports } from"../../services/sportService";
+import { getTeams } from"../../services/teamService";
 import {
   createFixture,
   deleteFixture,
   getFixtures,
   updateFixture,
-} from "../../services/fixtureService";
+} from"../../services/fixtureService";
 
 const initialFormData = {
-  sport: "",
-  team: "",
-  title: "",
-  opponent: "",
-  venue: "",
-  matchDate: "",
-  matchType: "OTHER",
-  status: "UPCOMING",
-  anandaScore: "",
-  opponentScore: "",
-  resultText: "",
-  summary: "",
+  sport:"",
+  team:"",
+  title:"",
+  opponent:"",
+  venue:"",
+  matchDate:"",
+  matchType:"OTHER",
+  status:"UPCOMING",
+  anandaScore:"",
+  opponentScore:"",
+  resultText:"",
+  summary:"",
   isFeatured: false,
 };
 
 const statusOptions = [
-  { value: "UPCOMING", label: "Upcoming" },
-  { value: "LIVE", label: "Live" },
-  { value: "COMPLETED", label: "Completed" },
-  { value: "CANCELLED", label: "Cancelled" },
-  { value: "POSTPONED", label: "Postponed" },
+  { value:"UPCOMING", label:"Upcoming" },
+  { value:"LIVE", label:"Live" },
+  { value:"COMPLETED", label:"Completed" },
+  { value:"CANCELLED", label:"Cancelled" },
+  { value:"POSTPONED", label:"Postponed" },
 ];
 
 const matchTypeOptions = [
-  { value: "FRIENDLY", label: "Friendly" },
-  { value: "TOURNAMENT", label: "Tournament" },
-  { value: "BIG_MATCH", label: "Big Match" },
-  { value: "ANNUAL_ENCOUNTER", label: "Annual Encounter" },
-  { value: "OTHER", label: "Other" },
+  { value:"FRIENDLY", label:"Friendly" },
+  { value:"TOURNAMENT", label:"Tournament" },
+  { value:"BIG_MATCH", label:"Big Match" },
+  { value:"ANNUAL_ENCOUNTER", label:"Annual Encounter" },
+  { value:"OTHER", label:"Other" },
 ];
 
 // const getStatusLabel = (value) => {
@@ -49,7 +49,7 @@ const getMatchTypeLabel = (value) => {
 };
 
 // Scroll-triggered reveal wrapper — fades sections in once
-function Reveal({ children, className = "" }) {
+function Reveal({ children, className ="" }) {
   const ref = useRef(null);
   const [visible, setVisible] = useState(false);
 
@@ -72,7 +72,7 @@ function Reveal({ children, className = "" }) {
   }, []);
 
   return (
-    <div ref={ref} className={`${visible ? "reveal" : "opacity-0"} ${className}`}>
+    <div ref={ref} className={`${visible ?"reveal" :"opacity-0"} ${className}`}>
       {children}
     </div>
   );
@@ -104,15 +104,15 @@ function AdminFixtures() {
   const buildFixtureParams = () => {
     const params = {};
 
-    if (filterSport !== "ALL") {
+    if (filterSport !=="ALL") {
       params.sport = filterSport;
     }
 
-    if (filterStatus !== "ALL") {
+    if (filterStatus !=="ALL") {
       params.status = filterStatus;
     }
 
-    if (filterMatchType !== "ALL") {
+    if (filterMatchType !=="ALL") {
       params.matchType = filterMatchType;
     }
 
@@ -128,7 +128,7 @@ function AdminFixtures() {
       setFixtures(data.fixtures);
       setCurrentPage(1);
     } catch (error) {
-      setError(error.response?.data?.message || "Failed to load fixtures.");
+      setError(error.response?.data?.message ||"Failed to load fixtures.");
     } finally {
       setLoading(false);
     }
@@ -159,7 +159,7 @@ function AdminFixtures() {
         }
 
         setError(
-          error.response?.data?.message || "Failed to load sports and teams."
+          error.response?.data?.message ||"Failed to load sports and teams."
         );
       });
 
@@ -173,15 +173,15 @@ function AdminFixtures() {
 
     const params = {};
 
-    if (filterSport !== "ALL") {
+    if (filterSport !=="ALL") {
       params.sport = filterSport;
     }
 
-    if (filterStatus !== "ALL") {
+    if (filterStatus !=="ALL") {
       params.status = filterStatus;
     }
 
-    if (filterMatchType !== "ALL") {
+    if (filterMatchType !=="ALL") {
       params.matchType = filterMatchType;
     }
 
@@ -200,7 +200,7 @@ function AdminFixtures() {
           return;
         }
 
-        setError(error.response?.data?.message || "Failed to load fixtures.");
+        setError(error.response?.data?.message ||"Failed to load fixtures.");
       })
       .finally(() => {
         if (!isMounted) {
@@ -220,7 +220,7 @@ function AdminFixtures() {
 
     setFormData({
       ...formData,
-      [name]: type === "checkbox" ? checked : value,
+      [name]: type ==="checkbox" ? checked : value,
     });
 
     setMessage("");
@@ -292,13 +292,13 @@ function AdminFixtures() {
       setEditingFixtureId(null);
       setFormData({
         ...initialFormData,
-        sport: sports[0]?._id || "",
+        sport: sports[0]?._id ||"",
       });
       setIsFormOpen(false);
 
       await loadFixtures();
     } catch (error) {
-      setError(error.response?.data?.message || "Failed to save fixture.");
+      setError(error.response?.data?.message ||"Failed to save fixture.");
     } finally {
       setSaving(false);
     }
@@ -308,18 +308,18 @@ function AdminFixtures() {
     setEditingFixtureId(fixture._id);
 
     setFormData({
-      sport: fixture.sport?._id || fixture.sport || "",
-      team: fixture.team?._id || fixture.team || "",
-      title: fixture.title || "",
-      opponent: fixture.opponent || "",
-      venue: fixture.venue || "",
-      matchDate: fixture.matchDate ? fixture.matchDate.slice(0, 16) : "",
-      matchType: fixture.matchType || "OTHER",
-      status: fixture.status || "UPCOMING",
-      anandaScore: fixture.result?.anandaScore || "",
-      opponentScore: fixture.result?.opponentScore || "",
-      resultText: fixture.result?.resultText || "",
-      summary: fixture.result?.summary || "",
+      sport: fixture.sport?._id || fixture.sport ||"",
+      team: fixture.team?._id || fixture.team ||"",
+      title: fixture.title ||"",
+      opponent: fixture.opponent ||"",
+      venue: fixture.venue ||"",
+      matchDate: fixture.matchDate ? fixture.matchDate.slice(0, 16) :"",
+      matchType: fixture.matchType ||"OTHER",
+      status: fixture.status ||"UPCOMING",
+      anandaScore: fixture.result?.anandaScore ||"",
+      opponentScore: fixture.result?.opponentScore ||"",
+      resultText: fixture.result?.resultText ||"",
+      summary: fixture.result?.summary ||"",
       isFeatured: fixture.isFeatured || false,
     });
 
@@ -333,7 +333,7 @@ function AdminFixtures() {
 
     setFormData({
       ...initialFormData,
-      sport: sports[0]?._id || "",
+      sport: sports[0]?._id ||"",
     });
 
     setIsFormOpen(false);
@@ -342,8 +342,7 @@ function AdminFixtures() {
   };
 
   const handleDelete = async (fixtureId) => {
-    const confirmed = window.confirm(
-      "Are you sure you want to delete this fixture?"
+    const confirmed = window.confirm("Are you sure you want to delete this fixture?"
     );
 
     if (!confirmed) {
@@ -358,7 +357,7 @@ function AdminFixtures() {
       setMessage("Fixture deleted successfully.");
       await loadFixtures();
     } catch (error) {
-      setError(error.response?.data?.message || "Failed to delete fixture.");
+      setError(error.response?.data?.message ||"Failed to delete fixture.");
     }
   };
 
@@ -371,40 +370,40 @@ function AdminFixtures() {
 
   const getStatusBadge = (status) => {
     switch (status) {
-      case "LIVE":
+      case"LIVE":
         return (
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-red-50 border border-red-200 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-red-600 animate-pulse">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-red-50 border border-red-200 px-2.5 py-0.5 text-[10px] font-bold tracking-wider text-red-600 animate-pulse">
             <span className="h-1.5 w-1.5 rounded-full bg-red-600 animate-pulse" />
             Live
           </span>
         );
-      case "COMPLETED":
+      case"COMPLETED":
         return (
-          <span className="inline-flex items-center rounded-full bg-green-50 border border-green-200 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-green-600">
+          <span className="inline-flex items-center rounded-full bg-green-50 border border-green-200 px-2.5 py-0.5 text-[10px] font-bold tracking-wider text-green-600">
             Completed
           </span>
         );
-      case "UPCOMING":
+      case"UPCOMING":
         return (
-          <span className="inline-flex items-center rounded-full bg-blue-50 border border-blue-200 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-blue-600">
+          <span className="inline-flex items-center rounded-full bg-blue-50 border border-blue-200 px-2.5 py-0.5 text-[10px] font-bold tracking-wider text-blue-600">
             Upcoming
           </span>
         );
-      case "CANCELLED":
+      case"CANCELLED":
         return (
-          <span className="inline-flex items-center rounded-full bg-gray-100 border border-gray-200 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-gray-550">
+          <span className="inline-flex items-center rounded-full bg-gray-100 border border-gray-200 px-2.5 py-0.5 text-[10px] font-bold tracking-wider text-gray-550">
             Cancelled
           </span>
         );
-      case "POSTPONED":
+      case"POSTPONED":
         return (
-          <span className="inline-flex items-center rounded-full bg-yellow-50 border border-yellow-200 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-yellow-700">
+          <span className="inline-flex items-center rounded-full bg-yellow-50 border border-yellow-200 px-2.5 py-0.5 text-[10px] font-bold tracking-wider text-yellow-700">
             Postponed
           </span>
         );
       default:
         return (
-          <span className="inline-flex items-center rounded-full bg-gray-50 border border-gray-200 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-gray-650">
+          <span className="inline-flex items-center rounded-full bg-gray-50 border border-gray-200 px-2.5 py-0.5 text-[10px] font-bold tracking-wider text-gray-650">
             {status}
           </span>
         );
@@ -415,8 +414,8 @@ function AdminFixtures() {
   const filteredFixtures = fixtures.filter((fixture) =>
     fixture.title.toLowerCase().includes(search.toLowerCase()) ||
     fixture.opponent.toLowerCase().includes(search.toLowerCase()) ||
-    (fixture.sport?.name || "").toLowerCase().includes(search.toLowerCase()) ||
-    (fixture.venue || "").toLowerCase().includes(search.toLowerCase())
+    (fixture.sport?.name ||"").toLowerCase().includes(search.toLowerCase()) ||
+    (fixture.venue ||"").toLowerCase().includes(search.toLowerCase())
   );
 
   // Pagination Logic
@@ -428,10 +427,10 @@ function AdminFixtures() {
     <div>
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
         <div>
-          <p className="font-display mb-1 text-xs font-semibold uppercase tracking-wider text-ananda-gold">
+          <p className="font-display mb-1 text-xs font-semibold tracking-wider text-ananda-gold">
             Admin Panel
           </p>
-          <h1 className="font-display text-3xl font-bold uppercase tracking-tight text-ananda-dark-maroon">
+          <h1 className="font-display text-3xl font-bold tracking-tight text-ananda-dark-maroon">
             Manage Fixtures & Results
           </h1>
         </div>
@@ -441,13 +440,13 @@ function AdminFixtures() {
             setEditingFixtureId(null);
             setFormData({
               ...initialFormData,
-              sport: sports[0]?._id || "",
+              sport: sports[0]?._id ||"",
             });
             setIsFormOpen(true);
             setMessage("");
             setError("");
           }}
-          className="font-display self-start sm:self-auto rounded-xl bg-ananda-gold px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-ananda-dark-maroon hover:bg-ananda-light-gold transition cursor-pointer flex items-center gap-1.5 shadow-sm hover:shadow-md hover:scale-[1.02]"
+          className="font-display self-start sm:self-auto rounded-xl bg-ananda-gold px-4 py-2.5 text-xs font-bold tracking-wider text-ananda-dark-maroon hover:bg-ananda-light-gold transition cursor-pointer flex items-center gap-1.5 shadow-sm hover:shadow-md hover:scale-[1.02]"
         >
           <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" />
@@ -475,7 +474,7 @@ function AdminFixtures() {
       {/* Full-width spacious view */}
       <Reveal className="rounded-2xl border border-ananda-gold/15 bg-white p-6 shadow-sm">
         <div className="mb-6 flex flex-col gap-4">
-          <h2 className="font-display text-lg font-bold uppercase tracking-tight text-ananda-maroon">
+          <h2 className="font-display text-lg font-bold tracking-tight text-ananda-maroon">
             Fixtures & Results List
           </h2>
 
@@ -494,7 +493,7 @@ function AdminFixtures() {
               <select
                 value={filterSport}
                 onChange={handleFilterSportChange}
-                className="w-full appearance-none rounded-xl border border-ananda-gold/25 bg-white pl-3 pr-8 py-2.5 text-xs font-semibold uppercase tracking-wider outline-none focus:border-ananda-maroon focus:ring-1 focus:ring-ananda-maroon transition shadow-sm"
+                className="w-full appearance-none rounded-xl border border-ananda-gold/25 bg-white pl-3 pr-8 py-2.5 text-xs font-semibold tracking-wider outline-none focus:border-ananda-maroon focus:ring-1 focus:ring-ananda-maroon transition shadow-sm"
               >
                 <option value="ALL">All Sports</option>
                 {sports.map((sport) => (
@@ -515,7 +514,7 @@ function AdminFixtures() {
               <select
                 value={filterStatus}
                 onChange={handleFilterStatusChange}
-                className="w-full appearance-none rounded-xl border border-ananda-gold/25 bg-white pl-3 pr-8 py-2.5 text-xs font-semibold uppercase tracking-wider outline-none focus:border-ananda-maroon focus:ring-1 focus:ring-ananda-maroon transition shadow-sm"
+                className="w-full appearance-none rounded-xl border border-ananda-gold/25 bg-white pl-3 pr-8 py-2.5 text-xs font-semibold tracking-wider outline-none focus:border-ananda-maroon focus:ring-1 focus:ring-ananda-maroon transition shadow-sm"
               >
                 <option value="ALL">All Status</option>
                 {statusOptions.map((item) => (
@@ -536,7 +535,7 @@ function AdminFixtures() {
               <select
                 value={filterMatchType}
                 onChange={handleFilterMatchTypeChange}
-                className="w-full appearance-none rounded-xl border border-ananda-gold/25 bg-white pl-3 pr-8 py-2.5 text-xs font-semibold uppercase tracking-wider outline-none focus:border-ananda-maroon focus:ring-1 focus:ring-ananda-maroon transition shadow-sm"
+                className="w-full appearance-none rounded-xl border border-ananda-gold/25 bg-white pl-3 pr-8 py-2.5 text-xs font-semibold tracking-wider outline-none focus:border-ananda-maroon focus:ring-1 focus:ring-ananda-maroon transition shadow-sm"
               >
                 <option value="ALL">All Match Types</option>
                 {matchTypeOptions.map((item) => (
@@ -557,7 +556,7 @@ function AdminFixtures() {
         {loading && (
           <div className="flex flex-col items-center gap-3 py-16 text-center">
             <div className="h-8 w-8 animate-spin rounded-full border-4 border-ananda-gold/30 border-t-ananda-maroon" />
-            <p className="font-display text-xs uppercase tracking-wider text-ananda-maroon animate-pulse">Loading fixtures...</p>
+            <p className="font-display text-xs tracking-wider text-ananda-maroon animate-pulse">Loading fixtures...</p>
           </div>
         )}
 
@@ -578,14 +577,14 @@ function AdminFixtures() {
                   <div className="mb-4 flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
                     <div>
                       <div className="mb-1.5 flex flex-wrap items-center gap-2">
-                        <span className="font-display text-[10px] font-bold uppercase tracking-wider text-ananda-gold">
+                        <span className="font-display text-[10px] font-bold tracking-wider text-ananda-gold">
                           {fixture.sport?.name}
                         </span>
                         <span className="text-gray-300 text-xs">|</span>
                         {getStatusBadge(fixture.status)}
                       </div>
 
-                      <h3 className="font-display text-lg font-bold uppercase tracking-tight text-ananda-maroon">
+                      <h3 className="font-display text-lg font-bold tracking-tight text-ananda-maroon">
                         {fixture.title}
                       </h3>
 
@@ -601,7 +600,7 @@ function AdminFixtures() {
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                         </svg>
-                        {fixture.venue || "Venue not added"}
+                        {fixture.venue ||"Venue not added"}
                       </p>
 
                       <p className="mt-0.5 text-xs text-gray-550 flex items-center gap-1.5 font-medium">
@@ -615,14 +614,14 @@ function AdminFixtures() {
                     <div className="flex flex-wrap gap-2">
                       <button
                         onClick={() => handleEdit(fixture)}
-                        className="font-display text-[10px] font-bold uppercase tracking-wider bg-ananda-gold hover:bg-ananda-light-gold text-ananda-dark-maroon px-3 py-1.5 rounded-lg transition duration-250 cursor-pointer"
+                        className="font-display text-[10px] font-bold tracking-wider bg-ananda-gold hover:bg-ananda-light-gold text-ananda-dark-maroon px-3 py-1.5 rounded-lg transition duration-250 cursor-pointer"
                       >
                         Edit
                       </button>
 
                       <button
                         onClick={() => handleDelete(fixture._id)}
-                        className="font-display text-[10px] font-bold uppercase tracking-wider bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-lg transition duration-250 cursor-pointer"
+                        className="font-display text-[10px] font-bold tracking-wider bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-lg transition duration-250 cursor-pointer"
                       >
                         Delete
                       </button>
@@ -631,30 +630,30 @@ function AdminFixtures() {
 
                   <div className="grid gap-3 grid-cols-3 mt-4">
                     <div className="rounded-xl border border-ananda-gold/10 bg-ananda-cream/15 p-3 text-center">
-                      <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Match Type</p>
+                      <p className="text-[10px] font-bold tracking-wider text-gray-400">Match Type</p>
                       <p className="font-display text-xs font-extrabold text-ananda-maroon mt-0.5">
                         {getMatchTypeLabel(fixture.matchType)}
                       </p>
                     </div>
 
                     <div className="rounded-xl border border-ananda-gold/10 bg-ananda-cream/15 p-3 text-center">
-                      <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Ananda Score</p>
+                      <p className="text-[10px] font-bold tracking-wider text-gray-400">Ananda Score</p>
                       <p className="font-display text-xs font-extrabold text-ananda-maroon mt-0.5">
-                        {fixture.result?.anandaScore || "-"}
+                        {fixture.result?.anandaScore ||"-"}
                       </p>
                     </div>
 
                     <div className="rounded-xl border border-ananda-gold/10 bg-ananda-cream/15 p-3 text-center">
-                      <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Opponent Score</p>
+                      <p className="text-[10px] font-bold tracking-wider text-gray-400">Opponent Score</p>
                       <p className="font-display text-xs font-extrabold text-ananda-maroon mt-0.5">
-                        {fixture.result?.opponentScore || "-"}
+                        {fixture.result?.opponentScore ||"-"}
                       </p>
                     </div>
                   </div>
 
                   {fixture.result?.resultText && (
                     <div className="mt-4 rounded-xl bg-ananda-gold/15 border border-ananda-gold/25 p-3.5 text-xs font-semibold text-ananda-dark-maroon leading-relaxed">
-                      <span className="font-display text-[10px] font-bold uppercase tracking-wider text-ananda-maroon block mb-1">Result Summary</span>
+                      <span className="font-display text-[10px] font-bold tracking-wider text-ananda-maroon block mb-1">Result Summary</span>
                       {fixture.result.resultText}
                     </div>
                   )}
@@ -665,14 +664,14 @@ function AdminFixtures() {
             {/* Pagination Controls */}
             {totalPages > 1 && (
               <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-t border-gray-100 pt-4">
-                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                <p className="text-xs font-semibold text-gray-500 tracking-wider">
                   Showing {startIndex + 1} to {Math.min(startIndex + itemsPerPage, filteredFixtures.length)} of {filteredFixtures.length} entries
                 </p>
                 <div className="flex flex-wrap gap-1">
                   <button
                     onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
                     disabled={currentPage === 1}
-                    className="font-display text-[10px] font-bold uppercase tracking-wider border border-gray-200 bg-white hover:bg-gray-50 text-gray-750 px-3 py-1.5 rounded-lg disabled:opacity-40 disabled:cursor-not-allowed transition duration-200 cursor-pointer"
+                    className="font-display text-[10px] font-bold tracking-wider border border-gray-200 bg-white hover:bg-gray-50 text-gray-750 px-3 py-1.5 rounded-lg disabled:opacity-40 disabled:cursor-not-allowed transition duration-200 cursor-pointer"
                   >
                     Previous
                   </button>
@@ -680,10 +679,10 @@ function AdminFixtures() {
                     <button
                       key={page}
                       onClick={() => setCurrentPage(page)}
-                      className={`font-display text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-lg transition duration-200 cursor-pointer ${
+                      className={`font-display text-[10px] font-bold  tracking-wider px-3 py-1.5 rounded-lg transition duration-200 cursor-pointer ${
                         currentPage === page
-                          ? "bg-ananda-maroon text-white shadow-xs"
-                          : "border border-gray-200 bg-white hover:bg-gray-50 text-gray-700"
+                          ?"bg-ananda-maroon text-white shadow-xs"
+                          :"border border-gray-200 bg-white hover:bg-gray-50 text-gray-700"
                       }`}
                     >
                       {page}
@@ -692,7 +691,7 @@ function AdminFixtures() {
                   <button
                     onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
                     disabled={currentPage === totalPages}
-                    className="font-display text-[10px] font-bold uppercase tracking-wider border border-gray-200 bg-white hover:bg-gray-50 text-gray-750 px-3 py-1.5 rounded-lg disabled:opacity-40 disabled:cursor-not-allowed transition duration-200 cursor-pointer"
+                    className="font-display text-[10px] font-bold tracking-wider border border-gray-200 bg-white hover:bg-gray-50 text-gray-750 px-3 py-1.5 rounded-lg disabled:opacity-40 disabled:cursor-not-allowed transition duration-200 cursor-pointer"
                   >
                     Next
                   </button>
@@ -717,13 +716,13 @@ function AdminFixtures() {
               </svg>
             </button>
 
-            <h2 className="font-display mb-5 text-lg font-bold uppercase tracking-tight text-ananda-maroon">
-              {editingFixtureId ? "Edit Fixture" : "Add Fixture"}
+            <h2 className="font-display mb-5 text-lg font-bold tracking-tight text-ananda-maroon">
+              {editingFixtureId ?"Edit Fixture" :"Add Fixture"}
             </h2>
 
             <form className="space-y-5" onSubmit={handleSubmit}>
               <div>
-                <label className="font-display text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5 block">
+                <label className="font-display text-xs font-bold tracking-wider text-gray-500 mb-1.5 block">
                   Sport
                 </label>
                 <div className="relative">
@@ -749,7 +748,7 @@ function AdminFixtures() {
               </div>
 
               <div>
-                <label className="font-display text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5 block">
+                <label className="font-display text-xs font-bold tracking-wider text-gray-500 mb-1.5 block">
                   Team
                 </label>
                 <div className="relative">
@@ -775,7 +774,7 @@ function AdminFixtures() {
               </div>
 
               <div>
-                <label className="font-display text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5 block">
+                <label className="font-display text-xs font-bold tracking-wider text-gray-500 mb-1.5 block">
                   Fixture Title
                 </label>
                 <input
@@ -790,7 +789,7 @@ function AdminFixtures() {
               </div>
 
               <div>
-                <label className="font-display text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5 block">
+                <label className="font-display text-xs font-bold tracking-wider text-gray-500 mb-1.5 block">
                   Opponent
                 </label>
                 <input
@@ -805,7 +804,7 @@ function AdminFixtures() {
               </div>
 
               <div>
-                <label className="font-display text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5 block">
+                <label className="font-display text-xs font-bold tracking-wider text-gray-500 mb-1.5 block">
                   Venue
                 </label>
                 <input
@@ -819,7 +818,7 @@ function AdminFixtures() {
               </div>
 
               <div>
-                <label className="font-display text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5 block">
+                <label className="font-display text-xs font-bold tracking-wider text-gray-500 mb-1.5 block">
                   Match Date and Time
                 </label>
                 <input
@@ -834,7 +833,7 @@ function AdminFixtures() {
 
               <div className="grid gap-4 md:grid-cols-2">
                 <div>
-                  <label className="font-display text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5 block">
+                  <label className="font-display text-xs font-bold tracking-wider text-gray-500 mb-1.5 block">
                     Match Type
                   </label>
                   <div className="relative">
@@ -859,7 +858,7 @@ function AdminFixtures() {
                 </div>
 
                 <div>
-                  <label className="font-display text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5 block">
+                  <label className="font-display text-xs font-bold tracking-wider text-gray-500 mb-1.5 block">
                     Status
                   </label>
                   <div className="relative">
@@ -886,7 +885,7 @@ function AdminFixtures() {
 
               {/* Results sub-panel */}
               <div className="rounded-xl border border-ananda-gold/15 bg-ananda-cream/15 p-4 space-y-4">
-                <h3 className="font-display text-sm font-bold uppercase tracking-tight text-ananda-maroon border-b border-ananda-gold/15 pb-2">
+                <h3 className="font-display text-sm font-bold tracking-tight text-ananda-maroon border-b border-ananda-gold/15 pb-2">
                   Result Details
                 </h3>
 
@@ -938,7 +937,7 @@ function AdminFixtures() {
                   onChange={handleChange}
                   className="rounded border-ananda-gold/25 text-ananda-maroon focus:ring-ananda-maroon h-4 w-4 cursor-pointer"
                 />
-                <span className="font-display text-xs font-bold uppercase tracking-wider text-ananda-dark-maroon">
+                <span className="font-display text-xs font-bold tracking-wider text-ananda-dark-maroon">
                   Featured fixture
                 </span>
               </label>
@@ -947,13 +946,13 @@ function AdminFixtures() {
                 <button
                   type="submit"
                   disabled={saving}
-                  className="w-full rounded-xl bg-ananda-maroon px-6 py-3.5 font-semibold text-white hover:bg-ananda-dark-maroon disabled:cursor-not-allowed disabled:opacity-70 transition duration-300 font-display text-xs font-bold uppercase tracking-wider cursor-pointer hover:scale-[1.01]"
+                  className="w-full rounded-xl bg-ananda-maroon px-6 py-3.5 font-semibold text-white hover:bg-ananda-dark-maroon disabled:cursor-not-allowed disabled:opacity-70 transition duration-300 font-display text-xs font-bold tracking-wider cursor-pointer hover:scale-[1.01]"
                 >
                   {saving
-                    ? "Saving..."
+                    ?"Saving..."
                     : editingFixtureId
-                      ? "Update Fixture"
-                      : "Create Fixture"}
+                      ?"Update Fixture"
+                      :"Create Fixture"}
                 </button>
               </div>
             </form>

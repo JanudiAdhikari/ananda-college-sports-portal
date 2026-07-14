@@ -1,4 +1,5 @@
-import { Link } from "react-router-dom";
+import { Link } from"react-router-dom";
+import logo from "../../assets/logo.png";
 
 function Footer() {
   return (
@@ -8,14 +9,12 @@ function Footer() {
           {/* Brand Column */}
           <div className="space-y-5">
             <Link to="/" className="flex items-center gap-3 group">
-              <div className="font-display flex h-10 w-10 items-center justify-center rounded-xl bg-ananda-gold text-ananda-dark-maroon font-extrabold shadow-md transition duration-300 group-hover:scale-[1.05]">
-                AC
-              </div>
+              <img src={logo} alt="Ananda College Logo" className="h-10 w-auto object-contain shadow-md transition duration-300 group-hover:scale-[1.05]" />
               <div className="flex flex-col">
-                <span className="font-display text-sm font-bold uppercase tracking-[0.15em] leading-tight text-white group-hover:text-ananda-gold transition duration-300">
+                <span className="font-display text-sm font-bold tracking-[0.15em] leading-tight text-white group-hover:text-ananda-gold transition duration-300">
                   Ananda College
                 </span>
-                <span className="font-display text-[10px] font-semibold uppercase tracking-[0.2em] text-ananda-light-gold">
+                <span className="font-display text-[10px] font-semibold tracking-[0.2em] text-ananda-light-gold">
                   Sports Portal
                 </span>
               </div>
@@ -27,10 +26,10 @@ function Footer() {
 
           {/* Quick Links Column */}
           <div className="space-y-4">
-            <h3 className="font-display text-xs font-bold uppercase tracking-wider text-ananda-gold">
+            <h3 className="font-display text-xs font-bold tracking-wider text-ananda-gold">
               Quick Navigation
             </h3>
-            <ul className="grid grid-cols-2 gap-3 text-xs font-semibold uppercase tracking-wider text-white/70">
+            <ul className="grid grid-cols-2 gap-3 text-xs font-semibold tracking-wider text-white/70">
               <li>
                 <Link to="/" className="hover:text-ananda-gold transition-all duration-200 flex items-center gap-2 hover:translate-x-1 group">
                   <span className="h-1 w-1 rounded-full bg-ananda-gold/40 group-hover:bg-ananda-gold" />
@@ -66,7 +65,7 @@ function Footer() {
 
           {/* Contact Column */}
           <div className="space-y-4">
-            <h3 className="font-display text-xs font-bold uppercase tracking-wider text-ananda-gold">
+            <h3 className="font-display text-xs font-bold tracking-wider text-ananda-gold">
               Contact Us
             </h3>
             <ul className="space-y-3.5 text-xs text-white/70 font-semibold">
@@ -92,7 +91,7 @@ function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="mt-16 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-[10px] uppercase tracking-widest text-white/40 font-bold">
+        <div className="mt-16 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-[10px] tracking-widest text-white/40 font-bold">
           <p>
             © {new Date().getFullYear()} Ananda College. All rights reserved.
           </p>

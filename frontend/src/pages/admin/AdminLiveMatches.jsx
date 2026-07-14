@@ -1,39 +1,39 @@
-import { useEffect, useRef, useState } from "react";
-import { getSports } from "../../services/sportService";
+import { useEffect, useRef, useState } from"react";
+import { getSports } from"../../services/sportService";
 import {
   createLiveMatch,
   deleteLiveMatch,
   getLiveMatches,
   updateLiveMatch,
   updateLiveScore,
-} from "../../services/liveMatchService";
+} from"../../services/liveMatchService";
 
 const initialFormData = {
-  sport: "",
-  title: "",
-  anandaTeamName: "Ananda College",
-  opponentTeamName: "",
-  venue: "",
-  matchDate: "",
-  videoUrl: "",
-  status: "SCHEDULED",
+  sport:"",
+  title:"",
+  anandaTeamName:"Ananda College",
+  opponentTeamName:"",
+  venue:"",
+  matchDate:"",
+  videoUrl:"",
+  status:"SCHEDULED",
   isVisible: true,
-  anandaScore: "",
-  opponentScore: "",
-  currentStatus: "",
-  overs: "",
-  wickets: "",
+  anandaScore:"",
+  opponentScore:"",
+  currentStatus:"",
+  overs:"",
+  wickets:"",
 };
 
 const statusOptions = [
-  { value: "SCHEDULED", label: "Scheduled" },
-  { value: "LIVE", label: "Live" },
-  { value: "COMPLETED", label: "Completed" },
-  { value: "CANCELLED", label: "Cancelled" },
+  { value:"SCHEDULED", label:"Scheduled" },
+  { value:"LIVE", label:"Live" },
+  { value:"COMPLETED", label:"Completed" },
+  { value:"CANCELLED", label:"Cancelled" },
 ];
 
 // Scroll-triggered reveal wrapper — fades sections in once
-function Reveal({ children, className = "" }) {
+function Reveal({ children, className ="" }) {
   const ref = useRef(null);
   const [visible, setVisible] = useState(false);
 
@@ -56,7 +56,7 @@ function Reveal({ children, className = "" }) {
   }, []);
 
   return (
-    <div ref={ref} className={`${visible ? "reveal" : "opacity-0"} ${className}`}>
+    <div ref={ref} className={`${visible ?"reveal" :"opacity-0"} ${className}`}>
       {children}
     </div>
   );
@@ -68,16 +68,16 @@ function AdminLiveMatches() {
 
   const [formData, setFormData] = useState(initialFormData);
   const [editingLiveMatchId, setEditingLiveMatchId] = useState(null);
-  const [activeForm, setActiveForm] = useState(null); // null, 'MATCH', or 'SCORE'
+  const [activeForm, setActiveForm] = useState(null); // null,'MATCH', or'SCORE'
 
   const [selectedMatchId, setSelectedMatchId] = useState("");
   const [scoreFormData, setScoreFormData] = useState({
-    anandaScore: "",
-    opponentScore: "",
-    currentStatus: "",
-    overs: "",
-    wickets: "",
-    updateText: "",
+    anandaScore:"",
+    opponentScore:"",
+    currentStatus:"",
+    overs:"",
+    wickets:"",
+    updateText:"",
   });
 
   const [search, setSearch] = useState("");
@@ -97,11 +97,11 @@ function AdminLiveMatches() {
   const buildParams = () => {
     const params = {};
 
-    if (filterStatus !== "ALL") {
+    if (filterStatus !=="ALL") {
       params.status = filterStatus;
     }
 
-    if (filterSport !== "ALL") {
+    if (filterSport !=="ALL") {
       params.sport = filterSport;
     }
 
@@ -122,16 +122,16 @@ function AdminLiveMatches() {
         setSelectedMatchId(firstMatch._id);
 
         setScoreFormData({
-          anandaScore: firstMatch.score?.anandaScore || "",
-          opponentScore: firstMatch.score?.opponentScore || "",
-          currentStatus: firstMatch.score?.currentStatus || "",
-          overs: firstMatch.score?.overs || "",
-          wickets: firstMatch.score?.wickets || "",
-          updateText: "",
+          anandaScore: firstMatch.score?.anandaScore ||"",
+          opponentScore: firstMatch.score?.opponentScore ||"",
+          currentStatus: firstMatch.score?.currentStatus ||"",
+          overs: firstMatch.score?.overs ||"",
+          wickets: firstMatch.score?.wickets ||"",
+          updateText:"",
         });
       }
     } catch (error) {
-      setError(error.response?.data?.message || "Failed to load live matches.");
+      setError(error.response?.data?.message ||"Failed to load live matches.");
     } finally {
       setLoading(false);
     }
@@ -160,7 +160,7 @@ function AdminLiveMatches() {
           return;
         }
 
-        setError(error.response?.data?.message || "Failed to load sports.");
+        setError(error.response?.data?.message ||"Failed to load sports.");
       });
 
     return () => {
@@ -173,11 +173,11 @@ function AdminLiveMatches() {
 
     const params = {};
 
-    if (filterStatus !== "ALL") {
+    if (filterStatus !=="ALL") {
       params.status = filterStatus;
     }
 
-    if (filterSport !== "ALL") {
+    if (filterSport !=="ALL") {
       params.sport = filterSport;
     }
 
@@ -195,12 +195,12 @@ function AdminLiveMatches() {
           setSelectedMatchId(firstMatch._id);
 
           setScoreFormData({
-            anandaScore: firstMatch.score?.anandaScore || "",
-            opponentScore: firstMatch.score?.opponentScore || "",
-            currentStatus: firstMatch.score?.currentStatus || "",
-            overs: firstMatch.score?.overs || "",
-            wickets: firstMatch.score?.wickets || "",
-            updateText: "",
+            anandaScore: firstMatch.score?.anandaScore ||"",
+            opponentScore: firstMatch.score?.opponentScore ||"",
+            currentStatus: firstMatch.score?.currentStatus ||"",
+            overs: firstMatch.score?.overs ||"",
+            wickets: firstMatch.score?.wickets ||"",
+            updateText:"",
           });
         }
 
@@ -211,7 +211,7 @@ function AdminLiveMatches() {
           return;
         }
 
-        setError(error.response?.data?.message || "Failed to load live matches.");
+        setError(error.response?.data?.message ||"Failed to load live matches.");
       })
       .finally(() => {
         if (!isMounted) {
@@ -231,7 +231,7 @@ function AdminLiveMatches() {
 
     setFormData({
       ...formData,
-      [name]: type === "checkbox" ? checked : value,
+      [name]: type ==="checkbox" ? checked : value,
     });
 
     setMessage("");
@@ -309,13 +309,13 @@ function AdminLiveMatches() {
       setEditingLiveMatchId(null);
       setFormData({
         ...initialFormData,
-        sport: sports[0]?._id || "",
+        sport: sports[0]?._id ||"",
       });
       setActiveForm(null);
 
       await loadLiveMatches();
     } catch (error) {
-      setError(error.response?.data?.message || "Failed to save live match.");
+      setError(error.response?.data?.message ||"Failed to save live match.");
     } finally {
       setSaving(false);
     }
@@ -325,20 +325,20 @@ function AdminLiveMatches() {
     setEditingLiveMatchId(liveMatch._id);
 
     setFormData({
-      sport: liveMatch.sport?._id || liveMatch.sport || "",
-      title: liveMatch.title || "",
-      anandaTeamName: liveMatch.anandaTeamName || "Ananda College",
-      opponentTeamName: liveMatch.opponentTeamName || "",
-      venue: liveMatch.venue || "",
-      matchDate: liveMatch.matchDate ? liveMatch.matchDate.slice(0, 16) : "",
-      videoUrl: liveMatch.videoUrl || "",
-      status: liveMatch.status || "SCHEDULED",
+      sport: liveMatch.sport?._id || liveMatch.sport ||"",
+      title: liveMatch.title ||"",
+      anandaTeamName: liveMatch.anandaTeamName ||"Ananda College",
+      opponentTeamName: liveMatch.opponentTeamName ||"",
+      venue: liveMatch.venue ||"",
+      matchDate: liveMatch.matchDate ? liveMatch.matchDate.slice(0, 16) :"",
+      videoUrl: liveMatch.videoUrl ||"",
+      status: liveMatch.status ||"SCHEDULED",
       isVisible: liveMatch.isVisible,
-      anandaScore: liveMatch.score?.anandaScore || "",
-      opponentScore: liveMatch.score?.opponentScore || "",
-      currentStatus: liveMatch.score?.currentStatus || "",
-      overs: liveMatch.score?.overs || "",
-      wickets: liveMatch.score?.wickets || "",
+      anandaScore: liveMatch.score?.anandaScore ||"",
+      opponentScore: liveMatch.score?.opponentScore ||"",
+      currentStatus: liveMatch.score?.currentStatus ||"",
+      overs: liveMatch.score?.overs ||"",
+      wickets: liveMatch.score?.wickets ||"",
     });
 
     setMessage("");
@@ -350,7 +350,7 @@ function AdminLiveMatches() {
     setEditingLiveMatchId(null);
     setFormData({
       ...initialFormData,
-      sport: sports[0]?._id || "",
+      sport: sports[0]?._id ||"",
     });
     setActiveForm(null);
     setMessage("");
@@ -365,12 +365,12 @@ function AdminLiveMatches() {
 
     if (selectedMatch) {
       setScoreFormData({
-        anandaScore: selectedMatch.score?.anandaScore || "",
-        opponentScore: selectedMatch.score?.opponentScore || "",
-        currentStatus: selectedMatch.score?.currentStatus || "",
-        overs: selectedMatch.score?.overs || "",
-        wickets: selectedMatch.score?.wickets || "",
-        updateText: "",
+        anandaScore: selectedMatch.score?.anandaScore ||"",
+        opponentScore: selectedMatch.score?.opponentScore ||"",
+        currentStatus: selectedMatch.score?.currentStatus ||"",
+        overs: selectedMatch.score?.overs ||"",
+        wickets: selectedMatch.score?.wickets ||"",
+        updateText:"",
       });
     }
 
@@ -396,21 +396,20 @@ function AdminLiveMatches() {
       setMessage("Live score updated successfully.");
       setScoreFormData({
         ...scoreFormData,
-        updateText: "",
+        updateText:"",
       });
       setActiveForm(null);
 
       await loadLiveMatches();
     } catch (error) {
-      setError(error.response?.data?.message || "Failed to update live score.");
+      setError(error.response?.data?.message ||"Failed to update live score.");
     } finally {
       setUpdatingScore(false);
     }
   };
 
   const handleDelete = async (liveMatchId) => {
-    const confirmed = window.confirm(
-      "Are you sure you want to remove this live match?"
+    const confirmed = window.confirm("Are you sure you want to remove this live match?"
     );
 
     if (!confirmed) {
@@ -426,40 +425,40 @@ function AdminLiveMatches() {
       setSelectedMatchId("");
       await loadLiveMatches();
     } catch (error) {
-      setError(error.response?.data?.message || "Failed to remove live match.");
+      setError(error.response?.data?.message ||"Failed to remove live match.");
     }
   };
 
   const getStatusBadge = (status) => {
     switch (status) {
-      case "LIVE":
+      case"LIVE":
         return (
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-red-50 border border-red-200 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-red-600 animate-pulse">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-red-50 border border-red-200 px-2.5 py-0.5 text-[10px] font-bold tracking-wider text-red-600 animate-pulse">
             <span className="h-1.5 w-1.5 rounded-full bg-red-600" />
             Live Match
           </span>
         );
-      case "COMPLETED":
+      case"COMPLETED":
         return (
-          <span className="inline-flex items-center rounded-full bg-green-50 border border-green-200 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-green-600">
+          <span className="inline-flex items-center rounded-full bg-green-50 border border-green-200 px-2.5 py-0.5 text-[10px] font-bold tracking-wider text-green-600">
             Completed
           </span>
         );
-      case "SCHEDULED":
+      case"SCHEDULED":
         return (
-          <span className="inline-flex items-center rounded-full bg-blue-50 border border-blue-200 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-blue-600">
+          <span className="inline-flex items-center rounded-full bg-blue-50 border border-blue-200 px-2.5 py-0.5 text-[10px] font-bold tracking-wider text-blue-600">
             Scheduled
           </span>
         );
-      case "CANCELLED":
+      case"CANCELLED":
         return (
-          <span className="inline-flex items-center rounded-full bg-gray-100 border border-gray-200 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-gray-550">
+          <span className="inline-flex items-center rounded-full bg-gray-100 border border-gray-200 px-2.5 py-0.5 text-[10px] font-bold tracking-wider text-gray-550">
             Cancelled
           </span>
         );
       default:
         return (
-          <span className="inline-flex items-center rounded-full bg-gray-50 border border-gray-200 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-gray-650">
+          <span className="inline-flex items-center rounded-full bg-gray-50 border border-gray-200 px-2.5 py-0.5 text-[10px] font-bold tracking-wider text-gray-650">
             {status}
           </span>
         );
@@ -470,8 +469,8 @@ function AdminLiveMatches() {
   const filteredMatches = liveMatches.filter((match) =>
     match.title.toLowerCase().includes(search.toLowerCase()) ||
     match.opponentTeamName.toLowerCase().includes(search.toLowerCase()) ||
-    (match.sport?.name || "").toLowerCase().includes(search.toLowerCase()) ||
-    (match.venue || "").toLowerCase().includes(search.toLowerCase())
+    (match.sport?.name ||"").toLowerCase().includes(search.toLowerCase()) ||
+    (match.venue ||"").toLowerCase().includes(search.toLowerCase())
   );
 
   // Pagination Logic
@@ -483,10 +482,10 @@ function AdminLiveMatches() {
     <div>
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
         <div>
-          <p className="font-display mb-1 text-xs font-semibold uppercase tracking-wider text-ananda-gold">
+          <p className="font-display mb-1 text-xs font-semibold tracking-wider text-ananda-gold">
             Admin Panel
           </p>
-          <h1 className="font-display text-3xl font-bold uppercase tracking-tight text-ananda-dark-maroon">
+          <h1 className="font-display text-3xl font-bold tracking-tight text-ananda-dark-maroon">
             Manage Live Matches
           </h1>
         </div>
@@ -497,13 +496,13 @@ function AdminLiveMatches() {
               setEditingLiveMatchId(null);
               setFormData({
                 ...initialFormData,
-                sport: sports[0]?._id || "",
+                sport: sports[0]?._id ||"",
               });
               setActiveForm("MATCH");
               setMessage("");
               setError("");
             }}
-            className="font-display rounded-xl bg-ananda-gold px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-ananda-dark-maroon hover:bg-ananda-light-gold transition cursor-pointer flex items-center gap-1.5 shadow-sm hover:shadow-md hover:scale-[1.02]"
+            className="font-display rounded-xl bg-ananda-gold px-4 py-2.5 text-xs font-bold tracking-wider text-ananda-dark-maroon hover:bg-ananda-light-gold transition cursor-pointer flex items-center gap-1.5 shadow-sm hover:shadow-md hover:scale-[1.02]"
           >
             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" />
@@ -517,7 +516,7 @@ function AdminLiveMatches() {
               setMessage("");
               setError("");
             }}
-            className="font-display rounded-xl border border-ananda-maroon px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-ananda-maroon hover:bg-ananda-cream/45 transition cursor-pointer flex items-center gap-1.5 shadow-sm hover:scale-[1.02]"
+            className="font-display rounded-xl border border-ananda-maroon px-4 py-2.5 text-xs font-bold tracking-wider text-ananda-maroon hover:bg-ananda-cream/45 transition cursor-pointer flex items-center gap-1.5 shadow-sm hover:scale-[1.02]"
           >
             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -546,7 +545,7 @@ function AdminLiveMatches() {
       {/* Full-width spacious view */}
       <Reveal className="rounded-2xl border border-ananda-gold/15 bg-white p-6 shadow-sm">
         <div className="mb-6 flex flex-col gap-4">
-          <h2 className="font-display text-lg font-bold uppercase tracking-tight text-ananda-maroon">
+          <h2 className="font-display text-lg font-bold tracking-tight text-ananda-maroon">
             Live Matches List
           </h2>
 
@@ -565,7 +564,7 @@ function AdminLiveMatches() {
               <select
                 value={filterStatus}
                 onChange={handleFilterStatusChange}
-                className="w-full appearance-none rounded-xl border border-ananda-gold/25 bg-white pl-3 pr-8 py-2.5 text-xs font-semibold uppercase tracking-wider outline-none focus:border-ananda-maroon focus:ring-1 focus:ring-ananda-maroon transition shadow-sm"
+                className="w-full appearance-none rounded-xl border border-ananda-gold/25 bg-white pl-3 pr-8 py-2.5 text-xs font-semibold tracking-wider outline-none focus:border-ananda-maroon focus:ring-1 focus:ring-ananda-maroon transition shadow-sm"
               >
                 <option value="ALL">All Status</option>
                 {statusOptions.map((status) => (
@@ -586,7 +585,7 @@ function AdminLiveMatches() {
               <select
                 value={filterSport}
                 onChange={handleFilterSportChange}
-                className="w-full appearance-none rounded-xl border border-ananda-gold/25 bg-white pl-3 pr-8 py-2.5 text-xs font-semibold uppercase tracking-wider outline-none focus:border-ananda-maroon focus:ring-1 focus:ring-ananda-maroon transition shadow-sm"
+                className="w-full appearance-none rounded-xl border border-ananda-gold/25 bg-white pl-3 pr-8 py-2.5 text-xs font-semibold tracking-wider outline-none focus:border-ananda-maroon focus:ring-1 focus:ring-ananda-maroon transition shadow-sm"
               >
                 <option value="ALL">All Sports</option>
                 {sports.map((sport) => (
@@ -607,7 +606,7 @@ function AdminLiveMatches() {
         {loading && (
           <div className="flex flex-col items-center gap-3 py-16 text-center">
             <div className="h-8 w-8 animate-spin rounded-full border-4 border-ananda-gold/30 border-t-ananda-maroon" />
-            <p className="font-display text-xs uppercase tracking-wider text-ananda-maroon animate-pulse">Loading live matches...</p>
+            <p className="font-display text-xs tracking-wider text-ananda-maroon animate-pulse">Loading live matches...</p>
           </div>
         )}
 
@@ -628,14 +627,14 @@ function AdminLiveMatches() {
                   <div className="mb-4 flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
                     <div>
                       <div className="mb-1.5 flex flex-wrap items-center gap-2">
-                        <span className="font-display text-[10px] font-bold uppercase tracking-wider text-ananda-gold">
+                        <span className="font-display text-[10px] font-bold tracking-wider text-ananda-gold">
                           {match.sport?.name}
                         </span>
                         <span className="text-gray-300 text-xs">|</span>
                         {getStatusBadge(match.status)}
                       </div>
 
-                      <h3 className="font-display text-lg font-bold uppercase tracking-tight text-ananda-maroon">
+                      <h3 className="font-display text-lg font-bold tracking-tight text-ananda-maroon">
                         {match.title}
                       </h3>
 
@@ -651,7 +650,7 @@ function AdminLiveMatches() {
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                         </svg>
-                        Venue: {match.venue || "Venue not added"}
+                        Venue: {match.venue ||"Venue not added"}
                       </p>
 
                       <p className="mt-0.5 text-xs text-gray-550 flex items-center gap-1.5 font-medium">
@@ -665,14 +664,14 @@ function AdminLiveMatches() {
                     <div className="flex flex-wrap gap-2">
                       <button
                         onClick={() => handleEdit(match)}
-                        className="font-display text-[10px] font-bold uppercase tracking-wider bg-ananda-gold hover:bg-ananda-light-gold text-ananda-dark-maroon px-3 py-1.5 rounded-lg transition duration-250 cursor-pointer"
+                        className="font-display text-[10px] font-bold tracking-wider bg-ananda-gold hover:bg-ananda-light-gold text-ananda-dark-maroon px-3 py-1.5 rounded-lg transition duration-250 cursor-pointer"
                       >
                         Edit
                       </button>
 
                       <button
                         onClick={() => handleDelete(match._id)}
-                        className="font-display text-[10px] font-bold uppercase tracking-wider bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-lg transition duration-250 cursor-pointer"
+                        className="font-display text-[10px] font-bold tracking-wider bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-lg transition duration-250 cursor-pointer"
                       >
                         Remove
                       </button>
@@ -681,37 +680,37 @@ function AdminLiveMatches() {
 
                   <div className="grid gap-3 grid-cols-2 sm:grid-cols-4 mt-4">
                     <div className="rounded-xl border border-ananda-gold/10 bg-ananda-cream/15 p-3 text-center">
-                      <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400 truncate">{match.anandaTeamName}</p>
+                      <p className="text-[10px] font-bold tracking-wider text-gray-400 truncate">{match.anandaTeamName}</p>
                       <p className="font-display text-sm font-extrabold text-ananda-maroon mt-0.5">
-                        {match.score?.anandaScore || "-"}
+                        {match.score?.anandaScore ||"-"}
                       </p>
                     </div>
 
                     <div className="rounded-xl border border-ananda-gold/10 bg-ananda-cream/15 p-3 text-center">
-                      <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400 truncate">{match.opponentTeamName}</p>
+                      <p className="text-[10px] font-bold tracking-wider text-gray-400 truncate">{match.opponentTeamName}</p>
                       <p className="font-display text-sm font-extrabold text-ananda-maroon mt-0.5">
-                        {match.score?.opponentScore || "-"}
+                        {match.score?.opponentScore ||"-"}
                       </p>
                     </div>
 
                     <div className="rounded-xl border border-ananda-gold/10 bg-ananda-cream/15 p-3 text-center">
-                      <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Overs / Wickets</p>
+                      <p className="text-[10px] font-bold tracking-wider text-gray-400">Overs / Wickets</p>
                       <p className="font-display text-sm font-extrabold text-ananda-maroon mt-0.5">
-                        {match.score?.overs || "-"}{match.score?.wickets ? ` (${match.score.wickets} Wkts)` : ""}
+                        {match.score?.overs ||"-"}{match.score?.wickets ?` (${match.score.wickets} Wkts)` :""}
                       </p>
                     </div>
 
                     <div className="rounded-xl border border-ananda-gold/10 bg-ananda-cream/15 p-3 text-center">
-                      <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Public Visibility</p>
-                      <p className="font-display text-xs font-bold text-gray-600 mt-0.5 uppercase tracking-wide">
-                        {match.isVisible ? "Visible" : "Hidden"}
+                      <p className="text-[10px] font-bold tracking-wider text-gray-400">Public Visibility</p>
+                      <p className="font-display text-xs font-bold text-gray-600 mt-0.5 tracking-wide">
+                        {match.isVisible ?"Visible" :"Hidden"}
                       </p>
                     </div>
                   </div>
 
                   {match.score?.currentStatus && (
                     <div className="mt-4 rounded-xl bg-ananda-gold/15 border border-ananda-gold/25 p-3.5 text-xs font-semibold text-ananda-dark-maroon leading-relaxed">
-                      <span className="font-display text-[10px] font-bold uppercase tracking-wider text-ananda-maroon block mb-1">Live Status</span>
+                      <span className="font-display text-[10px] font-bold tracking-wider text-ananda-maroon block mb-1">Live Status</span>
                       {match.score.currentStatus}
                     </div>
                   )}
@@ -722,14 +721,14 @@ function AdminLiveMatches() {
             {/* Pagination Controls */}
             {totalPages > 1 && (
               <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-t border-gray-100 pt-4">
-                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                <p className="text-xs font-semibold text-gray-500 tracking-wider">
                   Showing {startIndex + 1} to {Math.min(startIndex + itemsPerPage, filteredMatches.length)} of {filteredMatches.length} entries
                 </p>
                 <div className="flex flex-wrap gap-1">
                   <button
                     onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
                     disabled={currentPage === 1}
-                    className="font-display text-[10px] font-bold uppercase tracking-wider border border-gray-200 bg-white hover:bg-gray-50 text-gray-750 px-3 py-1.5 rounded-lg disabled:opacity-40 disabled:cursor-not-allowed transition duration-200 cursor-pointer"
+                    className="font-display text-[10px] font-bold tracking-wider border border-gray-200 bg-white hover:bg-gray-50 text-gray-750 px-3 py-1.5 rounded-lg disabled:opacity-40 disabled:cursor-not-allowed transition duration-200 cursor-pointer"
                   >
                     Previous
                   </button>
@@ -737,10 +736,10 @@ function AdminLiveMatches() {
                     <button
                       key={page}
                       onClick={() => setCurrentPage(page)}
-                      className={`font-display text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-lg transition duration-200 cursor-pointer ${
+                      className={`font-display text-[10px] font-bold  tracking-wider px-3 py-1.5 rounded-lg transition duration-200 cursor-pointer ${
                         currentPage === page
-                          ? "bg-ananda-maroon text-white shadow-xs"
-                          : "border border-gray-200 bg-white hover:bg-gray-50 text-gray-705"
+                          ?"bg-ananda-maroon text-white shadow-xs"
+                          :"border border-gray-200 bg-white hover:bg-gray-50 text-gray-705"
                       }`}
                     >
                       {page}
@@ -749,7 +748,7 @@ function AdminLiveMatches() {
                   <button
                     onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
                     disabled={currentPage === totalPages}
-                    className="font-display text-[10px] font-bold uppercase tracking-wider border border-gray-200 bg-white hover:bg-gray-50 text-gray-750 px-3 py-1.5 rounded-lg disabled:opacity-40 disabled:cursor-not-allowed transition duration-200 cursor-pointer"
+                    className="font-display text-[10px] font-bold tracking-wider border border-gray-200 bg-white hover:bg-gray-50 text-gray-750 px-3 py-1.5 rounded-lg disabled:opacity-40 disabled:cursor-not-allowed transition duration-200 cursor-pointer"
                   >
                     Next
                   </button>
@@ -761,7 +760,7 @@ function AdminLiveMatches() {
       </Reveal>
 
       {/* Add/Edit Match Overlay Modal */}
-      {activeForm === "MATCH" && (
+      {activeForm ==="MATCH" && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fade-in">
           <div className="relative w-full max-w-2xl rounded-2xl border border-ananda-gold/15 bg-white p-6 shadow-2xl animate-scale-in max-h-[90vh] overflow-y-auto">
             {/* Close Button */}
@@ -774,13 +773,13 @@ function AdminLiveMatches() {
               </svg>
             </button>
 
-            <h2 className="font-display mb-5 text-lg font-bold uppercase tracking-tight text-ananda-maroon">
-              {editingLiveMatchId ? "Edit Live Match" : "Add Live Match"}
+            <h2 className="font-display mb-5 text-lg font-bold tracking-tight text-ananda-maroon">
+              {editingLiveMatchId ?"Edit Live Match" :"Add Live Match"}
             </h2>
 
             <form className="space-y-5" onSubmit={handleSubmit}>
               <div>
-                <label className="font-display text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5 block">
+                <label className="font-display text-xs font-bold tracking-wider text-gray-500 mb-1.5 block">
                   Sport
                 </label>
                 <div className="relative">
@@ -806,7 +805,7 @@ function AdminLiveMatches() {
               </div>
 
               <div>
-                <label className="font-display text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5 block">
+                <label className="font-display text-xs font-bold tracking-wider text-gray-500 mb-1.5 block">
                   Match Title
                 </label>
                 <input
@@ -822,7 +821,7 @@ function AdminLiveMatches() {
 
               <div className="grid gap-4 md:grid-cols-2">
                 <div>
-                  <label className="font-display text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5 block">
+                  <label className="font-display text-xs font-bold tracking-wider text-gray-500 mb-1.5 block">
                     Ananda Team Name
                   </label>
                   <input
@@ -835,7 +834,7 @@ function AdminLiveMatches() {
                 </div>
 
                 <div>
-                  <label className="font-display text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5 block">
+                  <label className="font-display text-xs font-bold tracking-wider text-gray-500 mb-1.5 block">
                     Opponent
                   </label>
                   <input
@@ -851,7 +850,7 @@ function AdminLiveMatches() {
               </div>
 
               <div>
-                <label className="font-display text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5 block">
+                <label className="font-display text-xs font-bold tracking-wider text-gray-500 mb-1.5 block">
                   Venue
                 </label>
                 <input
@@ -865,7 +864,7 @@ function AdminLiveMatches() {
               </div>
 
               <div>
-                <label className="font-display text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5 block">
+                <label className="font-display text-xs font-bold tracking-wider text-gray-500 mb-1.5 block">
                   Match Date and Time
                 </label>
                 <input
@@ -879,7 +878,7 @@ function AdminLiveMatches() {
               </div>
 
               <div>
-                <label className="font-display text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5 block">
+                <label className="font-display text-xs font-bold tracking-wider text-gray-500 mb-1.5 block">
                   Live Video URL
                 </label>
                 <input
@@ -893,7 +892,7 @@ function AdminLiveMatches() {
               </div>
 
               <div>
-                <label className="font-display text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5 block">
+                <label className="font-display text-xs font-bold tracking-wider text-gray-500 mb-1.5 block">
                   Status
                 </label>
                 <div className="relative">
@@ -919,7 +918,7 @@ function AdminLiveMatches() {
 
               {/* Score Sub-Panel */}
               <div className="rounded-xl border border-ananda-gold/15 bg-ananda-cream/15 p-4 space-y-4">
-                <h3 className="font-display text-sm font-bold uppercase tracking-tight text-ananda-maroon border-b border-ananda-gold/15 pb-2">
+                <h3 className="font-display text-sm font-bold tracking-tight text-ananda-maroon border-b border-ananda-gold/15 pb-2">
                   Initial Score
                 </h3>
 
@@ -982,7 +981,7 @@ function AdminLiveMatches() {
                   onChange={handleChange}
                   className="rounded border-ananda-gold/25 text-ananda-maroon focus:ring-ananda-maroon h-4 w-4 cursor-pointer"
                 />
-                <span className="font-display text-xs font-bold uppercase tracking-wider text-ananda-dark-maroon">
+                <span className="font-display text-xs font-bold tracking-wider text-ananda-dark-maroon">
                   Visible on public website
                 </span>
               </label>
@@ -991,13 +990,13 @@ function AdminLiveMatches() {
                 <button
                   type="submit"
                   disabled={saving}
-                  className="w-full rounded-xl bg-ananda-maroon px-6 py-3.5 font-semibold text-white hover:bg-ananda-dark-maroon disabled:cursor-not-allowed disabled:opacity-70 transition duration-300 font-display text-xs font-bold uppercase tracking-wider cursor-pointer hover:scale-[1.01]"
+                  className="w-full rounded-xl bg-ananda-maroon px-6 py-3.5 font-semibold text-white hover:bg-ananda-dark-maroon disabled:cursor-not-allowed disabled:opacity-70 transition duration-300 font-display text-xs font-bold tracking-wider cursor-pointer hover:scale-[1.01]"
                 >
                   {saving
-                    ? "Saving..."
+                    ?"Saving..."
                     : editingLiveMatchId
-                      ? "Update Match"
-                      : "Create Match"}
+                      ?"Update Match"
+                      :"Create Match"}
                 </button>
               </div>
             </form>
@@ -1006,7 +1005,7 @@ function AdminLiveMatches() {
       )}
 
       {/* Update Score Overlay Modal */}
-      {activeForm === "SCORE" && (
+      {activeForm ==="SCORE" && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fade-in">
           <div className="relative w-full max-w-lg rounded-2xl border border-ananda-gold/15 bg-white p-6 shadow-2xl animate-scale-in max-h-[90vh] overflow-y-auto">
             {/* Close Button */}
@@ -1019,13 +1018,13 @@ function AdminLiveMatches() {
               </svg>
             </button>
 
-            <h2 className="font-display mb-5 text-lg font-bold uppercase tracking-tight text-ananda-maroon">
+            <h2 className="font-display mb-5 text-lg font-bold tracking-tight text-ananda-maroon">
               Update Live Score
             </h2>
 
             <form className="space-y-5" onSubmit={handleScoreSubmit}>
               <div>
-                <label className="font-display text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5 block">
+                <label className="font-display text-xs font-bold tracking-wider text-gray-500 mb-1.5 block">
                   Select Match
                 </label>
                 <div className="relative">
@@ -1052,7 +1051,7 @@ function AdminLiveMatches() {
 
               <div className="space-y-4">
                 <div>
-                  <label className="font-display text-[10px] font-bold uppercase tracking-wider text-gray-500 mb-1 block">Ananda Score</label>
+                  <label className="font-display text-[10px] font-bold tracking-wider text-gray-500 mb-1 block">Ananda Score</label>
                   <input
                     type="text"
                     name="anandaScore"
@@ -1064,7 +1063,7 @@ function AdminLiveMatches() {
                 </div>
 
                 <div>
-                  <label className="font-display text-[10px] font-bold uppercase tracking-wider text-gray-500 mb-1 block">Opponent Score</label>
+                  <label className="font-display text-[10px] font-bold tracking-wider text-gray-500 mb-1 block">Opponent Score</label>
                   <input
                     type="text"
                     name="opponentScore"
@@ -1076,7 +1075,7 @@ function AdminLiveMatches() {
                 </div>
 
                 <div>
-                  <label className="font-display text-[10px] font-bold uppercase tracking-wider text-gray-500 mb-1 block">Current Status</label>
+                  <label className="font-display text-[10px] font-bold tracking-wider text-gray-500 mb-1 block">Current Status</label>
                   <input
                     type="text"
                     name="currentStatus"
@@ -1089,7 +1088,7 @@ function AdminLiveMatches() {
 
                 <div className="grid gap-4 grid-cols-2">
                   <div>
-                    <label className="font-display text-[10px] font-bold uppercase tracking-wider text-gray-500 mb-1 block">Overs</label>
+                    <label className="font-display text-[10px] font-bold tracking-wider text-gray-500 mb-1 block">Overs</label>
                     <input
                       type="text"
                       name="overs"
@@ -1101,7 +1100,7 @@ function AdminLiveMatches() {
                   </div>
 
                   <div>
-                    <label className="font-display text-[10px] font-bold uppercase tracking-wider text-gray-500 mb-1 block">Wickets</label>
+                    <label className="font-display text-[10px] font-bold tracking-wider text-gray-500 mb-1 block">Wickets</label>
                     <input
                       type="text"
                       name="wickets"
@@ -1114,7 +1113,7 @@ function AdminLiveMatches() {
                 </div>
 
                 <div>
-                  <label className="font-display text-[10px] font-bold uppercase tracking-wider text-gray-500 mb-1 block">Update Commentary Text</label>
+                  <label className="font-display text-[10px] font-bold tracking-wider text-gray-500 mb-1 block">Update Commentary Text</label>
                   <textarea
                     name="updateText"
                     value={scoreFormData.updateText}
@@ -1130,9 +1129,9 @@ function AdminLiveMatches() {
                 <button
                   type="submit"
                   disabled={updatingScore}
-                  className="w-full rounded-xl bg-ananda-maroon px-6 py-3.5 font-semibold text-white hover:bg-ananda-dark-maroon disabled:cursor-not-allowed disabled:opacity-70 transition duration-300 font-display text-xs font-bold uppercase tracking-wider cursor-pointer hover:scale-[1.01]"
+                  className="w-full rounded-xl bg-ananda-maroon px-6 py-3.5 font-semibold text-white hover:bg-ananda-dark-maroon disabled:cursor-not-allowed disabled:opacity-70 transition duration-300 font-display text-xs font-bold tracking-wider cursor-pointer hover:scale-[1.01]"
                 >
-                  {updatingScore ? "Updating..." : "Update Score"}
+                  {updatingScore ?"Updating..." :"Update Score"}
                 </button>
               </div>
             </form>

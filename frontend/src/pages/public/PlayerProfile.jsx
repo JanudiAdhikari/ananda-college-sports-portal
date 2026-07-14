@@ -1,21 +1,21 @@
-import { useEffect, useRef, useState } from "react";
-import { Link, useParams } from "react-router-dom";
-import { getPlayerById } from "../../services/playerService";
-import { getSportConfig } from "../../utils/sportConfig";
+import { useEffect, useRef, useState } from"react";
+import { Link, useParams } from"react-router-dom";
+import { getPlayerById } from"../../services/playerService";
+import { getSportConfig } from"../../utils/sportConfig";
 
 const ageGroupLabels = {
-  UNDER_12: "Under 12",
-  UNDER_14: "Under 14",
-  UNDER_16: "Under 16",
-  UNDER_18: "Under 18",
-  UNDER_20: "Under 20",
-  FIRST_TEAM: "First Team",
-  SENIOR: "Senior",
-  OPEN: "Open",
+  UNDER_12:"Under 12",
+  UNDER_14:"Under 14",
+  UNDER_16:"Under 16",
+  UNDER_18:"Under 18",
+  UNDER_20:"Under 20",
+  FIRST_TEAM:"First Team",
+  SENIOR:"Senior",
+  OPEN:"Open",
 };
 
 // Scroll-triggered reveal wrapper — fades sections in once
-function Reveal({ children, className = "" }) {
+function Reveal({ children, className ="" }) {
   const ref = useRef(null);
   const [visible, setVisible] = useState(false);
 
@@ -38,7 +38,7 @@ function Reveal({ children, className = "" }) {
   }, []);
 
   return (
-    <div ref={ref} className={`${visible ? "reveal" : "opacity-0"} ${className}`}>
+    <div ref={ref} className={`${visible ?"reveal" :"opacity-0"} ${className}`}>
       {children}
     </div>
   );
@@ -47,11 +47,11 @@ function Reveal({ children, className = "" }) {
 const SectionHeader = ({ eyebrow, title, description }) => (
   <div className="mb-6 border-b border-ananda-gold/20 pb-3">
     {eyebrow && (
-      <p className="font-display mb-1 text-xs font-semibold uppercase tracking-[0.25em] text-ananda-gold">
+      <p className="font-display mb-1 text-xs font-semibold tracking-[0.25em] text-ananda-gold">
         {eyebrow}
       </p>
     )}
-    <h2 className="font-display text-xl font-bold uppercase tracking-tight text-ananda-dark-maroon">
+    <h2 className="font-display text-xl font-bold tracking-tight text-ananda-dark-maroon">
       {title}
     </h2>
     {description && <p className="mt-1 text-xs text-gray-500">{description}</p>}
@@ -60,7 +60,7 @@ const SectionHeader = ({ eyebrow, title, description }) => (
 
 const StatCard = ({ label, value }) => (
   <div className="rounded-xl border border-ananda-gold/10 bg-white p-4 shadow-sm hover:border-ananda-gold/30 hover:-translate-y-0.5 transition duration-300">
-    <p className="font-display text-[10px] font-bold uppercase tracking-wider text-ananda-gold">
+    <p className="font-display text-[10px] font-bold tracking-wider text-ananda-gold">
       {label}
     </p>
     <p className="font-display mt-1 text-2xl font-bold text-ananda-maroon">
@@ -71,14 +71,14 @@ const StatCard = ({ label, value }) => (
 
 const SkillBar = ({ label, value }) => (
   <div className="space-y-1">
-    <div className="flex justify-between text-xs font-semibold uppercase tracking-wider text-gray-700">
+    <div className="flex justify-between text-xs font-semibold tracking-wider text-gray-700">
       <span>{label}</span>
       <span className="font-display text-ananda-maroon font-bold">{value || 0}%</span>
     </div>
     <div className="h-2.5 w-full rounded-full bg-gray-200 overflow-hidden">
       <div
         className="h-full rounded-full bg-gradient-to-r from-ananda-maroon to-ananda-gold transition-all duration-500"
-        style={{ width: `${value || 0}%` }}
+        style={{ width:`${value || 0}%` }}
       ></div>
     </div>
   </div>
@@ -109,7 +109,7 @@ function PlayerProfile() {
         }
 
         setError(
-          error.response?.data?.message || "Failed to load player profile."
+          error.response?.data?.message ||"Failed to load player profile."
         );
       })
       .finally(() => {
@@ -130,7 +130,7 @@ function PlayerProfile() {
       <section className="mx-auto max-w-7xl px-6 py-24">
         <div className="flex flex-col items-center gap-4 text-center">
           <div className="h-10 w-10 animate-spin rounded-full border-4 border-ananda-gold/30 border-t-ananda-maroon" />
-          <p className="font-display uppercase tracking-wide text-ananda-maroon animate-pulse">
+          <p className="font-display tracking-wide text-ananda-maroon animate-pulse">
             Loading player profile...
           </p>
         </div>
@@ -164,31 +164,31 @@ function PlayerProfile() {
           {player.team?._id ? (
             <Link
               to={`/teams/${player.team._id}`}
-              className="font-display mb-4 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-ananda-gold transition hover:text-white"
+              className="font-display mb-4 inline-flex items-center gap-2 text-xs font-semibold tracking-wider text-ananda-gold transition hover:text-white"
             >
               &larr; Back to {player.team.name}
             </Link>
           ) : player.sport?.slug ? (
             <Link
               to={`/sports/${player.sport.slug}`}
-              className="font-display mb-4 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-ananda-gold transition hover:text-white"
+              className="font-display mb-4 inline-flex items-center gap-2 text-xs font-semibold tracking-wider text-ananda-gold transition hover:text-white"
             >
               &larr; Back to {player.sport.name}
             </Link>
           ) : (
             <Link
               to="/sports"
-              className="font-display mb-4 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-ananda-gold transition hover:text-white"
+              className="font-display mb-4 inline-flex items-center gap-2 text-xs font-semibold tracking-wider text-ananda-gold transition hover:text-white"
             >
               &larr; Back to Sports
             </Link>
           )}
           
-          <p className="font-display mb-2 text-xs font-semibold uppercase tracking-[0.25em] text-ananda-gold">
+          <p className="font-display mb-2 text-xs font-semibold tracking-[0.25em] text-ananda-gold">
             Player Profile &middot; {player.sport?.name} &middot; {ageGroupLabels[player.ageGroup] || player.ageGroup}
           </p>
           
-          <h1 className="font-display text-4xl font-bold uppercase tracking-tight text-white md:text-5xl lg:text-6xl">
+          <h1 className="font-display text-4xl font-bold tracking-tight text-white md:text-5xl lg:text-6xl">
             {player.fullName}
           </h1>
         </div>
@@ -207,14 +207,14 @@ function PlayerProfile() {
                 <div className="font-display flex h-28 w-28 items-center justify-center rounded-full bg-ananda-light-gold text-5xl font-bold text-ananda-maroon border border-ananda-gold/30 shadow-inner mb-4">
                   {player.fullName.charAt(0)}
                 </div>
-                <h2 className="font-display text-xl font-bold uppercase tracking-tight text-ananda-dark-maroon">
+                <h2 className="font-display text-xl font-bold tracking-tight text-ananda-dark-maroon">
                   {player.fullName}
                 </h2>
                 <p className="text-sm text-gray-500 mt-1">
-                  {player.sport?.name} &middot; {player.team?.name || "No Team"}
+                  {player.sport?.name} &middot; {player.team?.name ||"No Team"}
                 </p>
                 {player.jerseyNumber && (
-                  <span className="mt-3 inline-block bg-ananda-maroon text-white text-xs font-bold tracking-wider uppercase px-4 py-1.5 rounded-full shadow-sm">
+                  <span className="mt-3 inline-block bg-ananda-maroon text-white text-xs font-bold tracking-wider px-4 py-1.5 rounded-full shadow-sm">
                     Jersey #{player.jerseyNumber}
                   </span>
                 )}
@@ -224,25 +224,25 @@ function PlayerProfile() {
             {/* Quick Info Card */}
             <Reveal>
               <div className="rounded-2xl border border-ananda-gold/15 bg-white p-6 shadow-sm">
-                <h3 className="font-display mb-5 text-lg font-bold uppercase tracking-wide text-ananda-dark-maroon border-b border-ananda-gold/10 pb-3">
+                <h3 className="font-display mb-5 text-lg font-bold tracking-wide text-ananda-dark-maroon border-b border-ananda-gold/10 pb-3">
                   Player Biography
                 </h3>
                 <div className="grid gap-4">
                   <div>
-                    <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Role / Position</p>
-                    <p className="font-semibold text-gray-800">{player.role || player.position || "Not specified"}</p>
+                    <p className="text-[10px] font-bold tracking-wider text-gray-400">Role / Position</p>
+                    <p className="font-semibold text-gray-800">{player.role || player.position ||"Not specified"}</p>
                   </div>
                   {sportConfig.hasCricketStyles && (player.battingStyle || player.bowlingStyle) && (
                     <>
                       {player.battingStyle && (
                         <div>
-                          <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Batting Style</p>
+                          <p className="text-[10px] font-bold tracking-wider text-gray-400">Batting Style</p>
                           <p className="font-semibold text-gray-800">{player.battingStyle}</p>
                         </div>
                       )}
                       {player.bowlingStyle && (
                         <div>
-                          <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Bowling Style</p>
+                          <p className="text-[10px] font-bold tracking-wider text-gray-400">Bowling Style</p>
                           <p className="font-semibold text-gray-800">{player.bowlingStyle}</p>
                         </div>
                       )}
@@ -264,7 +264,7 @@ function PlayerProfile() {
                   title="Season Overview"
                 />
                 <p className="text-gray-700 leading-relaxed">
-                  {player.performanceSummary || "Performance summary will be added soon."}
+                  {player.performanceSummary ||"Performance summary will be added soon."}
                 </p>
               </div>
             </Reveal>
@@ -294,7 +294,7 @@ function PlayerProfile() {
                       </svg>
                     </div>
                     <div>
-                      <p className="text-xs font-bold uppercase tracking-wider text-ananda-maroon">Best Performance</p>
+                      <p className="text-xs font-bold tracking-wider text-ananda-maroon">Best Performance</p>
                       <p className="mt-0.5 font-semibold text-gray-800">{player.statistics.bestPerformance}</p>
                     </div>
                   </div>

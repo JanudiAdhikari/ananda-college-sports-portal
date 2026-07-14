@@ -1,33 +1,33 @@
-import { useEffect, useRef, useState } from "react";
-import { getSports } from "../../services/sportService";
+import { useEffect, useRef, useState } from"react";
+import { getSports } from"../../services/sportService";
 import {
   createTeam,
   deleteTeam,
   getTeams,
   updateTeam,
-} from "../../services/teamService";
+} from"../../services/teamService";
 
 const currentYear = new Date().getFullYear();
 
 const initialFormData = {
-  sport: "",
-  name: "",
-  ageGroup: "UNDER_14",
+  sport:"",
+  name:"",
+  ageGroup:"UNDER_14",
   year: currentYear,
-  coachName: "",
-  assistantCoachName: "",
-  summary: "",
+  coachName:"",
+  assistantCoachName:"",
+  summary:"",
 };
 
 const ageGroupOptions = [
-  { value: "UNDER_12", label: "Under 12" },
-  { value: "UNDER_14", label: "Under 14" },
-  { value: "UNDER_16", label: "Under 16" },
-  { value: "UNDER_18", label: "Under 18" },
-  { value: "UNDER_20", label: "Under 20" },
-  { value: "FIRST_TEAM", label: "First Team" },
-  { value: "SENIOR", label: "Senior" },
-  { value: "OPEN", label: "Open" },
+  { value:"UNDER_12", label:"Under 12" },
+  { value:"UNDER_14", label:"Under 14" },
+  { value:"UNDER_16", label:"Under 16" },
+  { value:"UNDER_18", label:"Under 18" },
+  { value:"UNDER_20", label:"Under 20" },
+  { value:"FIRST_TEAM", label:"First Team" },
+  { value:"SENIOR", label:"Senior" },
+  { value:"OPEN", label:"Open" },
 ];
 
 const getAgeGroupLabel = (value) => {
@@ -35,7 +35,7 @@ const getAgeGroupLabel = (value) => {
 };
 
 // Scroll-triggered reveal wrapper — fades sections in once
-function Reveal({ children, className = "" }) {
+function Reveal({ children, className ="" }) {
   const ref = useRef(null);
   const [visible, setVisible] = useState(false);
 
@@ -58,7 +58,7 @@ function Reveal({ children, className = "" }) {
   }, []);
 
   return (
-    <div ref={ref} className={`${visible ? "reveal" : "opacity-0"} ${className}`}>
+    <div ref={ref} className={`${visible ?"reveal" :"opacity-0"} ${className}`}>
       {children}
     </div>
   );
@@ -92,7 +92,7 @@ function AdminTeams() {
       params.sport = filterSport;
     }
 
-    if (filterAgeGroup !== "ALL") {
+    if (filterAgeGroup !=="ALL") {
       params.ageGroup = filterAgeGroup;
     }
 
@@ -107,7 +107,7 @@ function AdminTeams() {
       const data = await getTeams(buildTeamParams());
       setTeams(data.teams);
     } catch (error) {
-      setError(error.response?.data?.message || "Failed to load teams.");
+      setError(error.response?.data?.message ||"Failed to load teams.");
     } finally {
       setLoading(false);
     }
@@ -142,7 +142,7 @@ function AdminTeams() {
           return;
         }
 
-        setError(error.response?.data?.message || "Failed to load sports.");
+        setError(error.response?.data?.message ||"Failed to load sports.");
       });
 
     return () => {
@@ -159,7 +159,7 @@ function AdminTeams() {
       params.sport = filterSport;
     }
 
-    if (filterAgeGroup !== "ALL") {
+    if (filterAgeGroup !=="ALL") {
       params.ageGroup = filterAgeGroup;
     }
 
@@ -178,7 +178,7 @@ function AdminTeams() {
           return;
         }
 
-        setError(error.response?.data?.message || "Failed to load teams.");
+        setError(error.response?.data?.message ||"Failed to load teams.");
       })
       .finally(() => {
         if (!isMounted) {
@@ -248,13 +248,13 @@ function AdminTeams() {
       setEditingTeamId(null);
       setFormData({
         ...initialFormData,
-        sport: sports[0]?._id || "",
+        sport: sports[0]?._id ||"",
       });
       setIsFormOpen(false);
 
       await loadTeams();
     } catch (error) {
-      setError(error.response?.data?.message || "Failed to save team.");
+      setError(error.response?.data?.message ||"Failed to save team.");
     } finally {
       setSaving(false);
     }
@@ -264,13 +264,13 @@ function AdminTeams() {
     setEditingTeamId(team._id);
 
     setFormData({
-      sport: team.sport?._id || team.sport || "",
-      name: team.name || "",
-      ageGroup: team.ageGroup || "UNDER_14",
+      sport: team.sport?._id || team.sport ||"",
+      name: team.name ||"",
+      ageGroup: team.ageGroup ||"UNDER_14",
       year: team.year || currentYear,
-      coachName: team.coachName || "",
-      assistantCoachName: team.assistantCoachName || "",
-      summary: team.summary || "",
+      coachName: team.coachName ||"",
+      assistantCoachName: team.assistantCoachName ||"",
+      summary: team.summary ||"",
     });
 
     setMessage("");
@@ -282,7 +282,7 @@ function AdminTeams() {
     setEditingTeamId(null);
     setFormData({
       ...initialFormData,
-      sport: sports[0]?._id || "",
+      sport: sports[0]?._id ||"",
     });
     setIsFormOpen(false);
     setMessage("");
@@ -290,8 +290,7 @@ function AdminTeams() {
   };
 
   const handleDelete = async (teamId) => {
-    const confirmed = window.confirm(
-      "Are you sure you want to delete this team?"
+    const confirmed = window.confirm("Are you sure you want to delete this team?"
     );
 
     if (!confirmed) {
@@ -306,15 +305,15 @@ function AdminTeams() {
       setMessage("Team deleted successfully.");
       await loadTeams();
     } catch (error) {
-      setError(error.response?.data?.message || "Failed to delete team.");
+      setError(error.response?.data?.message ||"Failed to delete team.");
     }
   };
 
   // Local Search & Filtering
   const filteredTeams = teams.filter((team) =>
     team.name.toLowerCase().includes(search.toLowerCase()) ||
-    (team.sport?.name || "").toLowerCase().includes(search.toLowerCase()) ||
-    (team.coachName || "").toLowerCase().includes(search.toLowerCase())
+    (team.sport?.name ||"").toLowerCase().includes(search.toLowerCase()) ||
+    (team.coachName ||"").toLowerCase().includes(search.toLowerCase())
   );
 
   // Pagination Logic
@@ -326,10 +325,10 @@ function AdminTeams() {
     <div>
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
         <div>
-          <p className="font-display mb-1 text-xs font-semibold uppercase tracking-wider text-ananda-gold">
+          <p className="font-display mb-1 text-xs font-semibold tracking-wider text-ananda-gold">
             Admin Panel
           </p>
-          <h1 className="font-display text-3xl font-bold uppercase tracking-tight text-ananda-dark-maroon">
+          <h1 className="font-display text-3xl font-bold tracking-tight text-ananda-dark-maroon">
             Manage Teams
           </h1>
         </div>
@@ -339,13 +338,13 @@ function AdminTeams() {
             setEditingTeamId(null);
             setFormData({
               ...initialFormData,
-              sport: sports[0]?._id || "",
+              sport: sports[0]?._id ||"",
             });
             setIsFormOpen(true);
             setMessage("");
             setError("");
           }}
-          className="font-display self-start sm:self-auto rounded-xl bg-ananda-gold px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-ananda-dark-maroon hover:bg-ananda-light-gold transition cursor-pointer flex items-center gap-1.5 shadow-sm hover:shadow-md hover:scale-[1.02]"
+          className="font-display self-start sm:self-auto rounded-xl bg-ananda-gold px-4 py-2.5 text-xs font-bold tracking-wider text-ananda-dark-maroon hover:bg-ananda-light-gold transition cursor-pointer flex items-center gap-1.5 shadow-sm hover:shadow-md hover:scale-[1.02]"
         >
           <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" />
@@ -373,7 +372,7 @@ function AdminTeams() {
       {/* Full-width spacious view */}
       <Reveal className="rounded-2xl border border-ananda-gold/15 bg-white p-6 shadow-sm">
         <div className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-          <h2 className="font-display text-lg font-bold uppercase tracking-tight text-ananda-maroon">
+          <h2 className="font-display text-lg font-bold tracking-tight text-ananda-maroon">
             Teams List
           </h2>
 
@@ -392,7 +391,7 @@ function AdminTeams() {
               <select
                 value={filterSport}
                 onChange={handleFilterSportChange}
-                className="w-full appearance-none rounded-xl border border-ananda-gold/25 bg-white pl-3 pr-8 py-2 text-xs font-semibold uppercase tracking-wider outline-none focus:border-ananda-maroon focus:ring-1 focus:ring-ananda-maroon transition shadow-sm"
+                className="w-full appearance-none rounded-xl border border-ananda-gold/25 bg-white pl-3 pr-8 py-2 text-xs font-semibold tracking-wider outline-none focus:border-ananda-maroon focus:ring-1 focus:ring-ananda-maroon transition shadow-sm"
               >
                 <option value="">All Sports</option>
                 {sports.map((sport) => (
@@ -413,7 +412,7 @@ function AdminTeams() {
               <select
                 value={filterAgeGroup}
                 onChange={handleFilterAgeGroupChange}
-                className="w-full appearance-none rounded-xl border border-ananda-gold/25 bg-white pl-3 pr-8 py-2 text-xs font-semibold uppercase tracking-wider outline-none focus:border-ananda-maroon focus:ring-1 focus:ring-ananda-maroon transition shadow-sm"
+                className="w-full appearance-none rounded-xl border border-ananda-gold/25 bg-white pl-3 pr-8 py-2 text-xs font-semibold tracking-wider outline-none focus:border-ananda-maroon focus:ring-1 focus:ring-ananda-maroon transition shadow-sm"
               >
                 <option value="ALL">All Ages</option>
                 {ageGroupOptions.map((ageGroup) => (
@@ -434,7 +433,7 @@ function AdminTeams() {
         {loading && (
           <div className="flex flex-col items-center gap-3 py-16 text-center">
             <div className="h-8 w-8 animate-spin rounded-full border-4 border-ananda-gold/30 border-t-ananda-maroon" />
-            <p className="font-display text-xs uppercase tracking-wider text-ananda-maroon animate-pulse">Loading teams...</p>
+            <p className="font-display text-xs tracking-wider text-ananda-maroon animate-pulse">Loading teams...</p>
           </div>
         )}
 
@@ -450,7 +449,7 @@ function AdminTeams() {
               <div className="overflow-x-auto">
                 <table className="w-full border-collapse text-left">
                   <thead>
-                    <tr className="border-b border-ananda-gold/15 bg-ananda-cream/35 font-display text-xs font-bold uppercase tracking-wider text-ananda-dark-maroon">
+                    <tr className="border-b border-ananda-gold/15 bg-ananda-cream/35 font-display text-xs font-bold tracking-wider text-ananda-dark-maroon">
                       <th className="px-5 py-4">Team</th>
                       <th className="px-5 py-4">Sport</th>
                       <th className="px-5 py-4">Age Group</th>
@@ -467,15 +466,15 @@ function AdminTeams() {
                             {team.name}
                           </p>
                           <p className="text-xs text-gray-400">
-                            Coach: {team.coachName || "Not added"}
+                            Coach: {team.coachName ||"Not added"}
                           </p>
                         </td>
 
                         <td className="px-5 py-4 text-sm text-gray-700 font-semibold">
-                          {team.sport?.name || "Not added"}
+                          {team.sport?.name ||"Not added"}
                         </td>
 
-                        <td className="px-5 py-4 text-xs font-bold uppercase tracking-wider text-gray-550">
+                        <td className="px-5 py-4 text-xs font-bold tracking-wider text-gray-550">
                           {getAgeGroupLabel(team.ageGroup)}
                         </td>
 
@@ -487,14 +486,14 @@ function AdminTeams() {
                           <div className="flex justify-end gap-2">
                             <button
                               onClick={() => handleEdit(team)}
-                              className="font-display text-[10px] font-bold uppercase tracking-wider bg-ananda-gold hover:bg-ananda-light-gold text-ananda-dark-maroon px-3 py-1.5 rounded-lg transition duration-250 cursor-pointer"
+                              className="font-display text-[10px] font-bold tracking-wider bg-ananda-gold hover:bg-ananda-light-gold text-ananda-dark-maroon px-3 py-1.5 rounded-lg transition duration-250 cursor-pointer"
                             >
                               Edit
                             </button>
 
                             <button
                               onClick={() => handleDelete(team._id)}
-                              className="font-display text-[10px] font-bold uppercase tracking-wider bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-lg transition duration-250 cursor-pointer"
+                              className="font-display text-[10px] font-bold tracking-wider bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-lg transition duration-250 cursor-pointer"
                             >
                               Delete
                             </button>
@@ -510,14 +509,14 @@ function AdminTeams() {
             {/* Pagination Controls */}
             {totalPages > 1 && (
               <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-t border-gray-100 pt-4">
-                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                <p className="text-xs font-semibold text-gray-500 tracking-wider">
                   Showing {startIndex + 1} to {Math.min(startIndex + itemsPerPage, filteredTeams.length)} of {filteredTeams.length} entries
                 </p>
                 <div className="flex flex-wrap gap-1">
                   <button
                     onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
                     disabled={currentPage === 1}
-                    className="font-display text-[10px] font-bold uppercase tracking-wider border border-gray-200 bg-white hover:bg-gray-50 text-gray-750 px-3 py-1.5 rounded-lg disabled:opacity-40 disabled:cursor-not-allowed transition duration-200 cursor-pointer"
+                    className="font-display text-[10px] font-bold tracking-wider border border-gray-200 bg-white hover:bg-gray-50 text-gray-750 px-3 py-1.5 rounded-lg disabled:opacity-40 disabled:cursor-not-allowed transition duration-200 cursor-pointer"
                   >
                     Previous
                   </button>
@@ -525,10 +524,10 @@ function AdminTeams() {
                     <button
                       key={page}
                       onClick={() => setCurrentPage(page)}
-                      className={`font-display text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-lg transition duration-200 cursor-pointer ${
+                      className={`font-display text-[10px] font-bold  tracking-wider px-3 py-1.5 rounded-lg transition duration-200 cursor-pointer ${
                         currentPage === page
-                          ? "bg-ananda-maroon text-white shadow-xs"
-                          : "border border-gray-200 bg-white hover:bg-gray-50 text-gray-700"
+                          ?"bg-ananda-maroon text-white shadow-xs"
+                          :"border border-gray-200 bg-white hover:bg-gray-50 text-gray-700"
                       }`}
                     >
                       {page}
@@ -537,7 +536,7 @@ function AdminTeams() {
                   <button
                     onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
                     disabled={currentPage === totalPages}
-                    className="font-display text-[10px] font-bold uppercase tracking-wider border border-gray-200 bg-white hover:bg-gray-50 text-gray-750 px-3 py-1.5 rounded-lg disabled:opacity-40 disabled:cursor-not-allowed transition duration-200 cursor-pointer"
+                    className="font-display text-[10px] font-bold tracking-wider border border-gray-200 bg-white hover:bg-gray-50 text-gray-750 px-3 py-1.5 rounded-lg disabled:opacity-40 disabled:cursor-not-allowed transition duration-200 cursor-pointer"
                   >
                     Next
                   </button>
@@ -562,13 +561,13 @@ function AdminTeams() {
               </svg>
             </button>
 
-            <h2 className="font-display mb-5 text-lg font-bold uppercase tracking-tight text-ananda-maroon">
-              {editingTeamId ? "Edit Team" : "Add New Team"}
+            <h2 className="font-display mb-5 text-lg font-bold tracking-tight text-ananda-maroon">
+              {editingTeamId ?"Edit Team" :"Add New Team"}
             </h2>
 
             <form className="space-y-5" onSubmit={handleSubmit}>
               <div>
-                <label className="font-display text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5 block">
+                <label className="font-display text-xs font-bold tracking-wider text-gray-500 mb-1.5 block">
                   Sport
                 </label>
                 <div className="relative">
@@ -594,7 +593,7 @@ function AdminTeams() {
               </div>
 
               <div>
-                <label className="font-display text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5 block">
+                <label className="font-display text-xs font-bold tracking-wider text-gray-500 mb-1.5 block">
                   Team Name
                 </label>
                 <input
@@ -609,7 +608,7 @@ function AdminTeams() {
               </div>
 
               <div>
-                <label className="font-display text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5 block">
+                <label className="font-display text-xs font-bold tracking-wider text-gray-500 mb-1.5 block">
                   Age Group
                 </label>
                 <div className="relative">
@@ -635,7 +634,7 @@ function AdminTeams() {
               </div>
 
               <div>
-                <label className="font-display text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5 block">
+                <label className="font-display text-xs font-bold tracking-wider text-gray-500 mb-1.5 block">
                   Year
                 </label>
                 <input
@@ -649,7 +648,7 @@ function AdminTeams() {
               </div>
 
               <div>
-                <label className="font-display text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5 block">
+                <label className="font-display text-xs font-bold tracking-wider text-gray-500 mb-1.5 block">
                   Coach Name
                 </label>
                 <input
@@ -663,7 +662,7 @@ function AdminTeams() {
               </div>
 
               <div>
-                <label className="font-display text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5 block">
+                <label className="font-display text-xs font-bold tracking-wider text-gray-500 mb-1.5 block">
                   Assistant Coach Name
                 </label>
                 <input
@@ -677,7 +676,7 @@ function AdminTeams() {
               </div>
 
               <div>
-                <label className="font-display text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5 block">
+                <label className="font-display text-xs font-bold tracking-wider text-gray-500 mb-1.5 block">
                   Team Summary
                 </label>
                 <textarea
@@ -694,13 +693,13 @@ function AdminTeams() {
                 <button
                   type="submit"
                   disabled={saving}
-                  className="w-full rounded-xl bg-ananda-maroon px-6 py-3.5 font-semibold text-white hover:bg-ananda-dark-maroon disabled:cursor-not-allowed disabled:opacity-70 transition duration-300 font-display text-xs font-bold uppercase tracking-wider cursor-pointer hover:scale-[1.01]"
+                  className="w-full rounded-xl bg-ananda-maroon px-6 py-3.5 font-semibold text-white hover:bg-ananda-dark-maroon disabled:cursor-not-allowed disabled:opacity-70 transition duration-300 font-display text-xs font-bold tracking-wider cursor-pointer hover:scale-[1.01]"
                 >
                   {saving
-                    ? "Saving..."
+                    ?"Saving..."
                     : editingTeamId
-                      ? "Update Team"
-                      : "Add Team"}
+                      ?"Update Team"
+                      :"Add Team"}
                 </button>
               </div>
             </form>

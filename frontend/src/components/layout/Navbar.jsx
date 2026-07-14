@@ -1,25 +1,23 @@
-import { useState } from "react";
-import { Link, NavLink, useNavigate } from "react-router-dom";
-import { useAuth } from "../../hooks/useAuth";
-import logo from "../../assets/logo.png";
+import { useState } from"react";
+import { Link, NavLink, useNavigate } from"react-router-dom";
+import { useAuth } from"../../hooks/useAuth";
+import logo from"../../assets/logo.png";
 
 function Navbar() {
   const navigate = useNavigate();
   const { user, isAuthenticated, logout } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const navLinkClass = ({ isActive }) =>
-    `font-display text-xs font-bold uppercase tracking-wider transition-all duration-300 pb-1 border-b-2 ${
+  const navLinkClass = ({ isActive }) =>`font-display text-base font-medium tracking-wider transition-all duration-300 pb-1 border-b-2 ${
       isActive
-        ? "text-ananda-gold border-ananda-gold"
-        : "text-white/90 border-transparent hover:text-ananda-gold hover:border-ananda-gold/40"
+        ?"text-ananda-gold border-ananda-gold"
+        :"text-white/90 border-transparent hover:text-ananda-gold hover:border-ananda-gold/40"
     }`;
 
-  const mobileNavLinkClass = ({ isActive }) =>
-    `font-display block text-sm font-bold uppercase tracking-wide px-4 py-3 rounded-xl transition duration-200 ${
+  const mobileNavLinkClass = ({ isActive }) =>`font-display block text-base font-medium tracking-wide px-4 py-3 rounded-xl transition duration-200 ${
       isActive
-        ? "bg-ananda-dark-maroon text-ananda-gold shadow-inner"
-        : "text-white/90 hover:bg-ananda-dark-maroon hover:text-ananda-gold"
+        ?"bg-ananda-dark-maroon text-ananda-gold shadow-inner"
+        :"text-white/90 hover:bg-ananda-dark-maroon hover:text-ananda-gold"
     }`;
 
   const handleLogout = () => {
@@ -43,10 +41,10 @@ function Navbar() {
         <Link to="/" onClick={closeMenu} className="flex items-center gap-3 group">
           <img src={logo} alt="Ananda College Logo" className="h-10 w-auto object-contain shadow-md transition duration-300 group-hover:scale-[1.05]" />
           <div className="flex flex-col">
-            <span className="font-display text-sm font-bold uppercase tracking-[0.15em] leading-tight md:text-base text-white group-hover:text-ananda-gold transition duration-300">
+            <span className="font-display text-sm font-bold tracking-[0.15em] leading-tight md:text-base text-white group-hover:text-ananda-gold transition duration-300">
               Ananda College
             </span>
-            <span className="font-display text-[10px] font-semibold uppercase tracking-[0.2em] text-ananda-light-gold">
+            <span className="font-display text-[10px] font-semibold tracking-[0.2em] text-ananda-light-gold">
               Sports Portal
             </span>
           </div>
@@ -81,13 +79,13 @@ function Navbar() {
               </NavLink>
 
               <div className="flex items-center gap-3">
-                <span className="max-w-28 truncate text-xs font-semibold text-ananda-light-gold">
+                <span className="max-w-28 truncate text-sm font-semibold text-ananda-light-gold">
                   {user?.fullName}
                 </span>
 
                 <button
                   onClick={handleLogout}
-                  className="font-display text-[10px] font-bold uppercase tracking-wider border border-ananda-gold/40 hover:bg-ananda-gold hover:text-ananda-dark-maroon px-3 py-1.5 rounded-lg transition duration-300 text-ananda-gold cursor-pointer"
+                  className="font-display text-sm font-semibold tracking-wider border border-ananda-gold/40 hover:bg-ananda-gold hover:text-ananda-dark-maroon px-4 py-2 rounded-lg transition duration-300 text-ananda-gold cursor-pointer"
                 >
                   Logout
                 </button>
@@ -97,7 +95,7 @@ function Navbar() {
             <div className="flex items-center border-l border-white/10 pl-6">
               <NavLink 
                 to="/login" 
-                className="font-display text-xs font-bold uppercase tracking-wider bg-ananda-gold hover:bg-ananda-light-gold text-ananda-dark-maroon px-4 py-2 rounded-xl transition duration-300"
+                className="font-display text-sm font-semibold tracking-wider bg-ananda-gold hover:bg-ananda-light-gold text-ananda-dark-maroon px-5 py-2.5 rounded-xl transition duration-300"
               >
                 Login
               </NavLink>
@@ -174,14 +172,14 @@ function Navbar() {
 
                 <div className="flex items-center gap-3 rounded-xl bg-ananda-dark-maroon/60 px-4 py-3 border border-ananda-gold/10">
                   <div>
-                    <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Logged In As</p>
+                    <p className="text-[10px] font-bold tracking-wider text-gray-400">Logged In As</p>
                     <p className="font-semibold text-white text-sm truncate max-w-48">{user?.fullName}</p>
                   </div>
                 </div>
 
                 <button
                   onClick={handleLogout}
-                  className="font-display text-xs font-bold uppercase tracking-wider border border-ananda-gold/40 text-ananda-gold hover:bg-ananda-gold hover:text-ananda-dark-maroon px-4 py-3 rounded-xl transition duration-300 text-center cursor-pointer"
+                  className="font-display text-sm font-semibold tracking-wider border border-ananda-gold/40 text-ananda-gold hover:bg-ananda-gold hover:text-ananda-dark-maroon px-4 py-3 rounded-xl transition duration-300 text-center cursor-pointer"
                 >
                   Logout
                 </button>
@@ -191,7 +189,7 @@ function Navbar() {
                 <NavLink
                   to="/login"
                   onClick={closeMenu}
-                  className="font-display block text-center text-sm font-bold uppercase tracking-wide bg-ananda-gold hover:bg-ananda-light-gold text-ananda-dark-maroon px-4 py-3 rounded-xl transition duration-300"
+                  className="font-display block text-center text-base font-semibold tracking-wide bg-ananda-gold hover:bg-ananda-light-gold text-ananda-dark-maroon px-4 py-3 rounded-xl transition duration-300"
                 >
                   Login
                 </NavLink>

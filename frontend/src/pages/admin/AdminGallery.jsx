@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from "react";
-import { getSports } from "../../services/sportService";
+import { useEffect, useRef, useState } from"react";
+import { getSports } from"../../services/sportService";
 import {
   createGalleryAlbum,
   deleteAlbumImage,
@@ -7,17 +7,17 @@ import {
   getGalleryAlbums,
   updateGalleryAlbum,
   uploadAlbumImages,
-} from "../../services/galleryService";
+} from"../../services/galleryService";
 
 const initialFormData = {
-  title: "",
-  sport: "",
-  eventDate: "",
-  description: "",
+  title:"",
+  sport:"",
+  eventDate:"",
+  description:"",
 };
 
 // Scroll-triggered reveal wrapper — fades sections in once
-function Reveal({ children, className = "" }) {
+function Reveal({ children, className ="" }) {
   const ref = useRef(null);
   const [visible, setVisible] = useState(false);
 
@@ -40,7 +40,7 @@ function Reveal({ children, className = "" }) {
   }, []);
 
   return (
-    <div ref={ref} className={`${visible ? "reveal" : "opacity-0"} ${className}`}>
+    <div ref={ref} className={`${visible ?"reveal" :"opacity-0"} ${className}`}>
       {children}
     </div>
   );
@@ -52,7 +52,7 @@ function AdminGallery() {
 
   const [formData, setFormData] = useState(initialFormData);
   const [editingAlbumId, setEditingAlbumId] = useState(null);
-  const [activeForm, setActiveForm] = useState(null); // null, 'ALBUM', or 'UPLOAD'
+  const [activeForm, setActiveForm] = useState(null); // null,'ALBUM', or'UPLOAD'
 
   const [selectedAlbumId, setSelectedAlbumId] = useState("");
   const [selectedFiles, setSelectedFiles] = useState([]);
@@ -93,9 +93,9 @@ function AdminGallery() {
   const handleDrag = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    if (e.type === "dragenter" || e.type === "dragover") {
+    if (e.type ==="dragenter" || e.type ==="dragover") {
       setIsDragActive(true);
-    } else if (e.type === "dragleave") {
+    } else if (e.type ==="dragleave") {
       setIsDragActive(false);
     }
   };
@@ -130,7 +130,7 @@ function AdminGallery() {
       params.search = search.trim();
     }
 
-    if (filterSport !== "ALL") {
+    if (filterSport !=="ALL") {
       params.sport = filterSport;
     }
 
@@ -150,7 +150,7 @@ function AdminGallery() {
         setSelectedAlbumId(data.albums[0]._id);
       }
     } catch (error) {
-      setError(error.response?.data?.message || "Failed to load albums.");
+      setError(error.response?.data?.message ||"Failed to load albums.");
     } finally {
       setLoading(false);
     }
@@ -172,7 +172,7 @@ function AdminGallery() {
           return;
         }
 
-        setError(error.response?.data?.message || "Failed to load sports.");
+        setError(error.response?.data?.message ||"Failed to load sports.");
       });
 
     return () => {
@@ -189,7 +189,7 @@ function AdminGallery() {
       params.search = search.trim();
     }
 
-    if (filterSport !== "ALL") {
+    if (filterSport !=="ALL") {
       params.sport = filterSport;
     }
 
@@ -214,7 +214,7 @@ function AdminGallery() {
             return;
           }
 
-          setError(error.response?.data?.message || "Failed to load albums.");
+          setError(error.response?.data?.message ||"Failed to load albums.");
         })
         .finally(() => {
           if (!isMounted) {
@@ -286,7 +286,7 @@ function AdminGallery() {
 
       await loadAlbums();
     } catch (error) {
-      setError(error.response?.data?.message || "Failed to save album.");
+      setError(error.response?.data?.message ||"Failed to save album.");
     } finally {
       setSaving(false);
     }
@@ -296,10 +296,10 @@ function AdminGallery() {
     setEditingAlbumId(album._id);
 
     setFormData({
-      title: album.title || "",
-      sport: album.sport?._id || "",
-      eventDate: album.eventDate ? album.eventDate.slice(0, 10) : "",
-      description: album.description || "",
+      title: album.title ||"",
+      sport: album.sport?._id ||"",
+      eventDate: album.eventDate ? album.eventDate.slice(0, 10) :"",
+      description: album.description ||"",
     });
 
     setMessage("");
@@ -320,8 +320,7 @@ function AdminGallery() {
       e.preventDefault();
       e.stopPropagation();
     }
-    const confirmed = window.confirm(
-      "Are you sure you want to delete this album?"
+    const confirmed = window.confirm("Are you sure you want to delete this album?"
     );
 
     if (!confirmed) {
@@ -339,7 +338,7 @@ function AdminGallery() {
       // Update local state inline to prevent full-page layout refetch flashing
       setAlbums((prevAlbums) => prevAlbums.filter((album) => album._id !== albumId));
     } catch (error) {
-      setError(error.response?.data?.message || "Failed to delete album.");
+      setError(error.response?.data?.message ||"Failed to delete album.");
     }
   };
 
@@ -370,7 +369,7 @@ function AdminGallery() {
 
       await loadAlbums();
     } catch (error) {
-      setError(error.response?.data?.message || "Failed to upload images.");
+      setError(error.response?.data?.message ||"Failed to upload images.");
     } finally {
       setUploading(false);
     }
@@ -381,8 +380,7 @@ function AdminGallery() {
       e.preventDefault();
       e.stopPropagation();
     }
-    const confirmed = window.confirm(
-      "Are you sure you want to delete this image?"
+    const confirmed = window.confirm("Are you sure you want to delete this image?"
     );
 
     if (!confirmed) {
@@ -410,7 +408,7 @@ function AdminGallery() {
         })
       );
     } catch (error) {
-      setError(error.response?.data?.message || "Failed to delete image.");
+      setError(error.response?.data?.message ||"Failed to delete image.");
     }
   };
 
@@ -425,10 +423,10 @@ function AdminGallery() {
     <div>
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
         <div>
-          <p className="font-display mb-1 text-xs font-semibold uppercase tracking-wider text-ananda-gold">
+          <p className="font-display mb-1 text-xs font-semibold tracking-wider text-ananda-gold">
             Admin Panel
           </p>
-          <h1 className="font-display text-3xl font-bold uppercase tracking-tight text-ananda-dark-maroon">
+          <h1 className="font-display text-3xl font-bold tracking-tight text-ananda-dark-maroon">
             Manage Gallery
           </h1>
         </div>
@@ -442,7 +440,7 @@ function AdminGallery() {
               setMessage("");
               setError("");
             }}
-            className="font-display rounded-xl bg-ananda-gold px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-ananda-dark-maroon hover:bg-ananda-light-gold transition cursor-pointer flex items-center gap-1.5 shadow-sm hover:shadow-md hover:scale-[1.02]"
+            className="font-display rounded-xl bg-ananda-gold px-4 py-2.5 text-xs font-bold tracking-wider text-ananda-dark-maroon hover:bg-ananda-light-gold transition cursor-pointer flex items-center gap-1.5 shadow-sm hover:shadow-md hover:scale-[1.02]"
           >
             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" />
@@ -471,7 +469,7 @@ function AdminGallery() {
       {/* Full-width spacious view */}
       <Reveal className="rounded-2xl border border-ananda-gold/15 bg-white p-6 shadow-sm">
         <div className="mb-6 flex flex-col gap-4">
-          <h2 className="font-display text-lg font-bold uppercase tracking-tight text-ananda-maroon">
+          <h2 className="font-display text-lg font-bold tracking-tight text-ananda-maroon">
             Gallery Albums
           </h2>
 
@@ -490,7 +488,7 @@ function AdminGallery() {
               <select
                 value={filterSport}
                 onChange={handleFilterSportChange}
-                className="w-full appearance-none rounded-xl border border-ananda-gold/25 bg-white pl-3 pr-8 py-2.5 text-xs font-semibold uppercase tracking-wider outline-none focus:border-ananda-maroon focus:ring-1 focus:ring-ananda-maroon transition shadow-sm"
+                className="w-full appearance-none rounded-xl border border-ananda-gold/25 bg-white pl-3 pr-8 py-2.5 text-xs font-semibold tracking-wider outline-none focus:border-ananda-maroon focus:ring-1 focus:ring-ananda-maroon transition shadow-sm"
               >
                 <option value="ALL">All Sports</option>
                 {sports.map((sport) => (
@@ -511,7 +509,7 @@ function AdminGallery() {
         {loading && (
           <div className="flex flex-col items-center gap-3 py-16 text-center">
             <div className="h-8 w-8 animate-spin rounded-full border-4 border-ananda-gold/30 border-t-ananda-maroon" />
-            <p className="font-display text-xs uppercase tracking-wider text-ananda-maroon animate-pulse">Loading albums...</p>
+            <p className="font-display text-xs tracking-wider text-ananda-maroon animate-pulse">Loading albums...</p>
           </div>
         )}
 
@@ -531,11 +529,11 @@ function AdminGallery() {
                 >
                   <div className="mb-4 flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
                     <div>
-                      <p className="mb-1 text-[10px] font-bold uppercase tracking-wider text-ananda-gold">
-                        {album.sport?.name || "General Event"}
+                      <p className="mb-1 text-[10px] font-bold tracking-wider text-ananda-gold">
+                        {album.sport?.name ||"General Event"}
                       </p>
 
-                      <h3 className="font-display text-lg font-bold uppercase tracking-tight text-ananda-maroon">
+                      <h3 className="font-display text-lg font-bold tracking-tight text-ananda-maroon">
                         {album.title}
                       </h3>
 
@@ -559,7 +557,7 @@ function AdminGallery() {
                           setMessage("");
                           setError("");
                         }}
-                        className="font-display text-[10px] font-bold uppercase tracking-wider bg-ananda-maroon hover:bg-ananda-dark-maroon text-white px-3.5 py-1.5 rounded-lg transition duration-250 cursor-pointer flex items-center gap-1 hover:scale-[1.02] shadow-xs"
+                        className="font-display text-[10px] font-bold tracking-wider bg-ananda-maroon hover:bg-ananda-dark-maroon text-white px-3.5 py-1.5 rounded-lg transition duration-250 cursor-pointer flex items-center gap-1 hover:scale-[1.02] shadow-xs"
                       >
                         <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
@@ -570,7 +568,7 @@ function AdminGallery() {
                       <button
                         type="button"
                         onClick={() => handleEdit(album)}
-                        className="font-display text-[10px] font-bold uppercase tracking-wider bg-ananda-gold hover:bg-ananda-light-gold text-ananda-dark-maroon px-3 py-1.5 rounded-lg transition duration-250 cursor-pointer"
+                        className="font-display text-[10px] font-bold tracking-wider bg-ananda-gold hover:bg-ananda-light-gold text-ananda-dark-maroon px-3 py-1.5 rounded-lg transition duration-250 cursor-pointer"
                       >
                         Edit
                       </button>
@@ -578,7 +576,7 @@ function AdminGallery() {
                       <button
                         type="button"
                         onClick={(e) => handleDeleteAlbum(e, album._id)}
-                        className="font-display text-[10px] font-bold uppercase tracking-wider bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-lg transition duration-250 cursor-pointer"
+                        className="font-display text-[10px] font-bold tracking-wider bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-lg transition duration-250 cursor-pointer"
                       >
                         Delete
                       </button>
@@ -604,7 +602,7 @@ function AdminGallery() {
                               onClick={(e) =>
                                 handleDeleteImage(e, album._id, image._id)
                               }
-                              className="font-display text-[9px] font-bold uppercase tracking-wider bg-red-600 hover:bg-red-700 text-white px-2.5 py-1.5 rounded-lg transition duration-250 cursor-pointer shadow-sm"
+                              className="font-display text-[9px] font-bold tracking-wider bg-red-600 hover:bg-red-700 text-white px-2.5 py-1.5 rounded-lg transition duration-250 cursor-pointer shadow-sm"
                             >
                               Delete Image
                             </button>
@@ -620,14 +618,14 @@ function AdminGallery() {
             {/* Pagination Controls */}
             {totalPages > 1 && (
               <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-t border-gray-100 pt-4">
-                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                <p className="text-xs font-semibold text-gray-500 tracking-wider">
                   Showing {startIndex + 1} to {Math.min(startIndex + itemsPerPage, albums.length)} of {albums.length} entries
                 </p>
                 <div className="flex flex-wrap gap-1">
                   <button
                     onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
                     disabled={currentPage === 1}
-                    className="font-display text-[10px] font-bold uppercase tracking-wider border border-gray-200 bg-white hover:bg-gray-50 text-gray-750 px-3 py-1.5 rounded-lg disabled:opacity-40 disabled:cursor-not-allowed transition duration-200 cursor-pointer"
+                    className="font-display text-[10px] font-bold tracking-wider border border-gray-200 bg-white hover:bg-gray-50 text-gray-750 px-3 py-1.5 rounded-lg disabled:opacity-40 disabled:cursor-not-allowed transition duration-200 cursor-pointer"
                   >
                     Previous
                   </button>
@@ -635,10 +633,10 @@ function AdminGallery() {
                     <button
                       key={page}
                       onClick={() => setCurrentPage(page)}
-                      className={`font-display text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-lg transition duration-200 cursor-pointer ${
+                      className={`font-display text-[10px] font-bold  tracking-wider px-3 py-1.5 rounded-lg transition duration-200 cursor-pointer ${
                         currentPage === page
-                          ? "bg-ananda-maroon text-white shadow-xs"
-                          : "border border-gray-200 bg-white hover:bg-gray-50 text-gray-700"
+                          ?"bg-ananda-maroon text-white shadow-xs"
+                          :"border border-gray-200 bg-white hover:bg-gray-50 text-gray-700"
                       }`}
                     >
                       {page}
@@ -647,7 +645,7 @@ function AdminGallery() {
                   <button
                     onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
                     disabled={currentPage === totalPages}
-                    className="font-display text-[10px] font-bold uppercase tracking-wider border border-gray-200 bg-white hover:bg-gray-50 text-gray-750 px-3 py-1.5 rounded-lg disabled:opacity-40 disabled:cursor-not-allowed transition duration-200 cursor-pointer"
+                    className="font-display text-[10px] font-bold tracking-wider border border-gray-200 bg-white hover:bg-gray-50 text-gray-750 px-3 py-1.5 rounded-lg disabled:opacity-40 disabled:cursor-not-allowed transition duration-200 cursor-pointer"
                   >
                     Next
                   </button>
@@ -661,7 +659,7 @@ function AdminGallery() {
       </Reveal>
 
       {/* Album Creation/Edit Overlay Modal */}
-      {activeForm === "ALBUM" && (
+      {activeForm ==="ALBUM" && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fade-in">
           <div className="relative w-full max-w-lg rounded-2xl border border-ananda-gold/15 bg-white p-6 shadow-2xl animate-scale-in max-h-[90vh] overflow-y-auto">
             {/* Close Button */}
@@ -674,13 +672,13 @@ function AdminGallery() {
               </svg>
             </button>
 
-            <h2 className="font-display mb-5 text-lg font-bold uppercase tracking-tight text-ananda-maroon">
-              {editingAlbumId ? "Edit Album" : "Create Album"}
+            <h2 className="font-display mb-5 text-lg font-bold tracking-tight text-ananda-maroon">
+              {editingAlbumId ?"Edit Album" :"Create Album"}
             </h2>
 
             <form className="space-y-5" onSubmit={handleSubmit}>
               <div>
-                <label className="font-display text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5 block">
+                <label className="font-display text-xs font-bold tracking-wider text-gray-500 mb-1.5 block">
                   Album Title
                 </label>
                 <input
@@ -695,7 +693,7 @@ function AdminGallery() {
               </div>
 
               <div>
-                <label className="font-display text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5 block">
+                <label className="font-display text-xs font-bold tracking-wider text-gray-500 mb-1.5 block">
                   Related Sport
                 </label>
                 <div className="relative">
@@ -721,7 +719,7 @@ function AdminGallery() {
               </div>
 
               <div>
-                <label className="font-display text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5 block">
+                <label className="font-display text-xs font-bold tracking-wider text-gray-500 mb-1.5 block">
                   Event Date
                 </label>
                 <input
@@ -734,7 +732,7 @@ function AdminGallery() {
               </div>
 
               <div>
-                <label className="font-display text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5 block">
+                <label className="font-display text-xs font-bold tracking-wider text-gray-500 mb-1.5 block">
                   Description
                 </label>
                 <textarea
@@ -751,13 +749,13 @@ function AdminGallery() {
                 <button
                   type="submit"
                   disabled={saving}
-                  className="w-full rounded-xl bg-ananda-maroon px-6 py-3.5 font-semibold text-white hover:bg-ananda-dark-maroon disabled:cursor-not-allowed disabled:opacity-70 transition duration-300 font-display text-xs font-bold uppercase tracking-wider cursor-pointer hover:scale-[1.01]"
+                  className="w-full rounded-xl bg-ananda-maroon px-6 py-3.5 font-semibold text-white hover:bg-ananda-dark-maroon disabled:cursor-not-allowed disabled:opacity-70 transition duration-300 font-display text-xs font-bold tracking-wider cursor-pointer hover:scale-[1.01]"
                 >
                   {saving
-                    ? "Saving..."
+                    ?"Saving..."
                     : editingAlbumId
-                      ? "Update Album"
-                      : "Create Album"}
+                      ?"Update Album"
+                      :"Create Album"}
                 </button>
               </div>
             </form>
@@ -766,7 +764,7 @@ function AdminGallery() {
       )}
 
       {/* Upload Images Overlay Modal */}
-      {activeForm === "UPLOAD" && (
+      {activeForm ==="UPLOAD" && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fade-in">
           <div className="relative w-full max-w-2xl rounded-2xl border border-ananda-gold/15 bg-white p-6 shadow-2xl animate-scale-in max-h-[90vh] overflow-y-auto">
             {/* Close Button */}
@@ -782,22 +780,22 @@ function AdminGallery() {
               </svg>
             </button>
 
-            <h2 className="font-display mb-5 text-lg font-bold uppercase tracking-tight text-ananda-maroon">
+            <h2 className="font-display mb-5 text-lg font-bold tracking-tight text-ananda-maroon">
               Upload Images
             </h2>
 
             <form className="space-y-5" onSubmit={handleUploadImages}>
               <div>
-                <label className="font-display text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5 block">
+                <label className="font-display text-xs font-bold tracking-wider text-gray-500 mb-1.5 block">
                   Target Album
                 </label>
                 <div className="rounded-xl border border-ananda-gold/15 bg-ananda-gold/10 px-4 py-3 text-sm font-bold text-ananda-dark-maroon shadow-xs">
-                  {selectedAlbum?.title || "Loading..."}
+                  {selectedAlbum?.title ||"Loading..."}
                 </div>
               </div>
 
               <div>
-                <label className="font-display text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5 block">
+                <label className="font-display text-xs font-bold tracking-wider text-gray-500 mb-1.5 block">
                   Images
                 </label>
                 
@@ -810,8 +808,8 @@ function AdminGallery() {
                   onClick={() => document.getElementById("file-upload-input").click()}
                   className={`w-full rounded-2xl border-2 border-dashed p-6 text-center cursor-pointer transition flex flex-col items-center justify-center gap-2 ${
                     isDragActive
-                      ? "border-ananda-maroon bg-ananda-gold/10"
-                      : "border-ananda-gold/30 hover:border-ananda-maroon bg-gray-50/50 hover:bg-white"
+                      ?"border-ananda-maroon bg-ananda-gold/10"
+                      :"border-ananda-gold/30 hover:border-ananda-maroon bg-gray-50/50 hover:bg-white"
                   }`}
                 >
                   <svg className="h-8 w-8 text-ananda-maroon opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -848,7 +846,7 @@ function AdminGallery() {
                       <button
                         type="button"
                         onClick={() => setSelectedFiles([])}
-                        className="text-[10px] font-bold text-red-600 uppercase tracking-wider hover:underline cursor-pointer"
+                        className="text-[10px] font-bold text-red-600 tracking-wider hover:underline cursor-pointer"
                       >
                         Clear All
                       </button>
@@ -859,7 +857,7 @@ function AdminGallery() {
                         const file = selectedFiles[index];
                         return (
                           <div key={index} className="group relative aspect-square rounded-lg overflow-hidden border border-ananda-gold/20 shadow-xs bg-white">
-                            <img src={url} alt={file?.name || "Preview"} className="h-full w-full object-cover" />
+                            <img src={url} alt={file?.name ||"Preview"} className="h-full w-full object-cover" />
                             <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center p-1">
                               <button
                                 type="button"
@@ -892,9 +890,9 @@ function AdminGallery() {
                 <button
                   type="submit"
                   disabled={uploading || selectedFiles.length === 0}
-                  className="w-full rounded-xl bg-ananda-maroon px-6 py-3.5 font-semibold text-white hover:bg-ananda-dark-maroon disabled:cursor-not-allowed disabled:opacity-50 transition duration-300 font-display text-xs font-bold uppercase tracking-wider cursor-pointer hover:scale-[1.01]"
+                  className="w-full rounded-xl bg-ananda-maroon px-6 py-3.5 font-semibold text-white hover:bg-ananda-dark-maroon disabled:cursor-not-allowed disabled:opacity-50 transition duration-300 font-display text-xs font-bold tracking-wider cursor-pointer hover:scale-[1.01]"
                 >
-                  {uploading ? "Uploading..." : `Upload ${selectedFiles.length} Image${selectedFiles.length === 1 ? "" : "s"}`}
+                  {uploading ?"Uploading..." :`Upload ${selectedFiles.length} Image${selectedFiles.length === 1 ?"" :"s"}`}
                 </button>
               </div>
             </form>
