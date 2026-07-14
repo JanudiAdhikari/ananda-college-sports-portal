@@ -4,6 +4,7 @@ import Navbar from "./components/layout/Navbar";
 import Footer from "./components/layout/Footer";
 import AppRoutes from "./routes/AppRoutes";
 import { AuthProvider } from "./context/AuthProvider";
+import ScrollToTopButton from "./components/layout/ScrollToTopButton";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           </main>
 
           <Footer />
+          <ScrollToTopButton />
         </div>
       </AuthProvider>
     </BrowserRouter>
