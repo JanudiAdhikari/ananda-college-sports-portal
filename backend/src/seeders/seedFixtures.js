@@ -36,6 +36,9 @@ const seedFixtures = async () => {
   try {
     await connectDB();
 
+    // Clean existing fixtures to avoid duplicate title clutter
+    await Fixture.deleteMany({});
+
     const teams = await Team.find().populate("sport");
     if (teams.length === 0) {
       console.warn("No teams found. Please seed teams first.");
@@ -67,11 +70,19 @@ const seedFixtures = async () => {
           };
         }
 
+        const opponent = opponents[Math.floor(Math.random() * opponents.length)];
+        let titleText = "";
+        if (team.name.toLowerCase().startsWith(team.sport.name.toLowerCase())) {
+          titleText = `${team.name} vs ${opponent}`;
+        } else {
+          titleText = `${team.sport.name} - ${team.name} vs ${opponent}`;
+        }
+
         fixtures.push({
           sport: team.sport._id,
           team: team._id,
-          title: `${team.sport.name} - ${team.name} vs ${opponents[Math.floor(Math.random() * opponents.length)]}`,
-          opponent: opponents[Math.floor(Math.random() * opponents.length)],
+          title: titleText,
+          opponent,
           venue: venues[Math.floor(Math.random() * venues.length)],
           matchDate,
           matchType: ["FRIENDLY", "TOURNAMENT", "BIG_MATCH", "ANNUAL_ENCOUNTER"][Math.floor(Math.random() * 4)],

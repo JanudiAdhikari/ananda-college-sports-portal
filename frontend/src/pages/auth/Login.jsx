@@ -1,10 +1,10 @@
-import { useEffect, useRef, useState } from"react";
-import { Navigate, useNavigate } from"react-router-dom";
-import { useAuth } from"../../hooks/useAuth";
-import backgroundImg from"../../assets/background1.jpeg";
+import { useEffect, useRef, useState } from "react";
+import { Link, Navigate, useNavigate } from "react-router-dom";
+import { useAuth } from "../../hooks/useAuth";
+import backgroundImg from "../../assets/background1.jpeg";
 
 // Scroll-triggered reveal wrapper — fades sections in once
-function Reveal({ children, className ="" }) {
+function Reveal({ children, className = "" }) {
   const ref = useRef(null);
   const [visible, setVisible] = useState(false);
 
@@ -27,7 +27,7 @@ function Reveal({ children, className ="" }) {
   }, []);
 
   return (
-    <div ref={ref} className={`${visible ?"reveal" :"opacity-0"} ${className}`}>
+    <div ref={ref} className={`${visible ? "reveal" : "opacity-0"} ${className}`}>
       {children}
     </div>
   );
@@ -37,8 +37,8 @@ function Login() {
   const navigate = useNavigate();
   const { login, loading, isAuthenticated } = useAuth();
   const [formData, setFormData] = useState({
-    username:"",
-    password:"",
+    username: "",
+    password: "",
   });
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -68,7 +68,7 @@ function Login() {
   return (
     <section
       className="relative flex min-h-[calc(100vh-80px)] items-center justify-center bg-cover bg-center bg-no-repeat px-6 py-16"
-      style={{ backgroundImage:`url(${backgroundImg})` }}
+      style={{ backgroundImage: `url(${backgroundImg})` }}
     >
       {/* Dark overlay with slight blur */}
       <div className="absolute inset-0 bg-ananda-dark-maroon/65 backdrop-blur-[2px]" />
@@ -76,7 +76,16 @@ function Login() {
       {/* FORM PANEL CONTAINER */}
       <div className="relative z-10 w-full max-w-md">
         <Reveal className="w-full rounded-3xl border border-ananda-gold/20 bg-white/95 p-8 shadow-2xl sm:p-10 backdrop-blur-md">
-          <div className="mb-2 flex items-center gap-2">
+          <div className="mb-4 flex items-center justify-between">
+            <Link
+              to="/"
+              className="inline-flex items-center gap-1.5 rounded-full border border-ananda-gold/20 bg-ananda-cream/40 px-3.5 py-1.5 text-xs font-semibold text-ananda-maroon transition duration-200 hover:bg-ananda-cream/80 hover:text-ananda-dark-maroon hover:border-ananda-gold/40 shadow-sm cursor-pointer"
+            >
+              <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+              </svg>
+              Back to Home
+            </Link>
             <span className="font-display text-xs font-semibold tracking-[0.25em] text-ananda-gold">
               Ananda College
             </span>

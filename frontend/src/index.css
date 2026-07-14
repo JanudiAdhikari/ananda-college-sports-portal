@@ -15,28 +15,28 @@ html {
   font-size: 16px;
 }
 
-@media (min-width: 768px) {
-  html {
-    font-size: 16.5px;
-  }
-}
-
-@media (min-width: 1024px) {
-  html {
-    font-size: 17px;
-  }
-}
-
 body {
   font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.6;
+  letter-spacing: 0;
+  color: #1f2937;
+
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
-  letter-spacing: -0.01em;
 }
 
+/* By default, elements with font-display use the clean body font (Plus Jakarta Sans) */
 .font-display {
+  font-family: var(--font-body);
+}
+
+/* Only major display headings (H1, H2) use the Outfit font */
+h1.font-display,
+h2.font-display {
   font-family: var(--font-display);
+  letter-spacing: -0.02em;
 }
 
 @keyframes pulse-dot {
@@ -57,4 +57,16 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   .live-dot, .reveal { animation: none; }
+}
+
+/* Global font size overrides for enhanced readability */
+.text-\[10px\] {
+  font-size: 0.8125rem !important; /* Scale up 10px to 13px */
+}
+.text-\[11px\] {
+  font-size: 0.84375rem !important; /* Scale up 11px to 13.5px */
+}
+.text-xs {
+  font-size: 0.875rem !important; /* Scale up 12px to 14px */
+  line-height: 1.45 !important;
 }
