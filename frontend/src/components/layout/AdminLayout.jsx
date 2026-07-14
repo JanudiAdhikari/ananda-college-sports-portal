@@ -51,7 +51,7 @@ function AdminLayout({ children }) {
     link.roles.includes(user?.role)
   );
 
-  const linkClass = ({ isActive }) =>`font-display text-sm font-semibold tracking-wider block rounded-xl px-4 py-3 transition duration-200 hover:translate-x-0.5 ${
+  const linkClass = ({ isActive }) =>`font-display text-sm font-semibold tracking-wider block rounded-xl px-4 py-2 lg:py-3 transition duration-200 lg:hover:translate-x-0.5 ${
       isActive
         ?"bg-gradient-to-r from-ananda-maroon to-ananda-dark-maroon text-white shadow-md"
         :"text-ananda-dark-maroon hover:bg-ananda-cream/60 hover:text-ananda-maroon"
@@ -91,12 +91,12 @@ function AdminLayout({ children }) {
       <div className="grid gap-8 lg:grid-cols-4">
         {/* Sidebar */}
         <aside className="lg:col-span-1">
-          <div className="sticky top-28 rounded-2xl border border-ananda-gold/15 bg-white p-4 shadow-sm">
+          <div className="lg:sticky lg:top-28 rounded-2xl border border-ananda-gold/15 bg-white p-4 shadow-sm">
             <p className="font-display mb-3 px-4 text-xs font-bold tracking-wider text-gray-400">
               Admin Menu
             </p>
 
-            <nav className="space-y-1.5">
+            <nav className="flex flex-wrap gap-2 lg:flex-col lg:space-y-1.5 lg:gap-0">
               {visibleLinks.map((link) => (
                 <NavLink
                   key={link.path}
