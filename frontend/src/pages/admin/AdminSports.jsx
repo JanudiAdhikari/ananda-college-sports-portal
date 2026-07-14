@@ -1,20 +1,20 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from"react";
 import {
   createSport,
   deleteSport,
   getSports,
   updateSport,
-} from "../../services/sportService";
+} from"../../services/sportService";
 
 const initialFormData = {
-  name: "",
-  category: "TEAM",
-  description: "",
+  name:"",
+  category:"TEAM",
+  description:"",
   displayOrder: 0,
 };
 
 // Scroll-triggered reveal wrapper — fades sections in once
-function Reveal({ children, className = "" }) {
+function Reveal({ children, className ="" }) {
   const ref = useRef(null);
   const [visible, setVisible] = useState(false);
 
@@ -37,7 +37,7 @@ function Reveal({ children, className = "" }) {
   }, []);
 
   return (
-    <div ref={ref} className={`${visible ? "reveal" : "opacity-0"} ${className}`}>
+    <div ref={ref} className={`${visible ?"reveal" :"opacity-0"} ${className}`}>
       {children}
     </div>
   );
@@ -66,7 +66,7 @@ function AdminSports() {
       const data = await getSports();
       setSports(data.sports || []);
     } catch (error) {
-      setError(error.response?.data?.message || "Failed to load sports.");
+      setError(error.response?.data?.message ||"Failed to load sports.");
     } finally {
       setLoading(false);
     }
@@ -84,7 +84,7 @@ function AdminSports() {
         }
       } catch (error) {
         if (isMounted) {
-          setError(error.response?.data?.message || "Failed to load sports.");
+          setError(error.response?.data?.message ||"Failed to load sports.");
         }
       } finally {
         if (isMounted) {
@@ -143,7 +143,7 @@ function AdminSports() {
       setIsFormOpen(false);
       await fetchSports();
     } catch (error) {
-      setError(error.response?.data?.message || "Failed to save sport.");
+      setError(error.response?.data?.message ||"Failed to save sport.");
     } finally {
       setSaving(false);
     }
@@ -153,9 +153,9 @@ function AdminSports() {
     setEditingSportId(sport._id);
 
     setFormData({
-      name: sport.name || "",
-      category: sport.category || "TEAM",
-      description: sport.description || "",
+      name: sport.name ||"",
+      category: sport.category ||"TEAM",
+      description: sport.description ||"",
       displayOrder: sport.displayOrder || 0,
     });
 
@@ -173,8 +173,7 @@ function AdminSports() {
   };
 
   const handleDelete = async (sportId) => {
-    const confirmed = window.confirm(
-      "Are you sure you want to delete this sport?"
+    const confirmed = window.confirm("Are you sure you want to delete this sport?"
     );
 
     if (!confirmed) {
@@ -189,7 +188,7 @@ function AdminSports() {
       setMessage("Sport deleted successfully.");
       await fetchSports();
     } catch (error) {
-      setError(error.response?.data?.message || "Failed to delete sport.");
+      setError(error.response?.data?.message ||"Failed to delete sport.");
     }
   };
 
@@ -208,10 +207,10 @@ function AdminSports() {
     <div>
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
         <div>
-          <p className="font-display mb-1 text-xs font-semibold uppercase tracking-wider text-ananda-gold">
+          <p className="font-display mb-1 text-xs font-semibold tracking-wider text-ananda-gold">
             Admin Panel
           </p>
-          <h1 className="font-display text-3xl font-bold uppercase tracking-tight text-ananda-dark-maroon">
+          <h1 className="font-display text-3xl font-bold tracking-tight text-ananda-dark-maroon">
             Manage Sports
           </h1>
         </div>
@@ -224,7 +223,7 @@ function AdminSports() {
             setMessage("");
             setError("");
           }}
-          className="font-display self-start sm:self-auto rounded-xl bg-ananda-gold px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-ananda-dark-maroon hover:bg-ananda-light-gold transition cursor-pointer flex items-center gap-1.5 shadow-sm hover:shadow-md hover:scale-[1.02]"
+          className="font-display self-start sm:self-auto rounded-xl bg-ananda-gold px-4 py-2.5 text-xs font-bold tracking-wider text-ananda-dark-maroon hover:bg-ananda-light-gold transition cursor-pointer flex items-center gap-1.5 shadow-sm hover:shadow-md hover:scale-[1.02]"
         >
           <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" />
@@ -252,7 +251,7 @@ function AdminSports() {
       {/* Main Spacious View */}
       <Reveal className="rounded-2xl border border-ananda-gold/15 bg-white p-6 shadow-sm">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-5">
-          <h2 className="font-display text-lg font-bold uppercase tracking-tight text-ananda-maroon">
+          <h2 className="font-display text-lg font-bold tracking-tight text-ananda-maroon">
             Sports List
           </h2>
 
@@ -268,7 +267,7 @@ function AdminSports() {
         {loading && (
           <div className="flex flex-col items-center gap-3 py-16 text-center">
             <div className="h-8 w-8 animate-spin rounded-full border-4 border-ananda-gold/30 border-t-ananda-maroon" />
-            <p className="font-display text-xs uppercase tracking-wider text-ananda-maroon animate-pulse">Loading sports...</p>
+            <p className="font-display text-xs tracking-wider text-ananda-maroon animate-pulse">Loading sports...</p>
           </div>
         )}
 
@@ -284,7 +283,7 @@ function AdminSports() {
               <div className="overflow-x-auto">
                 <table className="w-full border-collapse text-left">
                   <thead>
-                    <tr className="border-b border-ananda-gold/15 bg-ananda-cream/35 font-display text-xs font-bold uppercase tracking-wider text-ananda-dark-maroon">
+                    <tr className="border-b border-ananda-gold/15 bg-ananda-cream/35 font-display text-xs font-bold tracking-wider text-ananda-dark-maroon">
                       <th className="px-5 py-4">Name</th>
                       <th className="px-5 py-4">Category</th>
                       <th className="px-5 py-4">Order</th>
@@ -304,7 +303,7 @@ function AdminSports() {
                           </p>
                         </td>
 
-                        <td className="px-5 py-4 text-xs font-semibold uppercase tracking-wider text-gray-500">
+                        <td className="px-5 py-4 text-xs font-semibold tracking-wider text-gray-500">
                           {sport.category}
                         </td>
 
@@ -316,14 +315,14 @@ function AdminSports() {
                           <div className="flex justify-end gap-2">
                             <button
                               onClick={() => handleEdit(sport)}
-                              className="font-display text-[10px] font-bold uppercase tracking-wider bg-ananda-gold hover:bg-ananda-light-gold text-ananda-dark-maroon px-3 py-1.5 rounded-lg transition duration-250 cursor-pointer"
+                              className="font-display text-[10px] font-bold tracking-wider bg-ananda-gold hover:bg-ananda-light-gold text-ananda-dark-maroon px-3 py-1.5 rounded-lg transition duration-250 cursor-pointer"
                             >
                               Edit
                             </button>
 
                             <button
                               onClick={() => handleDelete(sport._id)}
-                              className="font-display text-[10px] font-bold uppercase tracking-wider bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-lg transition duration-250 cursor-pointer"
+                              className="font-display text-[10px] font-bold tracking-wider bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-lg transition duration-250 cursor-pointer"
                             >
                               Delete
                             </button>
@@ -339,14 +338,14 @@ function AdminSports() {
             {/* Pagination Controls */}
             {totalPages > 1 && (
               <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-t border-gray-100 pt-4">
-                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                <p className="text-xs font-semibold text-gray-500 tracking-wider">
                   Showing {startIndex + 1} to {Math.min(startIndex + itemsPerPage, filteredSports.length)} of {filteredSports.length} entries
                 </p>
                 <div className="flex flex-wrap gap-1">
                   <button
                     onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
                     disabled={currentPage === 1}
-                    className="font-display text-[10px] font-bold uppercase tracking-wider border border-gray-200 bg-white hover:bg-gray-50 text-gray-750 px-3 py-1.5 rounded-lg disabled:opacity-40 disabled:cursor-not-allowed transition duration-200 cursor-pointer"
+                    className="font-display text-[10px] font-bold tracking-wider border border-gray-200 bg-white hover:bg-gray-50 text-gray-750 px-3 py-1.5 rounded-lg disabled:opacity-40 disabled:cursor-not-allowed transition duration-200 cursor-pointer"
                   >
                     Previous
                   </button>
@@ -354,10 +353,10 @@ function AdminSports() {
                     <button
                       key={page}
                       onClick={() => setCurrentPage(page)}
-                      className={`font-display text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-lg transition duration-200 cursor-pointer ${
+                      className={`font-display text-[10px] font-bold  tracking-wider px-3 py-1.5 rounded-lg transition duration-200 cursor-pointer ${
                         currentPage === page
-                          ? "bg-ananda-maroon text-white shadow-xs"
-                          : "border border-gray-200 bg-white hover:bg-gray-50 text-gray-700"
+                          ?"bg-ananda-maroon text-white shadow-xs"
+                          :"border border-gray-200 bg-white hover:bg-gray-50 text-gray-700"
                       }`}
                     >
                       {page}
@@ -366,7 +365,7 @@ function AdminSports() {
                   <button
                     onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
                     disabled={currentPage === totalPages}
-                    className="font-display text-[10px] font-bold uppercase tracking-wider border border-gray-200 bg-white hover:bg-gray-50 text-gray-750 px-3 py-1.5 rounded-lg disabled:opacity-40 disabled:cursor-not-allowed transition duration-200 cursor-pointer"
+                    className="font-display text-[10px] font-bold tracking-wider border border-gray-200 bg-white hover:bg-gray-50 text-gray-750 px-3 py-1.5 rounded-lg disabled:opacity-40 disabled:cursor-not-allowed transition duration-200 cursor-pointer"
                   >
                     Next
                   </button>
@@ -391,13 +390,13 @@ function AdminSports() {
               </svg>
             </button>
 
-            <h2 className="font-display mb-5 text-lg font-bold uppercase tracking-tight text-ananda-maroon">
-              {editingSportId ? "Edit Sport" : "Add New Sport"}
+            <h2 className="font-display mb-5 text-lg font-bold tracking-tight text-ananda-maroon">
+              {editingSportId ?"Edit Sport" :"Add New Sport"}
             </h2>
 
             <form className="space-y-5" onSubmit={handleSubmit}>
               <div>
-                <label className="font-display text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5 block">
+                <label className="font-display text-xs font-bold tracking-wider text-gray-500 mb-1.5 block">
                   Sport Name
                 </label>
                 <input
@@ -412,7 +411,7 @@ function AdminSports() {
               </div>
 
               <div>
-                <label className="font-display text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5 block">
+                <label className="font-display text-xs font-bold tracking-wider text-gray-500 mb-1.5 block">
                   Category
                 </label>
                 <div className="relative">
@@ -437,7 +436,7 @@ function AdminSports() {
               </div>
 
               <div>
-                <label className="font-display text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5 block">
+                <label className="font-display text-xs font-bold tracking-wider text-gray-500 mb-1.5 block">
                   Display Order
                 </label>
                 <input
@@ -450,7 +449,7 @@ function AdminSports() {
               </div>
 
               <div>
-                <label className="font-display text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5 block">
+                <label className="font-display text-xs font-bold tracking-wider text-gray-500 mb-1.5 block">
                   Description
                 </label>
                 <textarea
@@ -467,13 +466,13 @@ function AdminSports() {
                 <button
                   type="submit"
                   disabled={saving}
-                  className="w-full rounded-xl bg-ananda-maroon px-6 py-3.5 font-semibold text-white hover:bg-ananda-dark-maroon disabled:cursor-not-allowed disabled:opacity-70 transition duration-300 font-display text-xs font-bold uppercase tracking-wider cursor-pointer hover:scale-[1.01]"
+                  className="w-full rounded-xl bg-ananda-maroon px-6 py-3.5 font-semibold text-white hover:bg-ananda-dark-maroon disabled:cursor-not-allowed disabled:opacity-70 transition duration-300 font-display text-xs font-bold tracking-wider cursor-pointer hover:scale-[1.01]"
                 >
                   {saving
-                    ? "Saving..."
+                    ?"Saving..."
                     : editingSportId
-                      ? "Update Sport"
-                      : "Add Sport"}
+                      ?"Update Sport"
+                      :"Add Sport"}
                 </button>
               </div>
             </form>

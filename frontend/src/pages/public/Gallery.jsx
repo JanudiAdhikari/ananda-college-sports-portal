@@ -1,12 +1,12 @@
-import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
-import { getSports } from "../../services/sportService";
-import { getGalleryAlbums } from "../../services/galleryService";
+import { useEffect, useRef, useState } from"react";
+import { Link } from"react-router-dom";
+import { getSports } from"../../services/sportService";
+import { getGalleryAlbums } from"../../services/galleryService";
 
-import { getOptimizedCloudinaryUrl } from "../../utils/cloudinaryUrl";
+import { getOptimizedCloudinaryUrl } from"../../utils/cloudinaryUrl";
 
 // Scroll-triggered reveal wrapper — fades sections in once
-function Reveal({ children, className = "" }) {
+function Reveal({ children, className ="" }) {
   const ref = useRef(null);
   const [visible, setVisible] = useState(false);
 
@@ -29,7 +29,7 @@ function Reveal({ children, className = "" }) {
   }, []);
 
   return (
-    <div ref={ref} className={`${visible ? "reveal" : "opacity-0"} ${className}`}>
+    <div ref={ref} className={`${visible ?"reveal" :"opacity-0"} ${className}`}>
       {children}
     </div>
   );
@@ -72,7 +72,7 @@ function Gallery() {
       params.search = search.trim();
     }
 
-    if (filterSport !== "ALL") {
+    if (filterSport !=="ALL") {
       params.sport = filterSport;
     }
 
@@ -91,7 +91,7 @@ function Gallery() {
             return;
           }
 
-          setError(error.response?.data?.message || "Failed to load albums.");
+          setError(error.response?.data?.message ||"Failed to load albums.");
         })
         .finally(() => {
           if (!isMounted) {
@@ -129,16 +129,16 @@ function Gallery() {
         <div className="relative mx-auto max-w-7xl px-6 z-10">
           <Link
             to="/"
-            className="font-display mb-4 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-ananda-gold transition hover:text-white"
+            className="font-display mb-4 inline-flex items-center gap-2 text-xs font-semibold tracking-wider text-ananda-gold transition hover:text-white"
           >
             &larr; Back to Home
           </Link>
           
-          <p className="font-display mb-2 text-xs font-semibold uppercase tracking-[0.25em] text-ananda-gold">
+          <p className="font-display mb-2 text-xs font-semibold tracking-[0.25em] text-ananda-gold">
             Ananda College
           </p>
           
-          <h1 className="font-display text-4xl font-bold uppercase tracking-tight text-white md:text-5xl lg:text-6xl">
+          <h1 className="font-display text-4xl font-bold tracking-tight text-white md:text-5xl lg:text-6xl">
             In Pictures
           </h1>
           
@@ -194,7 +194,7 @@ function Gallery() {
         {loading && (
           <div className="flex flex-col items-center gap-4 py-24 text-center">
             <div className="h-10 w-10 animate-spin rounded-full border-4 border-ananda-gold/30 border-t-ananda-maroon" />
-            <p className="font-display uppercase tracking-wide text-ananda-maroon animate-pulse">
+            <p className="font-display tracking-wide text-ananda-maroon animate-pulse">
               Loading gallery albums...
             </p>
           </div>
@@ -229,7 +229,7 @@ function Gallery() {
                       loading="lazy"
                     />
                   ) : (
-                    <div className="flex h-full items-center justify-center bg-ananda-light-gold/30 text-ananda-maroon font-display uppercase tracking-wider text-xs">
+                    <div className="flex h-full items-center justify-center bg-ananda-light-gold/30 text-ananda-maroon font-display tracking-wider text-xs">
                       No cover image
                     </div>
                   )}
@@ -240,16 +240,16 @@ function Gallery() {
 
                 <div className="p-6 flex-1 flex flex-col justify-between">
                   <div>
-                    <p className="font-display mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-ananda-gold">
-                      {album.sport?.name || "General Event"}
+                    <p className="font-display mb-2 text-xs font-semibold tracking-[0.2em] text-ananda-gold">
+                      {album.sport?.name ||"General Event"}
                     </p>
 
-                    <h2 className="font-display text-lg font-bold uppercase tracking-tight text-ananda-maroon group-hover:text-ananda-dark-maroon transition duration-300 line-clamp-2">
+                    <h2 className="font-display text-lg font-bold tracking-tight text-ananda-maroon group-hover:text-ananda-dark-maroon transition duration-300 line-clamp-2">
                       {album.title}
                     </h2>
                   </div>
                   
-                  <div className="mt-4 flex items-center gap-1 text-xs font-bold uppercase tracking-wide text-ananda-gold opacity-0 transition duration-300 group-hover:opacity-100 group-hover:translate-x-1">
+                  <div className="mt-4 flex items-center gap-1 text-xs font-bold tracking-wide text-ananda-gold opacity-0 transition duration-300 group-hover:opacity-100 group-hover:translate-x-1">
                     View Album &rarr;
                   </div>
                 </div>

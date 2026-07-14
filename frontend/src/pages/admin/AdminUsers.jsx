@@ -1,25 +1,25 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from"react";
 import {
   createUser,
   deactivateUser,
   getUsers,
   updateUser,
-} from "../../services/userService";
-import { useAuth } from "../../hooks/useAuth";
+} from"../../services/userService";
+import { useAuth } from"../../hooks/useAuth";
 
 const initialFormData = {
-  fullName: "",
-  username: "",
-  password: "",
-  role: "PHOTO_CLUB",
+  fullName:"",
+  username:"",
+  password:"",
+  role:"PHOTO_CLUB",
   isActive: true,
 };
 
 const roleOptions = [
-  { value: "SUPER_ADMIN", label: "Super Admin" },
-  { value: "SPORTS_TEACHER", label: "Sports Teacher" },
-  { value: "PHOTO_CLUB", label: "Photography Club" },
-  { value: "VIDEO_CLUB", label: "Videography Club" },
+  { value:"SUPER_ADMIN", label:"Super Admin" },
+  { value:"SPORTS_TEACHER", label:"Sports Teacher" },
+  { value:"PHOTO_CLUB", label:"Photography Club" },
+  { value:"VIDEO_CLUB", label:"Videography Club" },
 ];
 
 const getRoleLabel = (value) => {
@@ -27,7 +27,7 @@ const getRoleLabel = (value) => {
 };
 
 // Scroll-triggered reveal wrapper — fades sections in once
-function Reveal({ children, className = "" }) {
+function Reveal({ children, className ="" }) {
   const ref = useRef(null);
   const [visible, setVisible] = useState(false);
 
@@ -50,7 +50,7 @@ function Reveal({ children, className = "" }) {
   }, []);
 
   return (
-    <div ref={ref} className={`${visible ? "reveal" : "opacity-0"} ${className}`}>
+    <div ref={ref} className={`${visible ?"reveal" :"opacity-0"} ${className}`}>
       {children}
     </div>
   );
@@ -83,7 +83,7 @@ function AdminUsers() {
       params.search = search.trim();
     }
 
-    if (filterRole !== "ALL") {
+    if (filterRole !=="ALL") {
       params.role = filterRole;
     }
 
@@ -99,7 +99,7 @@ function AdminUsers() {
       setUsers(data.users);
       setCurrentPage(1);
     } catch (error) {
-      setError(error.response?.data?.message || "Failed to load users.");
+      setError(error.response?.data?.message ||"Failed to load users.");
     } finally {
       setLoading(false);
     }
@@ -114,7 +114,7 @@ function AdminUsers() {
       params.search = search.trim();
     }
 
-    if (filterRole !== "ALL") {
+    if (filterRole !=="ALL") {
       params.role = filterRole;
     }
 
@@ -134,7 +134,7 @@ function AdminUsers() {
             return;
           }
 
-          setError(error.response?.data?.message || "Failed to load users.");
+          setError(error.response?.data?.message ||"Failed to load users.");
         })
         .finally(() => {
           if (!isMounted) {
@@ -156,7 +156,7 @@ function AdminUsers() {
 
     setFormData({
       ...formData,
-      [name]: type === "checkbox" ? checked : value,
+      [name]: type ==="checkbox" ? checked : value,
     });
 
     setMessage("");
@@ -215,7 +215,7 @@ function AdminUsers() {
 
       await loadUsers();
     } catch (error) {
-      setError(error.response?.data?.message || "Failed to save user.");
+      setError(error.response?.data?.message ||"Failed to save user.");
     } finally {
       setSaving(false);
     }
@@ -225,10 +225,10 @@ function AdminUsers() {
     setEditingUserId(selectedUser._id);
 
     setFormData({
-      fullName: selectedUser.fullName || "",
-      username: selectedUser.username || "",
-      password: "",
-      role: selectedUser.role || "PHOTO_CLUB",
+      fullName: selectedUser.fullName ||"",
+      username: selectedUser.username ||"",
+      password:"",
+      role: selectedUser.role ||"PHOTO_CLUB",
       isActive: selectedUser.isActive,
     });
 
@@ -246,8 +246,7 @@ function AdminUsers() {
   };
 
   const handleDeactivate = async (userId) => {
-    const confirmed = window.confirm(
-      "Are you sure you want to deactivate this user?"
+    const confirmed = window.confirm("Are you sure you want to deactivate this user?"
     );
 
     if (!confirmed) {
@@ -262,7 +261,7 @@ function AdminUsers() {
       setMessage("User deactivated successfully.");
       await loadUsers();
     } catch (error) {
-      setError(error.response?.data?.message || "Failed to deactivate user.");
+      setError(error.response?.data?.message ||"Failed to deactivate user.");
     }
   };
 
@@ -275,10 +274,10 @@ function AdminUsers() {
     <div>
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
         <div>
-          <p className="font-display mb-1 text-xs font-semibold uppercase tracking-wider text-ananda-gold">
+          <p className="font-display mb-1 text-xs font-semibold tracking-wider text-ananda-gold">
             Admin Panel
           </p>
-          <h1 className="font-display text-3xl font-bold uppercase tracking-tight text-ananda-dark-maroon">
+          <h1 className="font-display text-3xl font-bold tracking-tight text-ananda-dark-maroon">
             Manage Users
           </h1>
         </div>
@@ -291,7 +290,7 @@ function AdminUsers() {
             setMessage("");
             setError("");
           }}
-          className="font-display self-start sm:self-auto rounded-xl bg-ananda-gold px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-ananda-dark-maroon hover:bg-ananda-light-gold transition cursor-pointer flex items-center gap-1.5 shadow-sm hover:shadow-md hover:scale-[1.02]"
+          className="font-display self-start sm:self-auto rounded-xl bg-ananda-gold px-4 py-2.5 text-xs font-bold tracking-wider text-ananda-dark-maroon hover:bg-ananda-light-gold transition cursor-pointer flex items-center gap-1.5 shadow-sm hover:shadow-md hover:scale-[1.02]"
         >
           <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" />
@@ -320,7 +319,7 @@ function AdminUsers() {
       {/* Full-width spacious view */}
       <Reveal className="rounded-2xl border border-ananda-gold/15 bg-white p-6 shadow-sm">
         <div className="mb-6 flex flex-col gap-4">
-          <h2 className="font-display text-lg font-bold uppercase tracking-tight text-ananda-maroon">
+          <h2 className="font-display text-lg font-bold tracking-tight text-ananda-maroon">
             Users List
           </h2>
 
@@ -339,7 +338,7 @@ function AdminUsers() {
               <select
                 value={filterRole}
                 onChange={handleRoleFilterChange}
-                className="w-full appearance-none rounded-xl border border-ananda-gold/25 bg-white pl-3 pr-8 py-2.5 text-xs font-semibold uppercase tracking-wider outline-none focus:border-ananda-maroon focus:ring-1 focus:ring-ananda-maroon transition shadow-sm"
+                className="w-full appearance-none rounded-xl border border-ananda-gold/25 bg-white pl-3 pr-8 py-2.5 text-xs font-semibold tracking-wider outline-none focus:border-ananda-maroon focus:ring-1 focus:ring-ananda-maroon transition shadow-sm"
               >
                 <option value="ALL">All Roles</option>
                 {roleOptions.map((role) => (
@@ -360,7 +359,7 @@ function AdminUsers() {
         {loading && (
           <div className="flex flex-col items-center gap-3 py-16 text-center">
             <div className="h-8 w-8 animate-spin rounded-full border-4 border-ananda-gold/30 border-t-ananda-maroon" />
-            <p className="font-display text-xs uppercase tracking-wider text-ananda-maroon animate-pulse">Loading users...</p>
+            <p className="font-display text-xs tracking-wider text-ananda-maroon animate-pulse">Loading users...</p>
           </div>
         )}
 
@@ -376,7 +375,7 @@ function AdminUsers() {
               <div className="overflow-x-auto">
                 <table className="w-full border-collapse text-left">
                   <thead>
-                    <tr className="border-b border-ananda-gold/15 bg-ananda-cream/35 font-display text-xs font-bold uppercase tracking-wider text-ananda-dark-maroon">
+                    <tr className="border-b border-ananda-gold/15 bg-ananda-cream/35 font-display text-xs font-bold tracking-wider text-ananda-dark-maroon">
                       <th className="px-5 py-4">User</th>
                       <th className="px-5 py-4">Role</th>
                       <th className="px-5 py-4">Status</th>
@@ -396,17 +395,17 @@ function AdminUsers() {
                           </p>
                         </td>
 
-                        <td className="px-5 py-4 text-xs font-bold uppercase tracking-wider text-gray-550">
+                        <td className="px-5 py-4 text-xs font-bold tracking-wider text-gray-550">
                           {getRoleLabel(selectedUser.role)}
                         </td>
 
                         <td className="px-5 py-4">
                           {selectedUser.isActive ? (
-                            <span className="inline-flex items-center rounded-full bg-green-50 border border-green-200 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-green-600">
+                            <span className="inline-flex items-center rounded-full bg-green-50 border border-green-200 px-2.5 py-0.5 text-[10px] font-bold tracking-wider text-green-600">
                               Active
                             </span>
                           ) : (
-                            <span className="inline-flex items-center rounded-full bg-red-50 border border-red-200 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-red-600">
+                            <span className="inline-flex items-center rounded-full bg-red-50 border border-red-200 px-2.5 py-0.5 text-[10px] font-bold tracking-wider text-red-600">
                               Inactive
                             </span>
                           )}
@@ -416,7 +415,7 @@ function AdminUsers() {
                           <div className="flex justify-end gap-2">
                             <button
                               onClick={() => handleEdit(selectedUser)}
-                              className="font-display text-[10px] font-bold uppercase tracking-wider bg-ananda-gold hover:bg-ananda-light-gold text-ananda-dark-maroon px-3 py-1.5 rounded-lg transition duration-250 cursor-pointer"
+                              className="font-display text-[10px] font-bold tracking-wider bg-ananda-gold hover:bg-ananda-light-gold text-ananda-dark-maroon px-3 py-1.5 rounded-lg transition duration-250 cursor-pointer"
                             >
                               Edit
                             </button>
@@ -427,7 +426,7 @@ function AdminUsers() {
                                 !selectedUser.isActive ||
                                 loggedUser?.id === selectedUser._id
                               }
-                              className="font-display text-[10px] font-bold uppercase tracking-wider bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-lg transition duration-250 disabled:cursor-not-allowed disabled:opacity-40 cursor-pointer"
+                              className="font-display text-[10px] font-bold tracking-wider bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-lg transition duration-250 disabled:cursor-not-allowed disabled:opacity-40 cursor-pointer"
                             >
                               Deactivate
                             </button>
@@ -443,14 +442,14 @@ function AdminUsers() {
             {/* Pagination Controls */}
             {totalPages > 1 && (
               <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-t border-gray-100 pt-4">
-                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                <p className="text-xs font-semibold text-gray-500 tracking-wider">
                   Showing {startIndex + 1} to {Math.min(startIndex + itemsPerPage, users.length)} of {users.length} entries
                 </p>
                 <div className="flex flex-wrap gap-1">
                   <button
                     onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
                     disabled={currentPage === 1}
-                    className="font-display text-[10px] font-bold uppercase tracking-wider border border-gray-200 bg-white hover:bg-gray-50 text-gray-750 px-3 py-1.5 rounded-lg disabled:opacity-40 disabled:cursor-not-allowed transition duration-200 cursor-pointer"
+                    className="font-display text-[10px] font-bold tracking-wider border border-gray-200 bg-white hover:bg-gray-50 text-gray-750 px-3 py-1.5 rounded-lg disabled:opacity-40 disabled:cursor-not-allowed transition duration-200 cursor-pointer"
                   >
                     Previous
                   </button>
@@ -458,10 +457,10 @@ function AdminUsers() {
                     <button
                       key={page}
                       onClick={() => setCurrentPage(page)}
-                      className={`font-display text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-lg transition duration-200 cursor-pointer ${
+                      className={`font-display text-[10px] font-bold  tracking-wider px-3 py-1.5 rounded-lg transition duration-200 cursor-pointer ${
                         currentPage === page
-                          ? "bg-ananda-maroon text-white shadow-xs"
-                          : "border border-gray-200 bg-white hover:bg-gray-50 text-gray-700"
+                          ?"bg-ananda-maroon text-white shadow-xs"
+                          :"border border-gray-200 bg-white hover:bg-gray-50 text-gray-700"
                       }`}
                     >
                       {page}
@@ -470,7 +469,7 @@ function AdminUsers() {
                   <button
                     onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
                     disabled={currentPage === totalPages}
-                    className="font-display text-[10px] font-bold uppercase tracking-wider border border-gray-200 bg-white hover:bg-gray-50 text-gray-750 px-3 py-1.5 rounded-lg disabled:opacity-40 disabled:cursor-not-allowed transition duration-200 cursor-pointer"
+                    className="font-display text-[10px] font-bold tracking-wider border border-gray-200 bg-white hover:bg-gray-50 text-gray-750 px-3 py-1.5 rounded-lg disabled:opacity-40 disabled:cursor-not-allowed transition duration-200 cursor-pointer"
                   >
                     Next
                   </button>
@@ -495,13 +494,13 @@ function AdminUsers() {
               </svg>
             </button>
 
-            <h2 className="font-display mb-5 text-lg font-bold uppercase tracking-tight text-ananda-maroon">
-              {editingUserId ? "Edit User" : "Add New User"}
+            <h2 className="font-display mb-5 text-lg font-bold tracking-tight text-ananda-maroon">
+              {editingUserId ?"Edit User" :"Add New User"}
             </h2>
 
             <form className="space-y-5" onSubmit={handleSubmit}>
               <div>
-                <label className="font-display text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5 block">
+                <label className="font-display text-xs font-bold tracking-wider text-gray-500 mb-1.5 block">
                   Full Name
                 </label>
                 <input
@@ -516,7 +515,7 @@ function AdminUsers() {
               </div>
 
               <div>
-                <label className="font-display text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5 block">
+                <label className="font-display text-xs font-bold tracking-wider text-gray-500 mb-1.5 block">
                   Username
                 </label>
                 <input
@@ -531,7 +530,7 @@ function AdminUsers() {
               </div>
 
               <div>
-                <label className="font-display text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5 block">
+                <label className="font-display text-xs font-bold tracking-wider text-gray-500 mb-1.5 block">
                   Password
                 </label>
                 <input
@@ -541,8 +540,8 @@ function AdminUsers() {
                   onChange={handleChange}
                   placeholder={
                     editingUserId
-                      ? "Leave blank to keep current password"
-                      : "Enter password"
+                      ?"Leave blank to keep current password"
+                      :"Enter password"
                   }
                   className="w-full rounded-xl border border-ananda-gold/25 bg-white px-4 py-3 outline-none focus:border-ananda-maroon focus:ring-1 focus:ring-ananda-maroon transition shadow-sm text-sm"
                   required={!editingUserId}
@@ -550,7 +549,7 @@ function AdminUsers() {
               </div>
 
               <div>
-                <label className="font-display text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5 block">
+                <label className="font-display text-xs font-bold tracking-wider text-gray-500 mb-1.5 block">
                   Role
                 </label>
                 <div className="relative">
@@ -584,7 +583,7 @@ function AdminUsers() {
                     onChange={handleChange}
                     className="rounded border-ananda-gold/25 text-ananda-maroon focus:ring-ananda-maroon h-4 w-4 cursor-pointer"
                   />
-                  <span className="font-display text-xs font-bold uppercase tracking-wider text-ananda-dark-maroon">
+                  <span className="font-display text-xs font-bold tracking-wider text-ananda-dark-maroon">
                     Active user
                   </span>
                 </label>
@@ -594,13 +593,13 @@ function AdminUsers() {
                 <button
                   type="submit"
                   disabled={saving}
-                  className="w-full rounded-xl bg-ananda-maroon px-6 py-3.5 font-semibold text-white hover:bg-ananda-dark-maroon disabled:cursor-not-allowed disabled:opacity-70 transition duration-300 font-display text-xs font-bold uppercase tracking-wider cursor-pointer hover:scale-[1.01]"
+                  className="w-full rounded-xl bg-ananda-maroon px-6 py-3.5 font-semibold text-white hover:bg-ananda-dark-maroon disabled:cursor-not-allowed disabled:opacity-70 transition duration-300 font-display text-xs font-bold tracking-wider cursor-pointer hover:scale-[1.01]"
                 >
                   {saving
-                    ? "Saving..."
+                    ?"Saving..."
                     : editingUserId
-                      ? "Update User"
-                      : "Create User"}
+                      ?"Update User"
+                      :"Create User"}
                 </button>
               </div>
             </form>

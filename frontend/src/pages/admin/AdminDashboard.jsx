@@ -1,9 +1,9 @@
-import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
-import { useAuth } from "../../hooks/useAuth";
+import { useEffect, useRef, useState } from"react";
+import { Link } from"react-router-dom";
+import { useAuth } from"../../hooks/useAuth";
 
 // Scroll-triggered reveal wrapper — fades sections in once
-function Reveal({ children, className = "" }) {
+function Reveal({ children, className ="" }) {
   const ref = useRef(null);
   const [visible, setVisible] = useState(false);
 
@@ -26,7 +26,7 @@ function Reveal({ children, className = "" }) {
   }, []);
 
   return (
-    <div ref={ref} className={`${visible ? "reveal" : "opacity-0"} ${className}`}>
+    <div ref={ref} className={`${visible ?"reveal" :"opacity-0"} ${className}`}>
       {children}
     </div>
   );
@@ -37,47 +37,46 @@ function AdminDashboard() {
 
   const dashboardItems = [
     {
-      title: "Sports",
-      description: "Add, edit, delete and manage school sports.",
-      roles: ["SUPER_ADMIN", "SPORTS_TEACHER"],
-      path: "/admin/sports",
+      title:"Sports",
+      description:"Add, edit, delete and manage school sports.",
+      roles: ["SUPER_ADMIN","SPORTS_TEACHER"],
+      path:"/admin/sports",
     },
     {
-      title: "Teams",
-      description: "Manage teams, age groups, coaches, captains and years.",
-      roles: ["SUPER_ADMIN", "SPORTS_TEACHER"],
-      path: "/admin/teams",
+      title:"Teams",
+      description:"Manage teams, age groups, coaches, captains and years.",
+      roles: ["SUPER_ADMIN","SPORTS_TEACHER"],
+      path:"/admin/teams",
     },
     {
-      title: "Players",
-      description: "Manage player profiles, statistics and achievements.",
-      roles: ["SUPER_ADMIN", "SPORTS_TEACHER"],
-      path: "/admin/players",
+      title:"Players",
+      description:"Manage player profiles, statistics and achievements.",
+      roles: ["SUPER_ADMIN","SPORTS_TEACHER"],
+      path:"/admin/players",
     },
     {
-      title: "Fixtures & Results",
-      description:
-        "Manage upcoming fixtures, completed results and match summaries.",
-      roles: ["SUPER_ADMIN", "SPORTS_TEACHER"],
-      path: "/admin/fixtures",
+      title:"Fixtures & Results",
+      description:"Manage upcoming fixtures, completed results and match summaries.",
+      roles: ["SUPER_ADMIN","SPORTS_TEACHER"],
+      path:"/admin/fixtures",
     },
     {
-      title: "Gallery",
-      description: "Create albums and manage event images.",
-      roles: ["SUPER_ADMIN", "SPORTS_TEACHER", "PHOTO_CLUB"],
-      path: "/admin/gallery",
+      title:"Gallery",
+      description:"Create albums and manage event images.",
+      roles: ["SUPER_ADMIN","SPORTS_TEACHER","PHOTO_CLUB"],
+      path:"/admin/gallery",
     },
     {
-      title: "Live Matches",
-      description: "Update live match links, scores and match status.",
-      roles: ["SUPER_ADMIN", "SPORTS_TEACHER", "VIDEO_CLUB"],
-      path: "/admin/live-matches",
+      title:"Live Matches",
+      description:"Update live match links, scores and match status.",
+      roles: ["SUPER_ADMIN","SPORTS_TEACHER","VIDEO_CLUB"],
+      path:"/admin/live-matches",
     },
     {
-      title: "Users",
-      description: "Create and manage system users and roles.",
-      roles: ["SUPER_ADMIN", "SPORTS_TEACHER"],
-      path: "/admin/users",
+      title:"Users",
+      description:"Create and manage system users and roles.",
+      roles: ["SUPER_ADMIN","SPORTS_TEACHER"],
+      path:"/admin/users",
     },
   ];
 
@@ -87,11 +86,11 @@ function AdminDashboard() {
 
   return (
     <div>
-      <p className="font-display mb-1 text-xs font-semibold uppercase tracking-wider text-ananda-gold">
+      <p className="font-display mb-1 text-xs font-semibold tracking-wider text-ananda-gold">
         Welcome Back
       </p>
 
-      <h1 className="font-display mb-2 text-3xl font-bold uppercase tracking-tight text-ananda-dark-maroon">
+      <h1 className="font-display mb-2 text-3xl font-bold tracking-tight text-ananda-dark-maroon">
         Admin Dashboard
       </h1>
 
@@ -106,7 +105,7 @@ function AdminDashboard() {
             className="group rounded-2xl border border-ananda-gold/15 bg-white p-6 shadow-sm transition duration-350 hover:-translate-y-1 hover:border-ananda-gold/30 hover:shadow-md flex flex-col justify-between"
           >
             <div>
-              <h2 className="font-display text-lg font-bold uppercase tracking-tight text-ananda-maroon group-hover:text-ananda-dark-maroon transition duration-300">
+              <h2 className="font-display text-lg font-bold tracking-tight text-ananda-maroon group-hover:text-ananda-dark-maroon transition duration-300">
                 {item.title}
               </h2>
 
@@ -117,7 +116,7 @@ function AdminDashboard() {
 
             <Link
               to={item.path}
-              className="mt-6 inline-block text-center font-display text-[11px] font-bold uppercase tracking-wider bg-ananda-maroon text-white hover:bg-ananda-dark-maroon px-4 py-2.5 rounded-xl transition duration-300 shadow-sm hover:scale-[1.02]"
+              className="mt-6 inline-block text-center font-display text-[11px] font-bold tracking-wider bg-ananda-maroon text-white hover:bg-ananda-dark-maroon px-4 py-2.5 rounded-xl transition duration-300 shadow-sm hover:scale-[1.02]"
             >
               Manage {item.title}
             </Link>

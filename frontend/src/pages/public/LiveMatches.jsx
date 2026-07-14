@@ -1,25 +1,25 @@
-import { useEffect, useRef, useState } from "react";
-import { getLiveMatches } from "../../services/liveMatchService";
+import { useEffect, useRef, useState } from"react";
+import { getLiveMatches } from"../../services/liveMatchService";
 
 const getEmbedUrl = (url) => {
   if (!url) {
-    return "";
+    return"";
   }
 
   if (url.includes("youtube.com/watch?v=")) {
-    return url.replace("watch?v=", "embed/");
+    return url.replace("watch?v=","embed/");
   }
 
   if (url.includes("youtu.be/")) {
     const videoId = url.split("youtu.be/")[1]?.split("?")[0];
-    return videoId ? `https://www.youtube.com/embed/${videoId}` : url;
+    return videoId ?`https://www.youtube.com/embed/${videoId}` : url;
   }
 
   return url;
 };
 
 // Scroll-triggered reveal wrapper — fades sections in once
-function Reveal({ children, className = "" }) {
+function Reveal({ children, className ="" }) {
   const ref = useRef(null);
   const [visible, setVisible] = useState(false);
 
@@ -42,7 +42,7 @@ function Reveal({ children, className = "" }) {
   }, []);
 
   return (
-    <div ref={ref} className={`${visible ? "reveal" : "opacity-0"} ${className}`}>
+    <div ref={ref} className={`${visible ?"reveal" :"opacity-0"} ${className}`}>
       {children}
     </div>
   );
@@ -58,7 +58,7 @@ function LiveMatches() {
     let isMounted = true;
 
     const fetchLiveMatches = () => {
-      getLiveMatches({ visibleOnly: "true" })
+      getLiveMatches({ visibleOnly:"true" })
         .then((data) => {
           if (!isMounted) return;
 
@@ -66,7 +66,7 @@ function LiveMatches() {
 
           if (data.liveMatches.length > 0 && !selectedMatchId) {
             const liveMatch =
-              data.liveMatches.find((match) => match.status === "LIVE") ||
+              data.liveMatches.find((match) => match.status ==="LIVE") ||
               data.liveMatches[0];
             setSelectedMatchId(liveMatch._id);
           }
@@ -76,7 +76,7 @@ function LiveMatches() {
         .catch((error) => {
           if (!isMounted) return;
           setError(
-            error.response?.data?.message || "Failed to load live matches."
+            error.response?.data?.message ||"Failed to load live matches."
           );
         })
         .finally(() => {
@@ -107,16 +107,16 @@ function LiveMatches() {
         <div className="absolute left-0 bottom-0 -ml-40 -mb-40 h-80 w-80 rounded-full bg-gradient-to-tr from-ananda-maroon/20 to-transparent blur-3xl" />
 
         <div className="relative mx-auto max-w-7xl px-6 py-16 z-10">
-          <p className="font-display mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.3em] text-ananda-gold">
-            {liveMatches.some((m) => m.status === "LIVE") && (
+          <p className="font-display mb-3 flex items-center gap-2 text-xs font-semibold tracking-[0.3em] text-ananda-gold">
+            {liveMatches.some((m) => m.status ==="LIVE") && (
               <span className="live-dot h-2 w-2 rounded-full bg-red-400 animate-pulse" />
             )}
             Live Coverage
           </p>
-          <h1 className="font-display text-4xl font-bold uppercase tracking-tight text-white md:text-5xl">
+          <h1 className="font-display text-4xl font-bold tracking-tight text-white md:text-5xl">
             Live Matches
           </h1>
-          <p className="mt-3 max-w-xl text-xs font-semibold uppercase tracking-wider text-ananda-light-gold/80 leading-relaxed">
+          <p className="mt-3 max-w-xl text-xs font-semibold tracking-wider text-ananda-light-gold/80 leading-relaxed">
             Watch live matches and follow live scores from Ananda College
             sports as they happen.
           </p>
@@ -144,7 +144,7 @@ function LiveMatches() {
 
         {!loading && !error && liveMatches.length === 0 && (
           <div className="rounded-2xl border border-dashed border-gray-200 bg-gray-50 p-12 text-center">
-            <p className="font-display text-lg font-bold uppercase text-ananda-maroon">
+            <p className="font-display text-lg font-bold text-ananda-maroon">
               Nothing live right now
             </p>
             <p className="mt-2 text-xs text-gray-500 font-medium">
@@ -162,22 +162,22 @@ function LiveMatches() {
                 <div className="flex items-center justify-between px-6 py-4 border-b border-ananda-gold/10">
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="font-display text-[10px] font-bold uppercase tracking-wider text-ananda-gold">
+                      <span className="font-display text-[10px] font-bold tracking-wider text-ananda-gold">
                         {selectedMatch.sport?.name}
                       </span>
                       <span className="text-gray-300 text-xs">|</span>
-                      {selectedMatch.status === "LIVE" ? (
-                        <span className="inline-flex items-center gap-1 rounded-full bg-red-50 border border-red-200 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-red-600 animate-pulse">
+                      {selectedMatch.status ==="LIVE" ? (
+                        <span className="inline-flex items-center gap-1 rounded-full bg-red-50 border border-red-200 px-2 py-0.5 text-[9px] font-bold tracking-wider text-red-600 animate-pulse">
                           <span className="h-1.5 w-1.5 rounded-full bg-red-600" />
                           Live Now
                         </span>
                       ) : (
-                        <span className="inline-flex items-center rounded-full bg-blue-50 border border-blue-200 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-blue-600">
+                        <span className="inline-flex items-center rounded-full bg-blue-50 border border-blue-200 px-2 py-0.5 text-[9px] font-bold tracking-wider text-blue-600">
                           {selectedMatch.status}
                         </span>
                       )}
                     </div>
-                    <h2 className="font-display mt-1 text-lg font-bold uppercase text-ananda-maroon">
+                    <h2 className="font-display mt-1 text-lg font-bold text-ananda-maroon">
                       {selectedMatch.title}
                     </h2>
                   </div>
@@ -196,7 +196,7 @@ function LiveMatches() {
                 ) : (
                   <div className="flex aspect-video flex-col items-center justify-center gap-3 bg-gray-950 text-center text-white border-b border-ananda-gold/15">
                     <span className="text-4xl">📺</span>
-                    <p className="font-display text-xs font-bold uppercase tracking-wider text-ananda-gold animate-pulse">
+                    <p className="font-display text-xs font-bold tracking-wider text-ananda-gold animate-pulse">
                       Live video stream is not active yet.
                     </p>
                   </div>
@@ -205,7 +205,7 @@ function LiveMatches() {
 
               {liveMatches.length > 1 && (
                 <Reveal className="rounded-2xl border border-ananda-gold/15 bg-white p-6 shadow-sm">
-                  <h2 className="font-display mb-4 text-xs font-bold uppercase tracking-wider text-ananda-gold">
+                  <h2 className="font-display mb-4 text-xs font-bold tracking-wider text-ananda-gold">
                     Other Matches
                   </h2>
 
@@ -218,35 +218,35 @@ function LiveMatches() {
                           onClick={() => setSelectedMatchId(match._id)}
                           className={`rounded-xl p-4 text-left transition duration-300 cursor-pointer ${
                             active
-                              ? "bg-ananda-maroon text-white shadow-md border border-transparent"
-                              : "border border-ananda-gold/15 bg-white hover:border-ananda-gold/30 hover:bg-ananda-cream/20"
+                              ?"bg-ananda-maroon text-white shadow-md border border-transparent"
+                              :"border border-ananda-gold/15 bg-white hover:border-ananda-gold/30 hover:bg-ananda-cream/20"
                           }`}
                         >
                           <div className="flex items-center gap-2 mb-1.5">
-                            <span className="font-display text-[9px] font-bold uppercase tracking-wider text-ananda-gold">
+                            <span className="font-display text-[9px] font-bold tracking-wider text-ananda-gold">
                               {match.sport?.name}
                             </span>
                             <span className="text-gray-300 text-xs">|</span>
-                            {match.status === "LIVE" ? (
-                              <span className="inline-flex items-center gap-1 rounded-full bg-red-500/20 border border-red-500/30 px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-wider text-red-400 animate-pulse">
+                            {match.status ==="LIVE" ? (
+                              <span className="inline-flex items-center gap-1 rounded-full bg-red-500/20 border border-red-500/30 px-1.5 py-0.5 text-[8px] font-bold tracking-wider text-red-400 animate-pulse">
                                 <span className="h-1 w-1 rounded-full bg-red-500" />
                                 Live
                               </span>
                             ) : (
-                              <span className={`inline-flex items-center rounded-full border px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-wider ${
+                              <span className={`inline-flex items-center rounded-full border px-1.5 py-0.5 text-[8px] font-bold  tracking-wider ${
                                 active
-                                  ? "bg-white/20 border-white/30 text-white"
-                                  : "bg-blue-50 border-blue-200 text-blue-600"
+                                  ?"bg-white/20 border-white/30 text-white"
+                                  :"bg-blue-50 border-blue-200 text-blue-600"
                               }`}>
                                 {match.status}
                               </span>
                             )}
                           </div>
-                          <p className="font-display font-bold uppercase tracking-tight text-sm line-clamp-1">
+                          <p className="font-display font-bold tracking-tight text-sm line-clamp-1">
                             {match.title}
                           </p>
                           <p className={`mt-1 text-xs font-semibold ${
-                            active ? "text-ananda-light-gold/80" : "text-gray-500"
+                            active ?"text-ananda-light-gold/80" :"text-gray-500"
                           }`}>
                             {match.anandaTeamName} vs {match.opponentTeamName}
                           </p>
@@ -262,8 +262,8 @@ function LiveMatches() {
             <div className="space-y-6 lg:sticky lg:top-6 lg:self-start">
               <Reveal className="overflow-hidden rounded-2xl border border-ananda-gold/30 bg-ananda-maroon shadow-lg">
                 <div className="flex items-center justify-between border-b border-ananda-gold/25 px-6 py-4 bg-ananda-dark-maroon/40">
-                  <span className="font-display flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-ananda-gold">
-                    {selectedMatch.status === "LIVE" && (
+                  <span className="font-display flex items-center gap-2 text-xs font-bold tracking-wider text-ananda-gold">
+                    {selectedMatch.status ==="LIVE" && (
                       <span className="live-dot h-2 w-2 rounded-full bg-red-500 animate-pulse" />
                     )}
                     Live Scoreboard
@@ -271,7 +271,7 @@ function LiveMatches() {
                 </div>
 
                 <div className="px-6 py-6">
-                  <h2 className="font-display mb-5 text-center text-xs font-bold uppercase tracking-wider text-white/90">
+                  <h2 className="font-display mb-5 text-center text-xs font-bold tracking-wider text-white/90">
                     {selectedMatch.anandaTeamName}
                     <span className="px-2 text-ananda-gold">&bull; VS &bull;</span>
                     {selectedMatch.opponentTeamName}
@@ -279,45 +279,45 @@ function LiveMatches() {
 
                   <div className="grid grid-cols-2 gap-4">
                     <div className="rounded-xl bg-black/20 p-4 text-center border border-white/5">
-                      <p className="mb-1 truncate text-[10px] font-bold uppercase tracking-wider text-ananda-light-gold/60">
+                      <p className="mb-1 truncate text-[10px] font-bold tracking-wider text-ananda-light-gold/60">
                         {selectedMatch.anandaTeamName}
                       </p>
                       <p className="font-display text-3xl font-extrabold text-white">
-                        {selectedMatch.score?.anandaScore || "-"}
+                        {selectedMatch.score?.anandaScore ||"-"}
                       </p>
                     </div>
 
                     <div className="rounded-xl bg-black/20 p-4 text-center border border-white/5">
-                      <p className="mb-1 truncate text-[10px] font-bold uppercase tracking-wider text-ananda-light-gold/60">
+                      <p className="mb-1 truncate text-[10px] font-bold tracking-wider text-ananda-light-gold/60">
                         {selectedMatch.opponentTeamName}
                       </p>
                       <p className="font-display text-3xl font-extrabold text-white">
-                        {selectedMatch.score?.opponentScore || "-"}
+                        {selectedMatch.score?.opponentScore ||"-"}
                       </p>
                     </div>
                   </div>
 
                   <div className="mt-4 grid grid-cols-2 gap-4">
                     <div className="rounded-xl bg-black/15 p-3 text-center border border-white/5">
-                      <p className="text-[9px] font-bold uppercase tracking-wider text-ananda-light-gold/50">
+                      <p className="text-[9px] font-bold tracking-wider text-ananda-light-gold/50">
                         Overs
                       </p>
                       <p className="font-display text-lg font-bold text-white mt-0.5">
-                        {selectedMatch.score?.overs || "-"}
+                        {selectedMatch.score?.overs ||"-"}
                       </p>
                     </div>
 
                     <div className="rounded-xl bg-black/15 p-3 text-center border border-white/5">
-                      <p className="text-[9px] font-bold uppercase tracking-wider text-ananda-light-gold/50">
+                      <p className="text-[9px] font-bold tracking-wider text-ananda-light-gold/50">
                         Wickets
                       </p>
                       <p className="font-display text-lg font-bold text-white mt-0.5">
-                        {selectedMatch.score?.wickets || "-"}
+                        {selectedMatch.score?.wickets ||"-"}
                       </p>
                     </div>
                   </div>
 
-                  <div className="font-display mt-5 rounded-lg bg-ananda-gold/10 border border-ananda-gold/25 px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-ananda-gold">
+                  <div className="font-display mt-5 rounded-lg bg-ananda-gold/10 border border-ananda-gold/25 px-4 py-3 text-center text-xs font-semibold tracking-wider text-ananda-gold">
                     {selectedMatch.score?.currentStatus || selectedMatch.status}
                   </div>
                 </div>
@@ -325,7 +325,7 @@ function LiveMatches() {
 
               {selectedMatch.updates?.length > 0 && (
                 <Reveal className="rounded-2xl border border-ananda-gold/15 bg-white p-6 shadow-sm">
-                  <h2 className="font-display mb-4 text-xs font-bold uppercase tracking-wider text-ananda-gold">
+                  <h2 className="font-display mb-4 text-xs font-bold tracking-wider text-ananda-gold">
                     Commentary Updates
                   </h2>
 
@@ -336,7 +336,7 @@ function LiveMatches() {
                         className="relative border-l-2 border-ananda-gold/20 py-3.5 pl-5 last:border-transparent"
                       >
                         <span className="absolute -left-[5px] top-4.5 h-2 w-2 rounded-full bg-ananda-gold border border-white" />
-                        <p className="font-display text-[10px] font-bold uppercase tracking-wider text-ananda-gold">
+                        <p className="font-display text-[10px] font-bold tracking-wider text-ananda-gold">
                           {update.time}
                         </p>
                         <p className="mt-0.5 text-xs text-gray-700 font-semibold leading-relaxed">

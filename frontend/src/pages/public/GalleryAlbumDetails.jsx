@@ -1,10 +1,10 @@
-import { useEffect, useRef, useState } from "react";
-import { Link, useParams } from "react-router-dom";
-import { getGalleryAlbumBySlug } from "../../services/galleryService";
-import { getOptimizedCloudinaryUrl } from "../../utils/cloudinaryUrl";
+import { useEffect, useRef, useState } from"react";
+import { Link, useParams } from"react-router-dom";
+import { getGalleryAlbumBySlug } from"../../services/galleryService";
+import { getOptimizedCloudinaryUrl } from"../../utils/cloudinaryUrl";
 
 // Scroll-triggered reveal wrapper — fades sections in once
-function Reveal({ children, className = "" }) {
+function Reveal({ children, className ="" }) {
   const ref = useRef(null);
   const [visible, setVisible] = useState(false);
 
@@ -27,7 +27,7 @@ function Reveal({ children, className = "" }) {
   }, []);
 
   return (
-    <div ref={ref} className={`${visible ? "reveal" : "opacity-0"} ${className}`}>
+    <div ref={ref} className={`${visible ?"reveal" :"opacity-0"} ${className}`}>
       {children}
     </div>
   );
@@ -59,7 +59,7 @@ function GalleryAlbumDetails() {
           return;
         }
 
-        setError(error.response?.data?.message || "Failed to load album.");
+        setError(error.response?.data?.message ||"Failed to load album.");
       })
       .finally(() => {
         if (!isMounted) {
@@ -79,7 +79,7 @@ function GalleryAlbumDetails() {
       <section className="mx-auto max-w-7xl px-6 py-24">
         <div className="flex flex-col items-center gap-4 text-center">
           <div className="h-10 w-10 animate-spin rounded-full border-4 border-ananda-gold/30 border-t-ananda-maroon" />
-          <p className="font-display uppercase tracking-wide text-ananda-maroon animate-pulse">
+          <p className="font-display tracking-wide text-ananda-maroon animate-pulse">
             Loading album...
           </p>
         </div>
@@ -108,21 +108,21 @@ function GalleryAlbumDetails() {
         <div className="relative mx-auto max-w-7xl px-6 z-10">
           <Link
             to="/gallery"
-            className="font-display mb-4 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-ananda-gold transition hover:text-white"
+            className="font-display mb-4 inline-flex items-center gap-2 text-xs font-semibold tracking-wider text-ananda-gold transition hover:text-white"
           >
             &larr; Back to Gallery
           </Link>
           
-          <p className="font-display mb-2 text-xs font-semibold uppercase tracking-[0.25em] text-ananda-gold">
-            {album.sport?.name || "General Event"}
+          <p className="font-display mb-2 text-xs font-semibold tracking-[0.25em] text-ananda-gold">
+            {album.sport?.name ||"General Event"}
           </p>
           
-          <h1 className="font-display text-4xl font-bold uppercase tracking-tight text-white md:text-5xl lg:text-6xl">
+          <h1 className="font-display text-4xl font-bold tracking-tight text-white md:text-5xl lg:text-6xl">
             {album.title}
           </h1>
           
           <p className="mt-4 max-w-3xl text-base text-ananda-light-gold/90 leading-relaxed">
-            {album.description || "Photos from this event."}
+            {album.description ||"Photos from this event."}
           </p>
         </div>
       </section>
@@ -153,7 +153,7 @@ function GalleryAlbumDetails() {
                   />
                   {/* Hover Overlay */}
                   <div className="absolute inset-0 bg-black/20 opacity-0 transition duration-300 group-hover:opacity-100 flex items-center justify-center">
-                    <span className="bg-white/95 backdrop-blur-xs text-ananda-dark-maroon text-xs font-bold uppercase tracking-wider px-3.5 py-2 rounded-xl shadow-md scale-95 transition duration-300 group-hover:scale-100">
+                    <span className="bg-white/95 backdrop-blur-xs text-ananda-dark-maroon text-xs font-bold tracking-wider px-3.5 py-2 rounded-xl shadow-md scale-95 transition duration-300 group-hover:scale-100">
                       View Large
                     </span>
                   </div>
