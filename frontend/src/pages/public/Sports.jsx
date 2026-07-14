@@ -1,15 +1,63 @@
-import { useEffect, useRef, useState } from"react";
-import { Link } from"react-router-dom";
-import { getSports } from"../../services/sportService";
+import { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
+import { getSports } from "../../services/sportService";
 
 const CATEGORIES = [
-  { value:"ALL", label:"All" },
-  { value:"TEAM", label:"Team" },
-  { value:"INDIVIDUAL", label:"Individual" },
-  { value:"AQUATIC", label:"Aquatic" },
-  { value:"ATHLETICS", label:"Athletics" },
-  { value:"OTHER", label:"Other" },
+  { value: "ALL", label: "All" },
+  { value: "TEAM", label: "Team" },
+  { value: "INDIVIDUAL", label: "Individual" },
+  { value: "AQUATIC", label: "Aquatic" },
+  { value: "ATHLETICS", label: "Athletics" },
+  { value: "OTHER", label: "Other" },
 ];
+
+const sportImages = {
+  cricket: "/sports/cricket.svg",
+  rugby: "/sports/rugby.svg",
+  athletics: "/sports/athletics.svg",
+  badminton: "/sports/badminton.svg",
+  basketball: "/sports/basketball.svg",
+  "table-tennis": "/sports/table-tennis.svg",
+  tennis: "/sports/tennis.svg",
+  rowing: "/sports/rowing.svg",
+  hockey: "/sports/hockey.svg",
+  volleyball: "/sports/volleyball.svg",
+  "beach-volleyball": "/sports/beach-volleyball.svg",
+  football: "/sports/football.svg",
+  swimming: "/sports/swimming.svg",
+  gymnastics: "/sports/gymnastics.svg",
+  lifesaving: "/sports/lifesaving.svg",
+  scouting: "/sports/scouting.svg",
+  archery: "/sports/archery.svg",
+  golf: "/sports/golf.svg",
+  chess: "/sports/chess.svg",
+  "water-polo": "/sports/water-polo.svg",
+  wushu: "/sports/wushu.svg",
+  karate: "/sports/karate.svg",
+  boxing: "/sports/boxing.svg",
+  judo: "/sports/judo.svg",
+  taekwondo: "/sports/taekwondo.svg",
+  "roller-skating": "/sports/roller-skating.svg",
+  weightlifting: "/sports/weightlifting.svg",
+  powerlifting: "/sports/powerlifting.svg",
+  carrom: "/sports/carrom.svg",
+  handball: "/sports/handball.svg",
+  baseball: "/sports/baseball.svg",
+  mountaineering: "/sports/mountaineering.svg",
+  "cadet-corps": "/sports/cadet-corps.svg",
+  "police-cadet-corps": "/sports/police-cadet-corps.svg",
+  "junior-cadet-corps": "/sports/junior-cadet-corps.svg",
+  "cadet-band": "/sports/cadet-band.svg",
+  squash: "/sports/squash.svg",
+  shooting: "/sports/shooting.svg",
+  kabaddi: "/sports/kabaddi.svg",
+  "softball-cricket": "/sports/softball-cricket.svg",
+  elle: "/sports/elle.svg",
+};
+
+const getSportPlaceholderImage = (slug) => {
+  return sportImages[slug] || "/sports/default.svg";
+};
 
 function SportCardSkeleton() {
   return (
@@ -26,7 +74,7 @@ function SportCardSkeleton() {
 }
 
 // Scroll-triggered reveal wrapper — fades sections in once
-function Reveal({ children, className ="" }) {
+function Reveal({ children, className = "" }) {
   const ref = useRef(null);
   const [visible, setVisible] = useState(false);
 
@@ -41,7 +89,7 @@ function Reveal({ children, className ="" }) {
           observer.disconnect();
         }
       },
-      { threshold: 0.01 }
+      { threshold: 0.01 },
     );
 
     observer.observe(node);
@@ -49,7 +97,10 @@ function Reveal({ children, className ="" }) {
   }, []);
 
   return (
-    <div ref={ref} className={`${visible ?"reveal" :"opacity-0"} ${className}`}>
+    <div
+      ref={ref}
+      className={`${visible ? "reveal" : "opacity-0"} ${className}`}
+    >
       {children}
     </div>
   );
@@ -70,7 +121,7 @@ function Sports() {
         const data = await getSports({ search, category });
         setSports(data.sports);
       } catch (error) {
-        setError(error.response?.data?.message ||"Failed to load sports.");
+        setError(error.response?.data?.message || "Failed to load sports.");
       } finally {
         setLoading(false);
       }
@@ -89,6 +140,16 @@ function Sports() {
         <div className="absolute left-0 bottom-0 -ml-40 -mb-40 h-80 w-80 rounded-full bg-gradient-to-tr from-ananda-maroon/20 to-transparent blur-3xl" />
 
         <div className="relative mx-auto max-w-7xl px-6 py-16 z-10">
+          <Link
+            to="/"
+            className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-ananda-light-gold transition duration-200 hover:bg-white/10 hover:text-white hover:border-white/20 shadow-sm hover:scale-[1.02] cursor-pointer"
+          >
+            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Back to Home
+          </Link>
+          
           <p className="font-display mb-3 text-xs font-semibold tracking-[0.25em] text-ananda-gold">
             Ananda College Athletics
           </p>
@@ -96,8 +157,8 @@ function Sports() {
             All Sports
           </h1>
           <p className="mt-3 max-w-xl text-xs font-semibold tracking-wider text-ananda-light-gold/80 leading-relaxed">
-            Browse every sport played at Ananda College and explore the
-            teams competing under each one.
+            Browse every sport played at Ananda College and explore the teams
+            competing under each one.
           </p>
         </div>
       </section>
@@ -138,8 +199,8 @@ function Sports() {
                   onClick={() => setCategory(cat.value)}
                   className={`font-display rounded-xl px-4 py-2.5 text-[10px] font-bold  tracking-wider transition cursor-pointer ${
                     active
-                      ?"bg-ananda-maroon text-white shadow-sm"
-                      :"bg-ananda-cream/40 text-ananda-dark-maroon hover:bg-ananda-gold/20"
+                      ? "bg-ananda-maroon text-white shadow-sm"
+                      : "bg-ananda-cream/40 text-ananda-dark-maroon hover:bg-ananda-gold/20"
                   }`}
                 >
                   {cat.label}
@@ -181,26 +242,53 @@ function Sports() {
               <Link
                 key={sport._id}
                 to={`/sports/${sport.slug}`}
-                style={{ animationDelay:`${index * 40}ms` }}
-                className="reveal group rounded-2xl border border-ananda-gold/15 bg-white p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-ananda-gold/35 hover:shadow-md flex flex-col justify-between"
+                style={{ animationDelay: `${index * 40}ms` }}
+                className="reveal group rounded-2xl border border-ananda-gold/15 bg-white overflow-hidden shadow-sm transition duration-300 hover:-translate-y-1 hover:border-ananda-gold/35 hover:shadow-md flex flex-col justify-between cursor-pointer"
               >
-                <div>
-                  <p className="font-display mb-1.5 text-[10px] font-bold tracking-wider text-ananda-gold">
+                {/* Top Image */}
+                <div className="relative h-48 w-full overflow-hidden bg-gray-150/10 border-b border-ananda-gold/10">
+                  <img
+                    src={
+                      sport.coverImage?.url ||
+                      getSportPlaceholderImage(sport.slug)
+                    }
+                    alt={sport.name}
+                    className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                    loading="lazy"
+                  />
+                  {/* Floating Category Badge */}
+                  <div className="absolute top-3 left-3 rounded-lg bg-ananda-maroon px-2.5 py-1 text-[9px] font-bold tracking-wider text-white uppercase shadow-sm border border-ananda-gold/20">
                     {sport.category}
-                  </p>
-                  <h2 className="font-display mb-3 text-lg font-bold text-ananda-maroon transition duration-300 group-hover:text-ananda-dark-maroon">
-                    {sport.name}
-                  </h2>
-                  <p className="line-clamp-3 text-xs text-gray-500 leading-relaxed">
-                    {sport.description ||"Sport details will be added soon."}
-                  </p>
+                  </div>
                 </div>
-                <span className="font-display mt-4 inline-flex items-center gap-1.5 text-[10px] font-bold tracking-wider text-ananda-maroon opacity-0 transition group-hover:opacity-100 duration-300">
-                  View teams
-                  <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
-                  </svg>
-                </span>
+
+                {/* Card Body */}
+                <div className="p-5 flex flex-col flex-1 justify-between">
+                  <div className="mb-4">
+                    <h2 className="font-display mb-2 text-lg font-bold text-ananda-maroon transition duration-300 group-hover:text-ananda-dark-maroon">
+                      {sport.name}
+                    </h2>
+                    <p className="line-clamp-3 text-xs text-gray-550 leading-relaxed font-semibold">
+                      {sport.description || "Sport details will be added soon."}
+                    </p>
+                  </div>
+                  <span className="font-display inline-flex items-center gap-1.5 text-[10px] font-bold tracking-wider text-ananda-maroon group-hover:translate-x-1 transition duration-300">
+                    View teams
+                    <svg
+                      className="h-3.5 w-3.5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2.5}
+                        d="M9 5l7 7-7 7"
+                      />
+                    </svg>
+                  </span>
+                </div>
               </Link>
             ))}
           </div>
