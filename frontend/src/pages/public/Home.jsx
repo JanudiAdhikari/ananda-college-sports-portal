@@ -91,22 +91,86 @@ function Reveal({ children, className ="" }) {
   );
 }
 
-const StatCard = ({ label, value, link }) => (
+function AnimatedCounter({ value, duration = 1200 }) {
+  const [count, setCount] = useState(0);
+  const [hasIntersected, setHasIntersected] = useState(false);
+  const elementRef = useRef(null);
+
+  useEffect(() => {
+    const node = elementRef.current;
+    if (!node) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setHasIntersected(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!hasIntersected) return;
+
+    let startTimestamp = null;
+    const endValue = Number(value) || 0;
+    if (endValue === 0) {
+      setCount(0);
+      return;
+    }
+
+    let animationFrameId;
+
+    const step = (timestamp) => {
+      if (!startTimestamp) startTimestamp = timestamp;
+      const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+      setCount(Math.floor(progress * endValue));
+      if (progress < 1) {
+        animationFrameId = window.requestAnimationFrame(step);
+      }
+    };
+
+    animationFrameId = window.requestAnimationFrame(step);
+
+    return () => {
+      if (animationFrameId) {
+        window.cancelAnimationFrame(animationFrameId);
+      }
+    };
+  }, [value, duration, hasIntersected]);
+
+  return <span ref={elementRef}>{count}</span>;
+}
+
+const StatCard = ({ label, value, link, icon }) => (
   <Link
     to={link}
-    className="group rounded-2xl border border-ananda-gold/15 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-ananda-gold/40 hover:shadow-md flex items-center justify-between"
+    className="group rounded-2xl border border-ananda-gold/15 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-ananda-gold/40 hover:shadow-md flex items-center gap-4 cursor-pointer"
   >
-    <div>
-      <p className="font-display text-[10px] font-bold tracking-wider text-gray-400">
+    {/* Left Icon */}
+    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-ananda-cream text-ananda-maroon group-hover:bg-ananda-gold/20 group-hover:text-ananda-dark-maroon transition duration-300">
+      {icon}
+    </div>
+
+    {/* Center Text */}
+    <div className="flex-1 min-w-0">
+      <p className="text-[11px] font-bold tracking-wider text-gray-400 uppercase">
         {label}
       </p>
-      <p className="font-display mt-1 text-4xl font-extrabold text-ananda-maroon transition duration-300 group-hover:text-ananda-dark-maroon">
-        {value}
+      <p className="font-display mt-1 text-3xl font-extrabold text-ananda-maroon transition duration-300 group-hover:text-ananda-dark-maroon">
+        <AnimatedCounter value={value} />+
       </p>
     </div>
-    <div className="h-10 w-10 rounded-xl bg-ananda-cream/40 flex items-center justify-center text-ananda-maroon group-hover:bg-ananda-gold/20 group-hover:text-ananda-dark-maroon transition duration-300">
+
+    {/* Right Chevron */}
+    <div className="text-gray-300 group-hover:text-ananda-maroon transition duration-300">
       <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
       </svg>
     </div>
   </Link>
@@ -360,10 +424,47 @@ function Home() {
       {/* STATS */}
       <section className="mx-auto max-w-7xl px-6 py-14">
         <Reveal className="grid gap-6 grid-cols-2 md:grid-cols-4">
-          <StatCard label="Sports" value={sports.length} link="/sports" />
-          <StatCard label="Players" value={players.length} link="/sports" />
-          <StatCard label="Upcoming" value={upcomingFixtures.length} link="/fixtures-results" />
-          <StatCard label="Albums" value={galleryAlbums.length} link="/gallery" />
+          <StatCard
+            label="Sports"
+            value={sports.length}
+            link="/sports"
+            icon={
+              <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15a4 4 0 004-4V5H8v6a4 4 0 004 4z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v4M8 19h8M5 7h3M19 7h-3M5 7a2 2 0 012-2h1M19 7a2 2 0 00-2-2h-1" />
+              </svg>
+            }
+          />
+          <StatCard
+            label="Players"
+            value={players.length}
+            link="/sports"
+            icon={
+              <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+              </svg>
+            }
+          />
+          <StatCard
+            label="Upcoming"
+            value={upcomingFixtures.length}
+            link="/fixtures-results"
+            icon={
+              <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+            }
+          />
+          <StatCard
+            label="Albums"
+            value={galleryAlbums.length}
+            link="/gallery"
+            icon={
+              <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+            }
+          />
         </Reveal>
       </section>
 

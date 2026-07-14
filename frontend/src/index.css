@@ -58,3 +58,15 @@ h2.font-display {
 @media (prefers-reduced-motion: reduce) {
   .live-dot, .reveal { animation: none; }
 }
+
+/* Global font size overrides for enhanced readability */
+.text-\[10px\] {
+  font-size: 0.8125rem !important; /* Scale up 10px to 13px */
+}
+.text-\[11px\] {
+  font-size: 0.84375rem !important; /* Scale up 11px to 13.5px */
+}
+.text-xs {
+  font-size: 0.875rem !important; /* Scale up 12px to 14px */
+  line-height: 1.45 !important;
+}
