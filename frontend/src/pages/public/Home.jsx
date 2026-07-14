@@ -485,28 +485,31 @@ function Home() {
             No sports added yet.
           </div>
         ) : (
-          <Reveal className="grid gap-6 md:grid-cols-3">
+          <Reveal className="grid gap-8 md:grid-cols-3 pb-4">
             {featuredSports.map((sport) => (
               <Link
                 key={sport._id}
                 to={`/sports/${sport.slug}`}
-                className="group rounded-2xl border border-ananda-gold/15 bg-white p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-ananda-gold/35 hover:shadow-md flex flex-col justify-between"
+                className="group relative rounded-2xl border border-ananda-gold/20 bg-white p-6 shadow-[5px_5px_0px_0px_#e5a93b] hover:shadow-[7px_7px_0px_0px_#8b0000] hover:border-ananda-maroon/30 transition-all duration-300 flex flex-col justify-between cursor-pointer"
               >
                 <div>
-                  <p className="font-display mb-1.5 text-[10px] font-bold tracking-wider text-ananda-gold">
+                  <p className="font-display mb-3 text-[10px] font-bold tracking-wider text-ananda-gold">
                     {sport.category}
                   </p>
-                  <h3 className="font-display mb-3 text-lg font-bold text-ananda-maroon transition duration-300 group-hover:text-ananda-dark-maroon">
-                    {sport.name}
-                  </h3>
-                  <p className="line-clamp-3 text-xs text-gray-500 leading-relaxed">
-                    {sport.description ||"Sport details will be added soon."}
-                  </p>
-                </div>
-                <span className="font-display mt-4 inline-flex items-center gap-1 text-[10px] font-bold tracking-wider text-ananda-maroon opacity-0 transition group-hover:opacity-100 duration-300">
-                  View teams &rarr;
-                </span>
-              </Link>
+                    <h3 className="font-display mb-3 text-lg font-bold text-ananda-maroon transition duration-300 group-hover:text-ananda-dark-maroon">
+                      {sport.name}
+                    </h3>
+                    <p className="line-clamp-3 text-xs text-gray-550 leading-relaxed font-semibold">
+                      {sport.description ||"Sport details will be added soon."}
+                    </p>
+                  </div>
+                  <span className="font-display mt-4 inline-flex items-center gap-1.5 text-[10px] font-bold tracking-wider text-ananda-maroon group-hover:translate-x-1 transition duration-300">
+                    View teams
+                    <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </span>
+                </Link>
             ))}
           </Reveal>
         )}
@@ -666,32 +669,58 @@ function Home() {
         )}
       </section>
 
-      {/* CTA */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-white to-ananda-cream/35 border-t border-ananda-gold/15">
-        <div className="relative mx-auto max-w-7xl px-6 py-16 text-center z-10">
-          <h2 className="font-display text-2xl font-bold tracking-tight text-ananda-dark-maroon">
-            Follow Ananda College Sports
-          </h2>
-          <p className="mx-auto mt-2 max-w-xl text-xs font-semibold tracking-wider text-gray-500 leading-relaxed">
-            Stay updated with teams, player profiles, fixtures, results,
-            event photos, and live coverage.
-          </p>
+      {/* CTA BANNER */}
+      <section className="mx-auto max-w-7xl px-6 py-16">
+        <Reveal className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-ananda-dark-maroon via-ananda-maroon to-[#2d000a] px-8 py-14 md:py-20 text-center shadow-2xl border border-ananda-gold/20">
+          {/* Glowing Spotlights */}
+          <div className="absolute right-0 top-0 -mr-20 -mt-20 h-64 w-64 rounded-full bg-gradient-to-br from-ananda-gold/15 to-transparent blur-2xl pointer-events-none" />
+          <div className="absolute left-0 bottom-0 -ml-20 -mb-20 h-64 w-64 rounded-full bg-gradient-to-tr from-ananda-maroon/30 to-transparent blur-2xl pointer-events-none" />
 
-          <div className="mt-8 flex flex-wrap justify-center gap-4">
-            <Link
-              to="/fixtures-results"
-              className="font-display rounded-xl bg-ananda-maroon px-7 py-3 text-xs font-bold tracking-wider text-white transition hover:scale-[1.03] cursor-pointer hover:bg-ananda-dark-maroon shadow-sm hover:shadow-md"
-            >
-              View Fixtures
-            </Link>
-            <Link
-              to="/gallery"
-              className="font-display rounded-xl border border-ananda-maroon/30 px-7 py-3 text-xs font-bold tracking-wider text-ananda-maroon transition hover:bg-ananda-cream/45 cursor-pointer"
-            >
-              View Gallery
-            </Link>
+          {/* Decorative Sports Playbook Dashed Tracks */}
+          <svg className="absolute left-8 top-1/2 -translate-y-1/2 w-64 h-48 text-ananda-gold/10 hidden lg:block" fill="none" viewBox="0 0 200 120" stroke="currentColor">
+            <path strokeDasharray="5,5" strokeWidth="2" strokeLinecap="round" d="M 20 100 C 40 40, 80 20, 130 50 C 170 70, 150 110, 110 90" />
+            <path d="M 110 90 L 102 93 M 110 90 L 113 82" strokeWidth="2.5" strokeLinecap="round" />
+            <circle cx="20" cy="100" r="4" fill="currentColor" />
+          </svg>
+
+          <svg className="absolute right-8 top-1/2 -translate-y-1/2 w-64 h-48 text-ananda-gold/10 hidden lg:block" fill="none" viewBox="0 0 200 120" stroke="currentColor">
+            <path strokeDasharray="5,5" strokeWidth="2" strokeLinecap="round" d="M 180 20 C 160 80, 120 100, 70 70 C 30 50, 50 10, 90 30" />
+            <path d="M 90 30 L 98 27 M 90 30 L 87 38" strokeWidth="2.5" strokeLinecap="round" />
+            <circle cx="180" cy="20" r="4" fill="currentColor" />
+          </svg>
+
+          {/* Content */}
+          <div className="relative z-10">
+            <h2 className="font-display text-3xl font-extrabold tracking-tight text-white sm:text-4xl md:text-5xl">
+              Follow Ananda College <span className="text-ananda-gold">Sports</span>
+            </h2>
+            
+            {/* Divider line like in user's image */}
+            <div className="mx-auto my-6 h-1 w-20 bg-ananda-gold/45 rounded-full" />
+
+            <p className="mx-auto max-w-xl text-sm md:text-base font-medium tracking-wide text-white/80 leading-relaxed italic">
+              "Stay updated with teams, player profiles, fixtures, results, event photos, and live coverage."
+            </p>
+
+            <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-5">
+              <Link
+                to="/fixtures-results"
+                className="font-display rounded-full bg-white hover:bg-ananda-light-gold hover:scale-[1.03] text-ananda-dark-maroon font-extrabold tracking-wider px-8 py-3.5 transition duration-200 shadow-md hover:shadow-lg cursor-pointer text-xs uppercase"
+              >
+                View Fixtures
+              </Link>
+              <Link
+                to="/gallery"
+                className="font-display rounded-full border-2 border-white/80 hover:border-white text-white hover:bg-white/10 hover:scale-[1.03] font-bold tracking-wider px-8 py-3 transition duration-200 cursor-pointer text-xs uppercase flex items-center gap-1.5"
+              >
+                View Gallery
+                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+              </Link>
+            </div>
           </div>
-        </div>
+        </Reveal>
       </section>
     </div>
   );
