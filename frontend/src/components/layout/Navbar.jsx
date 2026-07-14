@@ -23,6 +23,10 @@ function Navbar() {
     }`;
 
   const handleLogout = () => {
+    const confirmed = window.confirm("Are you sure you want to log out?");
+    if (!confirmed) {
+      return;
+    }
     logout();
     setIsMenuOpen(false);
     navigate("/");
@@ -77,10 +81,6 @@ function Navbar() {
               </NavLink>
 
               <div className="flex items-center gap-3">
-                {/* Initial Avatar for User */}
-                <div className="font-display flex h-7 w-7 items-center justify-center rounded-full bg-ananda-light-gold text-xs font-bold text-ananda-maroon">
-                  {user?.fullName?.charAt(0) || "U"}
-                </div>
                 <span className="max-w-28 truncate text-xs font-semibold text-ananda-light-gold">
                   {user?.fullName}
                 </span>
@@ -173,9 +173,6 @@ function Navbar() {
                 </NavLink>
 
                 <div className="flex items-center gap-3 rounded-xl bg-ananda-dark-maroon/60 px-4 py-3 border border-ananda-gold/10">
-                  <div className="font-display flex h-8 w-8 items-center justify-center rounded-full bg-ananda-light-gold text-sm font-bold text-ananda-maroon">
-                    {user?.fullName?.charAt(0) || "U"}
-                  </div>
                   <div>
                     <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Logged In As</p>
                     <p className="font-semibold text-white text-sm truncate max-w-48">{user?.fullName}</p>

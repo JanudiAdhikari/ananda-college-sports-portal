@@ -55,8 +55,60 @@ function AdminGallery() {
   const [activeForm, setActiveForm] = useState(null); // null, 'ALBUM', or 'UPLOAD'
 
   const [selectedAlbumId, setSelectedAlbumId] = useState("");
-  const [selectedFiles, setSelectedFiles] = useState(null);
+  const [selectedFiles, setSelectedFiles] = useState([]);
   const [fileInputKey, setFileInputKey] = useState(0);
+  const [previews, setPreviews] = useState([]);
+  const [isDragActive, setIsDragActive] = useState(false);
+
+  useEffect(() => {
+    if (!selectedFiles || selectedFiles.length === 0) {
+      setPreviews([]);
+      return;
+    }
+
+    const objectUrls = selectedFiles.map((file) => URL.createObjectURL(file));
+    setPreviews(objectUrls);
+
+    return () => {
+      objectUrls.forEach((url) => URL.revokeObjectURL(url));
+    };
+  }, [selectedFiles]);
+
+  const removeSelectedFile = (indexToRemove) => {
+    setSelectedFiles((prev) => prev.filter((_, idx) => idx !== indexToRemove));
+  };
+
+  const addFiles = (newFiles) => {
+    setSelectedFiles((prev) => {
+      const combined = [...prev, ...newFiles];
+      if (combined.length > 20) {
+        setError("You can only upload up to 20 images at a time. The list has been trimmed to 20.");
+        return combined.slice(0, 20);
+      }
+      setError("");
+      return combined;
+    });
+  };
+
+  const handleDrag = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.type === "dragenter" || e.type === "dragover") {
+      setIsDragActive(true);
+    } else if (e.type === "dragleave") {
+      setIsDragActive(false);
+    }
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragActive(false);
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      const files = Array.from(e.dataTransfer.files).filter(file => file.type.startsWith("image/"));
+      addFiles(files);
+    }
+  };
 
   const [search, setSearch] = useState("");
   const [filterSport, setFilterSport] = useState("ALL");
@@ -312,7 +364,7 @@ function AdminGallery() {
       await uploadAlbumImages(selectedAlbumId, selectedFiles);
 
       setMessage("Images uploaded successfully.");
-      setSelectedFiles(null);
+      setSelectedFiles([]);
       setFileInputKey((previousKey) => previousKey + 1);
       setActiveForm(null);
 
@@ -396,20 +448,6 @@ function AdminGallery() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" />
             </svg>
             Create Album
-          </button>
-
-          <button
-            onClick={() => {
-              setActiveForm("UPLOAD");
-              setMessage("");
-              setError("");
-            }}
-            className="font-display rounded-xl border border-ananda-maroon px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-ananda-maroon hover:bg-ananda-cream/45 transition cursor-pointer flex items-center gap-1.5 shadow-sm hover:scale-[1.02]"
-          >
-            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
-            </svg>
-            Upload Photos
           </button>
         </div>
       </div>
@@ -517,12 +555,16 @@ function AdminGallery() {
                         type="button"
                         onClick={() => {
                           setSelectedAlbumId(album._id);
-                          setMessage("Selected album: " + album.title);
+                          setActiveForm("UPLOAD");
+                          setMessage("");
                           setError("");
                         }}
-                        className="font-display text-[10px] font-bold uppercase tracking-wider bg-ananda-maroon hover:bg-ananda-dark-maroon text-white px-3 py-1.5 rounded-lg transition duration-250 cursor-pointer"
+                        className="font-display text-[10px] font-bold uppercase tracking-wider bg-ananda-maroon hover:bg-ananda-dark-maroon text-white px-3.5 py-1.5 rounded-lg transition duration-250 cursor-pointer flex items-center gap-1 hover:scale-[1.02] shadow-xs"
                       >
-                        Select For Upload
+                        <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                        </svg>
+                        Upload Photos
                       </button>
 
                       <button
@@ -615,13 +657,7 @@ function AdminGallery() {
           </div>
         )}
 
-        {selectedAlbum && (
-          <div className="mt-6 rounded-xl border border-ananda-gold/25 bg-ananda-gold/10 px-4 py-3 text-xs font-semibold text-ananda-dark-maroon flex items-center gap-2">
-            <span className="h-2 w-2 rounded-full bg-ananda-gold animate-pulse" />
-            <span>Selected album for upload:</span>
-            <span className="font-bold underline">{selectedAlbum.title}</span>
-          </div>
-        )}
+
       </Reveal>
 
       {/* Album Creation/Edit Overlay Modal */}
@@ -732,10 +768,13 @@ function AdminGallery() {
       {/* Upload Images Overlay Modal */}
       {activeForm === "UPLOAD" && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fade-in">
-          <div className="relative w-full max-w-lg rounded-2xl border border-ananda-gold/15 bg-white p-6 shadow-2xl animate-scale-in max-h-[90vh] overflow-y-auto">
+          <div className="relative w-full max-w-2xl rounded-2xl border border-ananda-gold/15 bg-white p-6 shadow-2xl animate-scale-in max-h-[90vh] overflow-y-auto">
             {/* Close Button */}
             <button
-              onClick={() => setActiveForm(null)}
+              onClick={() => {
+                setActiveForm(null);
+                setSelectedFiles([]);
+              }}
               className="absolute right-4 top-4 text-gray-400 hover:text-gray-655 cursor-pointer transition hover:scale-110"
             >
               <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -750,27 +789,10 @@ function AdminGallery() {
             <form className="space-y-5" onSubmit={handleUploadImages}>
               <div>
                 <label className="font-display text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5 block">
-                  Select Album
+                  Target Album
                 </label>
-                <div className="relative">
-                  <select
-                    value={selectedAlbumId}
-                    onChange={(event) => setSelectedAlbumId(event.target.value)}
-                    className="w-full appearance-none rounded-xl border border-ananda-gold/25 bg-white px-4 py-3 pr-10 outline-none focus:border-ananda-maroon focus:ring-1 focus:ring-ananda-maroon transition shadow-sm text-sm"
-                    required
-                  >
-                    <option value="">Select album</option>
-                    {albums.map((album) => (
-                      <option key={album._id} value={album._id}>
-                        {album.title}
-                      </option>
-                    ))}
-                  </select>
-                  <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-4 text-gray-555">
-                    <svg className="h-4 w-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </span>
+                <div className="rounded-xl border border-ananda-gold/15 bg-ananda-gold/10 px-4 py-3 text-sm font-bold text-ananda-dark-maroon shadow-xs">
+                  {selectedAlbum?.title || "Loading..."}
                 </div>
               </div>
 
@@ -778,26 +800,101 @@ function AdminGallery() {
                 <label className="font-display text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5 block">
                   Images
                 </label>
-                <input
-                  key={fileInputKey}
-                  type="file"
-                  accept="image/*"
-                  multiple
-                  onChange={(event) => setSelectedFiles(event.target.files)}
-                  className="w-full rounded-xl border border-ananda-gold/25 bg-white px-4 py-3 text-xs text-gray-500 outline-none file:mr-4 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-[10px] file:font-bold file:uppercase file:tracking-wider file:bg-ananda-cream file:text-ananda-maroon hover:file:bg-ananda-gold/20 transition cursor-pointer"
-                />
-                <p className="mt-2 text-[10px] text-gray-400 font-medium leading-relaxed">
-                  Maximum 20 images. Each image should be under 5MB.
-                </p>
+                
+                {/* Drag and Drop Zone */}
+                <div
+                  onDragEnter={handleDrag}
+                  onDragOver={handleDrag}
+                  onDragLeave={handleDrag}
+                  onDrop={handleDrop}
+                  onClick={() => document.getElementById("file-upload-input").click()}
+                  className={`w-full rounded-2xl border-2 border-dashed p-6 text-center cursor-pointer transition flex flex-col items-center justify-center gap-2 ${
+                    isDragActive
+                      ? "border-ananda-maroon bg-ananda-gold/10"
+                      : "border-ananda-gold/30 hover:border-ananda-maroon bg-gray-50/50 hover:bg-white"
+                  }`}
+                >
+                  <svg className="h-8 w-8 text-ananda-maroon opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                  <p className="text-xs text-gray-600 font-semibold mt-1">
+                    Drag & drop your images here, or <span className="text-ananda-maroon underline font-bold">click to browse</span>
+                  </p>
+                  <p className="text-[10px] text-gray-400 font-medium">
+                    Maximum 20 images. Each image should be under 5MB.
+                  </p>
+                  <input
+                    id="file-upload-input"
+                    key={fileInputKey}
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    onChange={(event) => {
+                      if (event.target.files && event.target.files.length > 0) {
+                        addFiles(Array.from(event.target.files));
+                      }
+                    }}
+                    className="hidden"
+                  />
+                </div>
+
+                {/* Previews Section */}
+                {selectedFiles.length > 0 && (
+                  <div className="mt-4 space-y-2">
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="font-semibold text-gray-600">
+                        Selected ({selectedFiles.length} of 20):
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => setSelectedFiles([])}
+                        className="text-[10px] font-bold text-red-600 uppercase tracking-wider hover:underline cursor-pointer"
+                      >
+                        Clear All
+                      </button>
+                    </div>
+
+                    <div className="grid grid-cols-4 sm:grid-cols-5 gap-3 max-h-48 overflow-y-auto p-2 border border-dashed border-gray-200 rounded-xl bg-gray-50/50">
+                      {previews.map((url, index) => {
+                        const file = selectedFiles[index];
+                        return (
+                          <div key={index} className="group relative aspect-square rounded-lg overflow-hidden border border-ananda-gold/20 shadow-xs bg-white">
+                            <img src={url} alt={file?.name || "Preview"} className="h-full w-full object-cover" />
+                            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center p-1">
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  removeSelectedFile(index);
+                                }}
+                                className="rounded-full bg-red-600 text-white p-1 hover:bg-red-700 transition transform hover:scale-110 cursor-pointer shadow-xs"
+                                title="Remove image"
+                              >
+                                <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                              </button>
+                            </div>
+                            {file?.size && (
+                              <div className="absolute bottom-0 inset-x-0 bg-black/60 text-[8px] text-white py-0.5 px-1 truncate text-center font-mono">
+                                {(file.size / (1024 * 1024)).toFixed(2)} MB
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
               </div>
 
               <div className="pt-2">
                 <button
                   type="submit"
-                  disabled={uploading}
-                  className="w-full rounded-xl bg-ananda-maroon px-6 py-3.5 font-semibold text-white hover:bg-ananda-dark-maroon disabled:cursor-not-allowed disabled:opacity-70 transition duration-300 font-display text-xs font-bold uppercase tracking-wider cursor-pointer hover:scale-[1.01]"
+                  disabled={uploading || selectedFiles.length === 0}
+                  className="w-full rounded-xl bg-ananda-maroon px-6 py-3.5 font-semibold text-white hover:bg-ananda-dark-maroon disabled:cursor-not-allowed disabled:opacity-50 transition duration-300 font-display text-xs font-bold uppercase tracking-wider cursor-pointer hover:scale-[1.01]"
                 >
-                  {uploading ? "Uploading..." : "Upload Images"}
+                  {uploading ? "Uploading..." : `Upload ${selectedFiles.length} Image${selectedFiles.length === 1 ? "" : "s"}`}
                 </button>
               </div>
             </form>
