@@ -302,13 +302,13 @@ function Home() {
               src={image}
               alt={`Hero ${index + 1}`}
               className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
-                index === currentImageIndex ?"opacity-35" :"opacity-0"
+                index === currentImageIndex ? "opacity-55" : "opacity-0"
               }`}
             />
           ))}
 
-          {/* Dark gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-r from-ananda-dark-maroon/90 via-ananda-dark-maroon/70 to-transparent" />
+          {/* Dark gradient overlay for text readability */}
+          <div className="absolute inset-0 bg-gradient-to-r from-ananda-dark-maroon/85 via-ananda-dark-maroon/45 to-transparent" />
         </div>
 
         {/* Content */}
