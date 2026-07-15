@@ -213,9 +213,17 @@ function PlayerProfile() {
             {/* Profile Avatar Card */}
             <Reveal>
               <div className="rounded-2xl border border-ananda-gold/15 bg-white p-6 shadow-sm flex flex-col items-center text-center">
-                <div className="font-display flex h-28 w-28 items-center justify-center rounded-full bg-ananda-light-gold text-5xl font-bold text-ananda-maroon border border-ananda-gold/30 shadow-inner mb-4">
-                  {player.fullName.charAt(0)}
-                </div>
+                {player.photo?.url ? (
+                  <img
+                    src={player.photo.url}
+                    alt={player.fullName}
+                    className="h-28 w-28 rounded-full object-cover border border-ananda-gold/30 shadow-md mb-4"
+                  />
+                ) : (
+                  <div className="font-display flex h-28 w-28 items-center justify-center rounded-full bg-ananda-light-gold text-5xl font-bold text-ananda-maroon border border-ananda-gold/30 shadow-inner mb-4">
+                    {player.fullName.charAt(0)}
+                  </div>
+                )}
                 <h2 className="font-display text-xl font-bold tracking-tight text-ananda-dark-maroon">
                   {player.fullName}
                 </h2>

@@ -31,3 +31,22 @@ export const deletePlayer = async (playerId) => {
 
   return response.data;
 };
+
+export const uploadPlayerPhoto = async (playerId, file) => {
+  const formData = new FormData();
+  formData.append("photo", file);
+
+  const response = await api.put(`/players/${playerId}/photo`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+
+  return response.data;
+};
+
+export const deletePlayerPhoto = async (playerId) => {
+  const response = await api.delete(`/players/${playerId}/photo`);
+
+  return response.data;
+};

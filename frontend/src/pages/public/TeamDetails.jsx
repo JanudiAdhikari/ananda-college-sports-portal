@@ -337,10 +337,18 @@ function TeamDetails() {
                         )}
                       </div>
 
-                      {/* Initial Avatar */}
-                      <div className="font-display mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-ananda-light-gold/40 text-3xl font-bold text-ananda-maroon transition duration-300 group-hover:bg-ananda-gold group-hover:text-ananda-dark-maroon">
-                        {player.fullName.charAt(0)}
-                      </div>
+                      {/* Avatar Photo */}
+                      {player.photo?.url ? (
+                        <img
+                          src={player.photo.url}
+                          alt={player.fullName}
+                          className="mb-4 h-20 w-20 rounded-full object-cover border border-ananda-gold/20 shadow-sm transition duration-300"
+                        />
+                      ) : (
+                        <div className="font-display mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-ananda-light-gold/40 text-3xl font-bold text-ananda-maroon transition duration-300 group-hover:bg-ananda-gold group-hover:text-ananda-dark-maroon">
+                          {player.fullName.charAt(0)}
+                        </div>
+                      )}
 
                       {/* Name */}
                       <h3 className="font-display text-lg font-bold tracking-tight text-ananda-maroon transition duration-300 group-hover:text-ananda-dark-maroon line-clamp-1">
