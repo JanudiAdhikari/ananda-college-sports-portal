@@ -105,18 +105,11 @@ const sports = [
     displayOrder: 14,
   },
   {
-    name: "Aerobic Gymnastics",
-    category: "INDIVIDUAL",
-    description:
-      "Aerobic gymnastics blends rhythm, conditioning, and choreography into a dynamic performance sport.",
-    displayOrder: 15,
-  },
-  {
     name: "Lifesaving",
     category: "AQUATIC",
     description:
       "Lifesaving teaches water safety, rescue techniques, and confidence in and around aquatic environments.",
-    displayOrder: 16,
+    displayOrder: 15,
   },
   {
     name: "Scouting",

@@ -204,8 +204,8 @@ export const getSportConfig = (slug) => {
     };
   }
 
-  // Gymnastics and aerobic gymnastics
-  if (["gymnastics", "aerobic-gymnastics"].includes(sportSlug)) {
+  // Gymnastics
+  if (sportSlug === "gymnastics") {
     return {
       hasCricketStyles: false,
       stats: [
