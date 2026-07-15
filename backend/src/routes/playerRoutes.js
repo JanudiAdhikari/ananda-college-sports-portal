@@ -6,7 +6,11 @@ const {
   createPlayer,
   updatePlayer,
   deletePlayer,
+  uploadPlayerPhoto,
+  deletePlayerPhoto,
 } = require("../controllers/playerController");
+
+const upload = require("../middleware/uploadMiddleware");
 
 const {
   protect,
@@ -37,6 +41,21 @@ router.delete(
   protect,
   authorize("SUPER_ADMIN", "SPORTS_TEACHER"),
   deletePlayer
+);
+
+router.put(
+  "/:id/photo",
+  protect,
+  authorize("SUPER_ADMIN", "SPORTS_TEACHER"),
+  upload.single("photo"),
+  uploadPlayerPhoto
+);
+
+router.delete(
+  "/:id/photo",
+  protect,
+  authorize("SUPER_ADMIN", "SPORTS_TEACHER"),
+  deletePlayerPhoto
 );
 
 module.exports = router;
