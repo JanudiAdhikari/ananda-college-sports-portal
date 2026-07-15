@@ -593,20 +593,35 @@ function Home() {
               <Link
                 key={player._id}
                 to={`/players/${player._id}`}
-                className="group rounded-2xl border border-ananda-gold/15 bg-white p-5 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-ananda-gold/35 hover:shadow-md flex flex-col items-center text-center"
+                className="group overflow-hidden rounded-2xl border border-ananda-gold/15 bg-white shadow-sm transition duration-300 hover:-translate-y-1.5 hover:border-ananda-gold/35 hover:shadow-md flex flex-col cursor-pointer"
               >
-                <div className="font-display mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-ananda-cream/40 border border-ananda-gold/20 text-lg font-bold text-ananda-maroon transition duration-300 group-hover:bg-ananda-gold/20 group-hover:text-ananda-dark-maroon">
-                  {player.fullName.charAt(0)}
+                {/* Photo Header */}
+                {player.photo?.url ? (
+                  <div className="h-64 w-full overflow-hidden relative">
+                    <img
+                      src={player.photo.url}
+                      alt={player.fullName}
+                      className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                      loading="lazy"
+                    />
+                  </div>
+                ) : (
+                  <div className="h-64 w-full flex items-center justify-center bg-gradient-to-br from-ananda-light-gold/20 to-ananda-cream/35 border-b border-ananda-gold/15 relative overflow-hidden">
+                    <div className="font-display text-7xl font-extrabold text-ananda-maroon/20 select-none transition duration-500 group-hover:scale-110">
+                      {player.fullName.charAt(0).toUpperCase()}
+                    </div>
+                  </div>
+                )}
+
+                {/* Player details */}
+                <div className="p-5 text-center flex-1 flex flex-col justify-center">
+                  <h2 className="font-display text-lg font-bold text-ananda-maroon leading-tight mb-2 group-hover:text-ananda-dark-maroon transition duration-300">
+                    {player.fullName}
+                  </h2>
+                  <p className="text-[14px] font-semibold text-gray-500">
+                    {player.sport?.name || "Sport"} • {player.role || player.position || "Player"}
+                  </p>
                 </div>
-                <h3 className="font-display text-sm font-bold text-ananda-maroon truncate w-full">
-                  {player.fullName}
-                </h3>
-                <p className="mt-1 text-[10px] font-semibold tracking-wider text-gray-400">
-                  {player.sport?.name ||"Sport"}
-                </p>
-                <p className="mt-0.5 text-xs font-semibold text-gray-500 line-clamp-1">
-                  {player.role || player.position ||"Player"}
-                </p>
               </Link>
             ))}
           </Reveal>

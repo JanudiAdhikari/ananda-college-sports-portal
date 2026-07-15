@@ -6,6 +6,8 @@ import {
   deletePlayer,
   getPlayers,
   updatePlayer,
+  uploadPlayerPhoto,
+  deletePlayerPhoto,
 } from"../../services/playerService";
 import { getSportConfig } from"../../utils/sportConfig";
 
@@ -89,6 +91,11 @@ function AdminPlayers() {
   const [formData, setFormData] = useState(initialFormData);
   const [editingPlayerId, setEditingPlayerId] = useState(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
+
+  const [photoFile, setPhotoFile] = useState(null);
+  const [photoPreview, setPhotoPreview] = useState("");
+  const [existingPhoto, setExistingPhoto] = useState(null);
+  const [shouldRemovePhoto, setShouldRemovePhoto] = useState(false);
 
   const selectedTeam = teams.find((t) => t._id === formData.team);
   const sportSlug = selectedTeam?.sport?.slug ||"";
@@ -310,6 +317,22 @@ function AdminPlayers() {
     return payload;
   };
 
+  const handlePhotoChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setPhotoFile(file);
+      setPhotoPreview(URL.createObjectURL(file));
+      setShouldRemovePhoto(false);
+    }
+  };
+
+  const handleRemovePhoto = () => {
+    setPhotoFile(null);
+    setPhotoPreview("");
+    setShouldRemovePhoto(true);
+    setExistingPhoto(null);
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -318,25 +341,30 @@ function AdminPlayers() {
       setMessage("");
       setError("");
 
+      let savedPlayer;
       if (editingPlayerId) {
-        await updatePlayer(editingPlayerId, getPayload());
-        setMessage("Player updated successfully.");
+        const response = await updatePlayer(editingPlayerId, getPayload());
+        savedPlayer = response.player;
       } else {
-        await createPlayer(getPayload());
-        setMessage("Player created successfully.");
+        const response = await createPlayer(getPayload());
+        savedPlayer = response.player;
       }
 
-      setEditingPlayerId(null);
-      setFormData({
-        ...initialFormData,
-        team: teams[0]?._id ||"",
-        ageGroup: teams[0]?.ageGroup ||"UNDER_14",
-      });
-      setIsFormOpen(false);
+      const savedPlayerId = savedPlayer._id;
 
+      // Handle photo upload/delete if needed
+      if (shouldRemovePhoto) {
+        await deletePlayerPhoto(savedPlayerId);
+      } else if (photoFile) {
+        await uploadPlayerPhoto(savedPlayerId, photoFile);
+      }
+
+      setMessage(editingPlayerId ? "Player updated successfully." : "Player created successfully.");
+
+      handleCloseForm();
       await loadPlayers();
     } catch (error) {
-      setError(error.response?.data?.message ||"Failed to save player.");
+      setError(error.response?.data?.message || "Failed to save player.");
     } finally {
       setSaving(false);
     }
@@ -372,6 +400,11 @@ function AdminPlayers() {
       technique: player.skillsRating?.technique || 0,
     });
 
+    setExistingPhoto(player.photo || null);
+    setPhotoFile(null);
+    setPhotoPreview("");
+    setShouldRemovePhoto(false);
+
     setMessage("");
     setError("");
     setIsFormOpen(true);
@@ -384,6 +417,10 @@ function AdminPlayers() {
       team: teams[0]?._id ||"",
       ageGroup: teams[0]?.ageGroup ||"UNDER_14",
     });
+    setPhotoFile(null);
+    setPhotoPreview("");
+    setExistingPhoto(null);
+    setShouldRemovePhoto(false);
     setIsFormOpen(false);
     setMessage("");
     setError("");
@@ -441,6 +478,10 @@ function AdminPlayers() {
               team: teams[0]?._id ||"",
               ageGroup: teams[0]?.ageGroup ||"UNDER_14",
             });
+            setPhotoFile(null);
+            setPhotoPreview("");
+            setExistingPhoto(null);
+            setShouldRemovePhoto(false);
             setIsFormOpen(true);
             setMessage("");
             setError("");
@@ -706,6 +747,74 @@ function AdminPlayers() {
                   className="w-full rounded-xl border border-ananda-gold/25 bg-white px-4 py-3 outline-none focus:border-ananda-maroon focus:ring-1 focus:ring-ananda-maroon transition shadow-sm text-sm"
                   required
                 />
+              </div>
+
+              {/* Photo Upload Section */}
+              <div className="rounded-xl border border-ananda-gold/15 bg-ananda-cream/15 p-4 space-y-3">
+                <label className="font-display text-xs font-bold tracking-wider text-gray-500 block">
+                  Player Profile Photo
+                </label>
+                
+                <div className="flex flex-col sm:flex-row items-center gap-4">
+                  {/* Photo Preview / Fallback avatar */}
+                  {photoPreview ? (
+                    <div className="relative">
+                      <img src={photoPreview} className="h-20 w-20 object-cover rounded-xl border border-ananda-gold/30 shadow-md" />
+                      <button
+                        type="button"
+                        onClick={handleRemovePhoto}
+                        className="absolute -top-2 -right-2 bg-red-600 hover:bg-red-700 text-white rounded-full p-1 shadow-md hover:scale-110 transition cursor-pointer flex items-center justify-center"
+                        title="Remove photo"
+                      >
+                        <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
+                    </div>
+                  ) : existingPhoto ? (
+                    <div className="relative">
+                      <img src={existingPhoto.url} className="h-20 w-20 object-cover rounded-xl border border-ananda-gold/30 shadow-md" />
+                      <button
+                        type="button"
+                        onClick={handleRemovePhoto}
+                        className="absolute -top-2 -right-2 bg-red-600 hover:bg-red-700 text-white rounded-full p-1 shadow-md hover:scale-110 transition cursor-pointer flex items-center justify-center"
+                        title="Remove photo"
+                      >
+                        <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="flex h-20 w-20 items-center justify-center rounded-xl bg-ananda-light-gold/45 text-2xl font-bold text-ananda-maroon border border-ananda-gold/20 shadow-inner">
+                      {formData.fullName ? formData.fullName.charAt(0).toUpperCase() : "?"}
+                    </div>
+                  )}
+
+                  {/* Input / Instructions */}
+                  <div className="flex-1 space-y-1">
+                    <input
+                      type="file"
+                      id="photo"
+                      name="photo"
+                      accept="image/*"
+                      onChange={handlePhotoChange}
+                      className="hidden"
+                    />
+                    <label
+                      htmlFor="photo"
+                      className="font-display inline-flex items-center gap-1.5 rounded-lg border border-ananda-gold/30 bg-white hover:bg-ananda-cream/35 text-ananda-dark-maroon px-3.5 py-2 text-xs font-bold tracking-wider cursor-pointer shadow-xs transition duration-200"
+                    >
+                      <svg className="h-4 w-4 text-ananda-maroon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                      </svg>
+                      {existingPhoto || photoFile ? "Change Photo" : "Upload Photo"}
+                    </label>
+                    <p className="text-[10px] font-semibold text-gray-400">
+                      Allowed formats: JPG, PNG, GIF. Max file size: 5MB.
+                    </p>
+                  </div>
+                </div>
               </div>
 
               <div className="grid gap-4 md:grid-cols-2">

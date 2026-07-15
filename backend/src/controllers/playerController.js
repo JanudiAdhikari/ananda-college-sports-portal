@@ -1,6 +1,28 @@
 const Player = require("../models/Player");
 const Team = require("../models/Team");
 const Sport = require("../models/Sport");
+const cloudinary = require("../config/cloudinary");
+const { Readable } = require("stream");
+
+const uploadImageToCloudinary = (buffer, folder) => {
+  return new Promise((resolve, reject) => {
+    const uploadStream = cloudinary.uploader.upload_stream(
+      {
+        folder,
+        resource_type: "image",
+      },
+      (error, result) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(result);
+        }
+      }
+    );
+
+    Readable.from(buffer).pipe(uploadStream);
+  });
+};
 
 const getPlayers = async (req, res) => {
   try {
@@ -281,10 +303,94 @@ const deletePlayer = async (req, res) => {
   }
 };
 
+const uploadPlayerPhoto = async (req, res) => {
+  try {
+    const player = await Player.findById(req.params.id);
+
+    if (!player) {
+      return res.status(404).json({
+        success: false,
+        message: "Player not found.",
+      });
+    }
+
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        message: "Please select an image file to upload.",
+      });
+    }
+
+    // If there is an existing photo, destroy it from Cloudinary
+    if (player.photo && player.photo.publicId) {
+      try {
+        await cloudinary.uploader.destroy(player.photo.publicId);
+      } catch (err) {
+        console.error("Failed to destroy old photo on Cloudinary:", err.message);
+      }
+    }
+
+    // Upload new photo
+    const result = await uploadImageToCloudinary(req.file.buffer, "ananda-players");
+
+    player.photo = {
+      url: result.secure_url,
+      publicId: result.public_id,
+    };
+
+    await player.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Player photo uploaded successfully.",
+      photo: player.photo,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to upload player photo.",
+      error: error.message,
+    });
+  }
+};
+
+const deletePlayerPhoto = async (req, res) => {
+  try {
+    const player = await Player.findById(req.params.id);
+
+    if (!player) {
+      return res.status(404).json({
+        success: false,
+        message: "Player not found.",
+      });
+    }
+
+    if (player.photo && player.photo.publicId) {
+      await cloudinary.uploader.destroy(player.photo.publicId);
+    }
+
+    player.photo = undefined;
+    await player.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Player photo deleted successfully.",
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to delete player photo.",
+      error: error.message,
+    });
+  }
+};
+
 module.exports = {
   getPlayers,
   getPlayerById,
   createPlayer,
   updatePlayer,
   deletePlayer,
+  uploadPlayerPhoto,
+  deletePlayerPhoto,
 };
